@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/Final-SQL-MOF/src" modelPluginID="Final-SQL-MOF"
+    modelName="Sql" rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container"
+    importerID="org.eclipse.emf.importer.ecore" complianceLevel="7.0" copyrightFields="false"
+    operationReflection="true" importOrganizing="true">
+  <foreignModel>Sql.ecore</foreignModel>
+  <genPackages prefix="Metamodel" disposableProviderFactory="true" ecorePackage="Sql.ecore#/">
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="Sql.ecore#//Datatype">
+      <genEnumLiterals ecoreEnumLiteral="Sql.ecore#//Datatype/INT"/>
+      <genEnumLiterals ecoreEnumLiteral="Sql.ecore#//Datatype/DOUBLE"/>
+      <genEnumLiterals ecoreEnumLiteral="Sql.ecore#//Datatype/BOOLEAN"/>
+      <genEnumLiterals ecoreEnumLiteral="Sql.ecore#//Datatype/STRING"/>
+      <genEnumLiterals ecoreEnumLiteral="Sql.ecore#//Datatype/DATE"/>
+      <genEnumLiterals ecoreEnumLiteral="Sql.ecore#//Datatype/FLOAT"/>
+      <genEnumLiterals ecoreEnumLiteral="Sql.ecore#//Datatype/TIMESTAMP"/>
+      <genEnumLiterals ecoreEnumLiteral="Sql.ecore#//Datatype/TEXT"/>
+      <genEnumLiterals ecoreEnumLiteral="Sql.ecore#//Datatype/DECIMAL"/>
+      <genEnumLiterals ecoreEnumLiteral="Sql.ecore#//Datatype/DATETIME"/>
+      <genEnumLiterals ecoreEnumLiteral="Sql.ecore#//Datatype/VARCHAR"/>
+      <genEnumLiterals ecoreEnumLiteral="Sql.ecore#//Datatype/CHAR"/>
+      <genEnumLiterals ecoreEnumLiteral="Sql.ecore#//Datatype/TINYTEXT"/>
+      <genEnumLiterals ecoreEnumLiteral="Sql.ecore#//Datatype/BLOB"/>
+      <genEnumLiterals ecoreEnumLiteral="Sql.ecore#//Datatype/LONGTEXT"/>
+      <genEnumLiterals ecoreEnumLiteral="Sql.ecore#//Datatype/SMALLINT"/>
+      <genEnumLiterals ecoreEnumLiteral="Sql.ecore#//Datatype/BIGINT"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="Sql.ecore#//ConstraintType">
+      <genEnumLiterals ecoreEnumLiteral="Sql.ecore#//ConstraintType/PRIMARY_KEY"/>
+      <genEnumLiterals ecoreEnumLiteral="Sql.ecore#//ConstraintType/FOREIGN_KEY"/>
+      <genEnumLiterals ecoreEnumLiteral="Sql.ecore#//ConstraintType/UNIQUE"/>
+      <genEnumLiterals ecoreEnumLiteral="Sql.ecore#//ConstraintType/COMPOSITE_PRIMARY_KEY"/>
+    </genEnums>
+    <genClasses ecoreClass="Sql.ecore#//Database">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Sql.ecore#//Database/name"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Sql.ecore#//Database/table"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Sql.ecore#//Database/sequences"/>
+    </genClasses>
+    <genClasses ecoreClass="Sql.ecore#//Table">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Sql.ecore#//Table/name"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Sql.ecore#//Table/constraints"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Sql.ecore#//Table/columns"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Sql.ecore#//Table/rows"/>
+    </genClasses>
+    <genClasses ecoreClass="Sql.ecore#//Constraint">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Sql.ecore#//Constraint/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Sql.ecore#//Constraint/type"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Sql.ecore#//Constraint/References"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Sql.ecore#//Constraint/reference"/>
+    </genClasses>
+    <genClasses ecoreClass="Sql.ecore#//Column">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Sql.ecore#//Column/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Sql.ecore#//Column/type"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Sql.ecore#//Column/nullable"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Sql.ecore#//Column/size"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Sql.ecore#//Column/References"/>
+    </genClasses>
+    <genClasses ecoreClass="Sql.ecore#//Sequence">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Sql.ecore#//Sequence/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Sql.ecore#//Sequence/minValue"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Sql.ecore#//Sequence/maxValue"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Sql.ecore#//Sequence/incrementby"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Sql.ecore#//Sequence/startwith"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Sql.ecore#//Sequence/currentValue"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Sql.ecore#//Sequence/cycle"/>
+    </genClasses>
+    <genClasses ecoreClass="Sql.ecore#//Row">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Sql.ecore#//Row/cells"/>
+    </genClasses>
+    <genClasses ecoreClass="Sql.ecore#//Cell">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Sql.ecore#//Cell/value"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Sql.ecore#//Cell/column"/>
+    </genClasses>
+  </genPackages>
+</genmodel:GenModel>
