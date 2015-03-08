@@ -128,7 +128,7 @@ public class ColumnImpl extends MinimalEObjectImpl.Container implements Column {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected ColumnImpl() {
+	public ColumnImpl() {
 		super();
 	}
 
