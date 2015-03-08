@@ -21,8 +21,7 @@ public class SqlCol2NoSqlCol implements Rule<Column, nosql.Column> {
 		noSqlCol.setName(source.getName());
 		noSqlCol.setSize(source.getSize());
 		noSqlCol.setPK(false);
-		//we need to set the datatype
-		//noSqlCol.setDatatype(value);
+		noSqlCol.setDatatype(DatatypeMapping.getType(source.getType()));
 		
 		return noSqlCol;
 	}
