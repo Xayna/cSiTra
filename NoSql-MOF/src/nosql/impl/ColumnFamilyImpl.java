@@ -246,6 +246,43 @@ public class ColumnFamilyImpl extends MinimalEObjectImpl.Container implements Co
 			eNotify(new ENotificationImpl(this, Notification.SET, NosqlPackage.COLUMN_FAMILY__PK, newPK, newPK));
 	}
 
+	
+	
+	/**
+	 * @return the pk
+	 */
+	public PK getPk() {
+		return pk;
+	}
+
+	/**
+	 * @param pk the pk to set
+	 */
+	public void setPk(PK pk) {
+		this.pk = pk;
+	}
+
+	/**
+	 * @param columns the columns to set
+	 */
+	public void setColumns(EList columns) {
+		this.columns = columns;
+	}
+
+	/**
+	 * @param options the options to set
+	 */
+	public void setOptions(EList options) {
+		this.options = options;
+	}
+
+	/**
+	 * @param rows the rows to set
+	 */
+	public void setRows(EList rows) {
+		this.rows = rows;
+	}
+
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
