@@ -5,10 +5,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
+import bham.transformation.model.Column;
+import bham.transformation.model.Table;
+
 public class DBTransformationService {
 
-	static List<String> tables = null;
-	static List<String> columns = null;
+	static List<Table> tables = null;
+	static List<Column> columns = null;
 	static Connection conn = null;
 	
 	public static void main(String[] args){
@@ -27,20 +30,21 @@ public class DBTransformationService {
 		
 		readTable(databaseName);
 		
-		for(String table: tables){
-			System.out.println("Table name: "+table);
+		for(Table table: tables){
+			System.out.println("Table name: "+table.getName());
 			readColumn(table);
 			System.out.println("Column:");
-			for(String column: columns){
-				System.out.println(column);
+			for(Column column: columns){
+				System.out.println(column.getName()+" "+column.getType()+" "+column.getSize()+" "+Boolean.toString(column.isNullable()));
 			}
 			System.out.println("====");
 		}
 		
 		
 	}
+
 	public static void readTable(String databaseName){
-		tables = new ArrayList<String>();
+		tables = new ArrayList<Table>();
 		try {
 			PreparedStatement st = conn.prepareStatement("SELECT table_name "
 					+ "FROM information_schema.tables "
@@ -49,7 +53,9 @@ public class DBTransformationService {
 			ResultSet rs = st.executeQuery();
 			while (rs.next())
 			{
-				tables.add(rs.getString("table_name"));
+				Table table = new Table();
+				table.setName(rs.getString("table_name"));
+				tables.add(table);
 			}
 			rs.close();
 			st.close();
@@ -59,17 +65,24 @@ public class DBTransformationService {
 		}
 	}
 	
-	public static void readColumn(String tableName){
-		columns = new ArrayList<String>();
+	public static void readColumn(Table tableName){
+		columns = new ArrayList<Column>();
+		boolean nullable = false;
+		String size = null;
 		try {
-			PreparedStatement st = conn.prepareStatement("SELECT column_name "
+			PreparedStatement st = conn.prepareStatement("SELECT column_name, data_type, character_maximum_length, is_nullable "
 					+ "FROM information_schema.columns "
 					+ "WHERE table_name = ?");
-			st.setString(1, tableName);
+			st.setString(1, tableName.getName());
 			ResultSet rs = st.executeQuery();
 			while (rs.next())
 			{
-				columns.add(rs.getString("column_name"));
+				Column column = new Column();
+				column.setName(rs.getString("column_name"));
+				column.setType(rs.getString("data_type"));
+				column.setSize(rs.getString("character_maximum_length"));
+				column.setNullable(rs.getBoolean("is_nullable"));
+				columns.add(column);
 			}
 			rs.close();
 			st.close();
