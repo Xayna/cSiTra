@@ -68,7 +68,7 @@ public class ConstraintImpl extends MinimalEObjectImpl.Container implements Cons
 	 * @generated
 	 * @ordered
 	 */
-	protected static final ConstraintType TYPE_EDEFAULT = ConstraintType.PRIMARY_KEY;
+	protected static final ConstraintType TYPE_EDEFAULT = ConstraintType.PRIMARY_LITERAL;
 
 	/**
 	 * The cached value of the '{@link #getType() <em>Type</em>}' attribute.

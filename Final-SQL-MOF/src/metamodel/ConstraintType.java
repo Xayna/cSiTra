@@ -6,7 +6,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import org.eclipse.emf.common.util.Enumerator;
+
+import org.eclipse.emf.common.util.AbstractEnumerator;
 
 /**
  * <!-- begin-user-doc -->
@@ -17,61 +18,9 @@ import org.eclipse.emf.common.util.Enumerator;
  * @model
  * @generated
  */
-public enum ConstraintType implements Enumerator {
-	/**
-	 * The '<em><b>PRIMARY KEY</b></em>' literal object.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #PRIMARY_KEY_VALUE
-	 * @generated
-	 * @ordered
-	 */
-	PRIMARY_KEY(0, "PRIMARY_KEY", "PRIMARY_KEY"),
-
-	/**
-	 * The '<em><b>FOREIGN KEY</b></em>' literal object.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #FOREIGN_KEY_VALUE
-	 * @generated
-	 * @ordered
-	 */
-	FOREIGN_KEY(1, "FOREIGN_KEY", "FOREIGN_KEY"),
-
-	/**
-	 * The '<em><b>UNIQUE</b></em>' literal object.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #UNIQUE_VALUE
-	 * @generated
-	 * @ordered
-	 */
-	UNIQUE(2, "UNIQUE", "UNIQUE"),
-
-	/**
-	 * The '<em><b>COMPOSITE PRIMARY KEY</b></em>' literal object.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #COMPOSITE_PRIMARY_KEY_VALUE
-	 * @generated
-	 * @ordered
-	 */
-	COMPOSITE_PRIMARY_KEY(3, "COMPOSITE_PRIMARY_KEY", "COMPOSITE_PRIMARY_KEY");
-
-	/**
-	 * The '<em><b>PRIMARY KEY</b></em>' literal value.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of '<em><b>PRIMARY KEY</b></em>' literal object isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @see #PRIMARY_KEY
-	 * @model
-	 * @generated
-	 * @ordered
-	 */
-	public static final int PRIMARY_KEY_VALUE = 0;
+public  final class ConstraintType extends AbstractEnumerator {
+	
+	public static final int PRIMARY_KEY = 0;
 
 	/**
 	 * The '<em><b>FOREIGN KEY</b></em>' literal value.
@@ -86,7 +35,7 @@ public enum ConstraintType implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int FOREIGN_KEY_VALUE = 1;
+	public static final int FOREIGN_KEY = 1;
 
 	/**
 	 * The '<em><b>UNIQUE</b></em>' literal value.
@@ -101,7 +50,7 @@ public enum ConstraintType implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int UNIQUE_VALUE = 2;
+	public static final int UNIQUE = 2;
 
 	/**
 	 * The '<em><b>COMPOSITE PRIMARY KEY</b></em>' literal value.
@@ -116,7 +65,7 @@ public enum ConstraintType implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int COMPOSITE_PRIMARY_KEY_VALUE = 3;
+	public static final int COMPOSITE_PRIMARY_KEY = 3;
 
 	/**
 	 * An array of all the '<em><b>Constraint Type</b></em>' enumerators.
@@ -124,12 +73,68 @@ public enum ConstraintType implements Enumerator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	
+	/**
+	 * The '<em><b>PRIMARY KEY</b></em>' literal object.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #PRIMARY_KEY_VALUE
+	 * @generated
+	 * @ordered
+	 */
+	public static final ConstraintType PRIMARY_LITERAL = new ConstraintType (PRIMARY_KEY, "PRIMARY_KEY", "PRIMARY_KEY");
+
+	/**
+	 * The '<em><b>FOREIGN KEY</b></em>' literal object.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #FOREIGN_KEY_VALUE
+	 * @generated
+	 * @ordered
+	 */
+	public static final ConstraintType FOREIGN_LITERAL  = new ConstraintType(FOREIGN_KEY, "FOREIGN_KEY", "FOREIGN_KEY");
+
+	/**
+	 * The '<em><b>UNIQUE</b></em>' literal object.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #UNIQUE_VALUE
+	 * @generated
+	 * @ordered
+	 */
+	public static final ConstraintType UNIQUE_LITERAL =  new ConstraintType (UNIQUE, "UNIQUE", "UNIQUE");
+
+	/**
+	 * The '<em><b>COMPOSITE PRIMARY KEY</b></em>' literal object.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #COMPOSITE_PRIMARY_KEY_VALUE
+	 * @generated
+	 * @ordered
+	 */
+	public static final ConstraintType COMPOSITE_PRIMARY_LITERAL = new ConstraintType (COMPOSITE_PRIMARY_KEY, "COMPOSITE_PRIMARY_KEY", "COMPOSITE_PRIMARY_KEY");
+
+	/**
+	 * The '<em><b>PRIMARY KEY</b></em>' literal value.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of '<em><b>PRIMARY KEY</b></em>' literal object isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @see #PRIMARY_KEY
+	 * @model
+	 * @generated
+	 * @ordered
+	 */
+	
+	
 	private static final ConstraintType[] VALUES_ARRAY =
 		new ConstraintType[] {
-			PRIMARY_KEY,
-			FOREIGN_KEY,
-			UNIQUE,
-			COMPOSITE_PRIMARY_KEY,
+			PRIMARY_LITERAL,
+			FOREIGN_LITERAL,
+			UNIQUE_LITERAL,
+			COMPOSITE_PRIMARY_LITERAL,
 		};
 
 	/**
@@ -180,83 +185,19 @@ public enum ConstraintType implements Enumerator {
 	 */
 	public static ConstraintType get(int value) {
 		switch (value) {
-			case PRIMARY_KEY_VALUE: return PRIMARY_KEY;
-			case FOREIGN_KEY_VALUE: return FOREIGN_KEY;
-			case UNIQUE_VALUE: return UNIQUE;
-			case COMPOSITE_PRIMARY_KEY_VALUE: return COMPOSITE_PRIMARY_KEY;
+			case PRIMARY_KEY: return PRIMARY_LITERAL;
+			case FOREIGN_KEY: return FOREIGN_LITERAL;
+			case UNIQUE: return UNIQUE_LITERAL;
+			case COMPOSITE_PRIMARY_KEY: return COMPOSITE_PRIMARY_LITERAL;
 		}
 		return null;
 	}
 
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	private final int value;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	private final String name;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	private final String literal;
-
-	/**
-	 * Only this class can construct instances.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+	
 	private ConstraintType(int value, String name, String literal) {
-		this.value = value;
-		this.name = name;
-		this.literal = literal;
+		super(value, name, literal);
 	}
 
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public int getValue() {
-	  return value;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public String getName() {
-	  return name;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public String getLiteral() {
-	  return literal;
-	}
-
-	/**
-	 * Returns the literal value of the enumerator, which is its string representation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public String toString() {
-		return literal;
-	}
+	
 	
 } //ConstraintType

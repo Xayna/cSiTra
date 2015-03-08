@@ -6,7 +6,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import org.eclipse.emf.common.util.Enumerator;
+import org.eclipse.emf.common.util.AbstractEnumerator;
+
 
 /**
  * <!-- begin-user-doc -->
@@ -17,176 +18,8 @@ import org.eclipse.emf.common.util.Enumerator;
  * @model
  * @generated
  */
-public enum Datatype implements Enumerator {
-	/**
-	 * The '<em><b>INT</b></em>' literal object.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #INT_VALUE
-	 * @generated
-	 * @ordered
-	 */
-	INT(1, "INT", "INT"),
-
-	/**
-	 * The '<em><b>DOUBLE</b></em>' literal object.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #DOUBLE_VALUE
-	 * @generated
-	 * @ordered
-	 */
-	DOUBLE(2, "DOUBLE", "DOUBLE"),
-
-	/**
-	 * The '<em><b>BOOLEAN</b></em>' literal object.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #BOOLEAN_VALUE
-	 * @generated
-	 * @ordered
-	 */
-	BOOLEAN(3, "BOOLEAN", "BOOLEAN"),
-
-	/**
-	 * The '<em><b>STRING</b></em>' literal object.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #STRING_VALUE
-	 * @generated
-	 * @ordered
-	 */
-	STRING(4, "STRING", "STRING"),
-
-	/**
-	 * The '<em><b>DATE</b></em>' literal object.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #DATE_VALUE
-	 * @generated
-	 * @ordered
-	 */
-	DATE(5, "DATE", "DATE"),
-
-	/**
-	 * The '<em><b>FLOAT</b></em>' literal object.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #FLOAT_VALUE
-	 * @generated
-	 * @ordered
-	 */
-	FLOAT(6, "FLOAT", "FLOAT"),
-
-	/**
-	 * The '<em><b>TIMESTAMP</b></em>' literal object.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #TIMESTAMP_VALUE
-	 * @generated
-	 * @ordered
-	 */
-	TIMESTAMP(7, "TIMESTAMP", "TIMESTAMP"),
-
-	/**
-	 * The '<em><b>TEXT</b></em>' literal object.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #TEXT_VALUE
-	 * @generated
-	 * @ordered
-	 */
-	TEXT(8, "TEXT", "TEXT"),
-
-	/**
-	 * The '<em><b>DECIMAL</b></em>' literal object.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #DECIMAL_VALUE
-	 * @generated
-	 * @ordered
-	 */
-	DECIMAL(9, "DECIMAL", "DECIMAL"),
-
-	/**
-	 * The '<em><b>DATETIME</b></em>' literal object.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #DATETIME_VALUE
-	 * @generated
-	 * @ordered
-	 */
-	DATETIME(10, "DATETIME", "DATETIME"),
-
-	/**
-	 * The '<em><b>VARCHAR</b></em>' literal object.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #VARCHAR_VALUE
-	 * @generated
-	 * @ordered
-	 */
-	VARCHAR(11, "VARCHAR", "VARCHAR"),
-
-	/**
-	 * The '<em><b>CHAR</b></em>' literal object.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #CHAR_VALUE
-	 * @generated
-	 * @ordered
-	 */
-	CHAR(12, "CHAR", "CHAR"),
-
-	/**
-	 * The '<em><b>TINYTEXT</b></em>' literal object.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #TINYTEXT_VALUE
-	 * @generated
-	 * @ordered
-	 */
-	TINYTEXT(13, "TINYTEXT", "TINYTEXT"),
-
-	/**
-	 * The '<em><b>BLOB</b></em>' literal object.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #BLOB_VALUE
-	 * @generated
-	 * @ordered
-	 */
-	BLOB(14, "BLOB", "BLOB"),
-
-	/**
-	 * The '<em><b>LONGTEXT</b></em>' literal object.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #LONGTEXT_VALUE
-	 * @generated
-	 * @ordered
-	 */
-	LONGTEXT(15, "LONGTEXT", "LONGTEXT"),
-
-	/**
-	 * The '<em><b>SMALLINT</b></em>' literal object.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #SMALLINT_VALUE
-	 * @generated
-	 * @ordered
-	 */
-	SMALLINT(16, "SMALLINT", "SMALLINT"),
-
-	/**
-	 * The '<em><b>BIGINT</b></em>' literal object.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #BIGINT_VALUE
-	 * @generated
-	 * @ordered
-	 */
-	BIGINT(17, "BIGINT", "BIGINT");
+public final class Datatype extends AbstractEnumerator {
+	
 
 	/**
 	 * The '<em><b>INT</b></em>' literal value.
@@ -201,7 +34,7 @@ public enum Datatype implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int INT_VALUE = 1;
+	public static final int INT = 1;
 
 	/**
 	 * The '<em><b>DOUBLE</b></em>' literal value.
@@ -216,7 +49,7 @@ public enum Datatype implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int DOUBLE_VALUE = 2;
+	public static final int DOUBLE = 2;
 
 	/**
 	 * The '<em><b>BOOLEAN</b></em>' literal value.
@@ -231,7 +64,7 @@ public enum Datatype implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int BOOLEAN_VALUE = 3;
+	public static final int BOOLEAN = 3;
 
 	/**
 	 * The '<em><b>STRING</b></em>' literal value.
@@ -246,7 +79,7 @@ public enum Datatype implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int STRING_VALUE = 4;
+	public static final int STRING = 4;
 
 	/**
 	 * The '<em><b>DATE</b></em>' literal value.
@@ -261,7 +94,7 @@ public enum Datatype implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int DATE_VALUE = 5;
+	public static final int DATE = 5;
 
 	/**
 	 * The '<em><b>FLOAT</b></em>' literal value.
@@ -276,7 +109,7 @@ public enum Datatype implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int FLOAT_VALUE = 6;
+	public static final int FLOAT = 6;
 
 	/**
 	 * The '<em><b>TIMESTAMP</b></em>' literal value.
@@ -291,7 +124,7 @@ public enum Datatype implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int TIMESTAMP_VALUE = 7;
+	public static final int TIMESTAMP = 7;
 
 	/**
 	 * The '<em><b>TEXT</b></em>' literal value.
@@ -306,7 +139,7 @@ public enum Datatype implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int TEXT_VALUE = 8;
+	public static final int TEXT = 8;
 
 	/**
 	 * The '<em><b>DECIMAL</b></em>' literal value.
@@ -321,7 +154,7 @@ public enum Datatype implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int DECIMAL_VALUE = 9;
+	public static final int DECIMAL = 9;
 
 	/**
 	 * The '<em><b>DATETIME</b></em>' literal value.
@@ -336,7 +169,7 @@ public enum Datatype implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int DATETIME_VALUE = 10;
+	public static final int DATETIME = 10;
 
 	/**
 	 * The '<em><b>VARCHAR</b></em>' literal value.
@@ -351,7 +184,7 @@ public enum Datatype implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int VARCHAR_VALUE = 11;
+	public static final int VARCHAR = 11;
 
 	/**
 	 * The '<em><b>CHAR</b></em>' literal value.
@@ -366,7 +199,7 @@ public enum Datatype implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int CHAR_VALUE = 12;
+	public static final int CHAR = 12;
 
 	/**
 	 * The '<em><b>TINYTEXT</b></em>' literal value.
@@ -381,7 +214,7 @@ public enum Datatype implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int TINYTEXT_VALUE = 13;
+	public static final int TINYTEXT = 13;
 
 	/**
 	 * The '<em><b>BLOB</b></em>' literal value.
@@ -396,7 +229,7 @@ public enum Datatype implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int BLOB_VALUE = 14;
+	public static final int BLOB= 14;
 
 	/**
 	 * The '<em><b>LONGTEXT</b></em>' literal value.
@@ -411,7 +244,7 @@ public enum Datatype implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int LONGTEXT_VALUE = 15;
+	public static final int LONGTEXT = 15;
 
 	/**
 	 * The '<em><b>SMALLINT</b></em>' literal value.
@@ -426,7 +259,7 @@ public enum Datatype implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int SMALLINT_VALUE = 16;
+	public static final int SMALLINT = 16;
 
 	/**
 	 * The '<em><b>BIGINT</b></em>' literal value.
@@ -441,7 +274,7 @@ public enum Datatype implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int BIGINT_VALUE = 17;
+	public static final int BIGINT = 17;
 
 	/**
 	 * An array of all the '<em><b>Datatype</b></em>' enumerators.
@@ -449,25 +282,197 @@ public enum Datatype implements Enumerator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	
+	/**
+	 * The '<em><b>INT</b></em>' literal object.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #INT_VALUE
+	 * @generated
+	 * @ordered
+	 */
+	public static final Datatype INT_LITERAL = new Datatype (INT,"INT", "INT");
+
+	/**
+	 * The '<em><b>DOUBLE</b></em>' literal object.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #DOUBLE_VALUE
+	 * @generated
+	 * @ordered
+	 */
+	public static final Datatype DOUBLE_LITERAL = new Datatype(DOUBLE, "DOUBLE", "DOUBLE");
+
+	/**
+	 * The '<em><b>BOOLEAN</b></em>' literal object.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #BOOLEAN_VALUE
+	 * @generated
+	 * @ordered
+	 */
+	public static final Datatype BOOLEAN_LITERAL = new Datatype (BOOLEAN, "BOOLEAN", "BOOLEAN");
+
+	/**
+	 * The '<em><b>STRING</b></em>' literal object.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #STRING_VALUE
+	 * @generated
+	 * @ordered
+	 */
+	public static final Datatype STRING_LITERAL = new Datatype (STRING, "STRING", "STRING");
+
+	/**
+	 * The '<em><b>DATE</b></em>' literal object.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #DATE_VALUE
+	 * @generated
+	 * @ordered
+	 */
+	public static  final Datatype DATE_LITERAL = new Datatype(DATE, "DATE", "DATE");
+
+	/**
+	 * The '<em><b>FLOAT</b></em>' literal object.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #FLOAT_VALUE
+	 * @generated
+	 * @ordered
+	 */
+	public static final Datatype FLOAT_LITERAL = new Datatype (FLOAT, "FLOAT", "FLOAT");
+
+	/**
+	 * The '<em><b>TIMESTAMP</b></em>' literal object.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #TIMESTAMP_VALUE
+	 * @generated
+	 * @ordered
+	 */
+	public static final Datatype TIMESTAMP_LITERAL = new Datatype (TIMESTAMP, "TIMESTAMP", "TIMESTAMP");
+
+	/**
+	 * The '<em><b>TEXT</b></em>' literal object.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #TEXT_VALUE
+	 * @generated
+	 * @ordered
+	 */
+	public static final Datatype TEXT_LITERAL = new Datatype (TEXT, "TEXT", "TEXT");
+
+	/**
+	 * The '<em><b>DECIMAL</b></em>' literal object.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #DECIMAL_VALUE
+	 * @generated
+	 * @ordered
+	 */
+	public static final Datatype DECIMAL_LITERAL = new Datatype (9, "DECIMAL", "DECIMAL");
+
+	/**
+	 * The '<em><b>DATETIME</b></em>' literal object.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #DATETIME_VALUE
+	 * @generated
+	 * @ordered
+	 */
+	public static final Datatype DATETIME_LITERAL = new Datatype (DATE, "DATETIME", "DATETIME");
+
+	/**
+	 * The '<em><b>VARCHAR</b></em>' literal object.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #VARCHAR_VALUE
+	 * @generated
+	 * @ordered
+	 */
+	public static final Datatype VARCHAR_LITERAL = new Datatype (VARCHAR, "VARCHAR", "VARCHAR");
+
+	/**
+	 * The '<em><b>CHAR</b></em>' literal object.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #CHAR_VALUE
+	 * @generated
+	 * @ordered
+	 */
+	public static final Datatype CHAR_LITERAL = new Datatype(CHAR, "CHAR", "CHAR");
+
+	/**
+	 * The '<em><b>TINYTEXT</b></em>' literal object.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #TINYTEXT_VALUE
+	 * @generated
+	 * @ordered
+	 */
+	public static final Datatype TINYTEXT_LITERAL = new Datatype(TINYTEXT, "TINYTEXT", "TINYTEXT");
+
+	/**
+	 * The '<em><b>BLOB</b></em>' literal object.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #BLOB_VALUE
+	 * @generated
+	 * @ordered
+	 */
+	public static final Datatype BLOB_LITERAL = new Datatype (BLOB, "BLOB", "BLOB");
+
+	/**
+	 * The '<em><b>LONGTEXT</b></em>' literal object.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #LONGTEXT_VALUE
+	 * @generated
+	 * @ordered
+	 */
+	public static final Datatype LONGTEXT_LITERAL = new Datatype (LONGTEXT, "LONGTEXT", "LONGTEXT");
+
+	/**
+	 * The '<em><b>SMALLINT</b></em>' literal object.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #SMALLINT_VALUE
+	 * @generated
+	 * @ordered
+	 */
+	public static final Datatype SMALLINT_LITERAL = new Datatype (SMALLINT, "SMALLINT", "SMALLINT");
+
+	/**
+	 * The '<em><b>BIGINT</b></em>' literal object.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #BIGINT_VALUE
+	 * @generated
+	 * @ordered
+	 */
+	public static final Datatype BIGINT_LITERAL = new Datatype(BIGINT, "BIGINT", "BIGINT");
+	
+	
 	private static final Datatype[] VALUES_ARRAY =
 		new Datatype[] {
-			INT,
-			DOUBLE,
-			BOOLEAN,
-			STRING,
-			DATE,
-			FLOAT,
-			TIMESTAMP,
-			TEXT,
-			DECIMAL,
-			DATETIME,
-			VARCHAR,
-			CHAR,
-			TINYTEXT,
-			BLOB,
-			LONGTEXT,
-			SMALLINT,
-			BIGINT,
+			INT_LITERAL,
+			DOUBLE_LITERAL,
+			BOOLEAN_LITERAL,
+			STRING_LITERAL,
+			DATE_LITERAL,
+			FLOAT_LITERAL,
+			TIMESTAMP_LITERAL,
+			TEXT_LITERAL,
+			DECIMAL_LITERAL,
+			DATETIME_LITERAL,
+			VARCHAR_LITERAL,
+			CHAR_LITERAL,
+			TINYTEXT_LITERAL,
+			BLOB_LITERAL,
+			LONGTEXT_LITERAL,
+			SMALLINT_LITERAL,
+			BIGINT_LITERAL,
 		};
 
 	/**
@@ -518,96 +523,32 @@ public enum Datatype implements Enumerator {
 	 */
 	public static Datatype get(int value) {
 		switch (value) {
-			case INT_VALUE: return INT;
-			case DOUBLE_VALUE: return DOUBLE;
-			case BOOLEAN_VALUE: return BOOLEAN;
-			case STRING_VALUE: return STRING;
-			case DATE_VALUE: return DATE;
-			case FLOAT_VALUE: return FLOAT;
-			case TIMESTAMP_VALUE: return TIMESTAMP;
-			case TEXT_VALUE: return TEXT;
-			case DECIMAL_VALUE: return DECIMAL;
-			case DATETIME_VALUE: return DATETIME;
-			case VARCHAR_VALUE: return VARCHAR;
-			case CHAR_VALUE: return CHAR;
-			case TINYTEXT_VALUE: return TINYTEXT;
-			case BLOB_VALUE: return BLOB;
-			case LONGTEXT_VALUE: return LONGTEXT;
-			case SMALLINT_VALUE: return SMALLINT;
-			case BIGINT_VALUE: return BIGINT;
+			case INT: return INT_LITERAL;
+			case DOUBLE: return DOUBLE_LITERAL;
+			case BOOLEAN: return BOOLEAN_LITERAL;
+			case STRING: return STRING_LITERAL;
+			case DATE: return DATE_LITERAL;
+			case FLOAT: return FLOAT_LITERAL;
+			case TIMESTAMP: return TIMESTAMP_LITERAL;
+			case TEXT: return TEXT_LITERAL;
+			case DECIMAL: return DECIMAL_LITERAL;
+			case DATETIME: return DATETIME_LITERAL;
+			case VARCHAR: return VARCHAR_LITERAL;
+			case CHAR: return CHAR_LITERAL;
+			case TINYTEXT: return TINYTEXT_LITERAL;
+			case BLOB: return BLOB_LITERAL;
+			case LONGTEXT: return LONGTEXT_LITERAL;
+			case SMALLINT: return SMALLINT_LITERAL;
+			case BIGINT: return BIGINT_LITERAL;
 		}
 		return null;
 	}
 
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	private final int value;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	private final String name;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	private final String literal;
-
-	/**
-	 * Only this class can construct instances.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+	
 	private Datatype(int value, String name, String literal) {
-		this.value = value;
-		this.name = name;
-		this.literal = literal;
+		super (value, name, literal);
 	}
 
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public int getValue() {
-	  return value;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public String getName() {
-	  return name;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public String getLiteral() {
-	  return literal;
-	}
-
-	/**
-	 * Returns the literal value of the enumerator, which is its string representation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public String toString() {
-		return literal;
-	}
+	
 	
 } //Datatype

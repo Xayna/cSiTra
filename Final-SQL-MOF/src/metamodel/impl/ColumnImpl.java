@@ -66,7 +66,7 @@ public class ColumnImpl extends MinimalEObjectImpl.Container implements Column {
 	 * @generated
 	 * @ordered
 	 */
-	protected static final Datatype TYPE_EDEFAULT = Datatype.INT;
+	protected static final Datatype TYPE_EDEFAULT = Datatype.INT_LITERAL;
 
 	/**
 	 * The cached value of the '{@link #getType() <em>Type</em>}' attribute.

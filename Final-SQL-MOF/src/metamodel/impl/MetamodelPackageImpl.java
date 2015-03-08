@@ -613,29 +613,29 @@ public class MetamodelPackageImpl extends EPackageImpl implements MetamodelPacka
 
 		// Initialize enums and add enum literals
 		initEEnum(datatypeEEnum, Datatype.class, "Datatype");
-		addEEnumLiteral(datatypeEEnum, Datatype.INT);
-		addEEnumLiteral(datatypeEEnum, Datatype.DOUBLE);
-		addEEnumLiteral(datatypeEEnum, Datatype.BOOLEAN);
-		addEEnumLiteral(datatypeEEnum, Datatype.STRING);
-		addEEnumLiteral(datatypeEEnum, Datatype.DATE);
-		addEEnumLiteral(datatypeEEnum, Datatype.FLOAT);
-		addEEnumLiteral(datatypeEEnum, Datatype.TIMESTAMP);
-		addEEnumLiteral(datatypeEEnum, Datatype.TEXT);
-		addEEnumLiteral(datatypeEEnum, Datatype.DECIMAL);
-		addEEnumLiteral(datatypeEEnum, Datatype.DATETIME);
-		addEEnumLiteral(datatypeEEnum, Datatype.VARCHAR);
-		addEEnumLiteral(datatypeEEnum, Datatype.CHAR);
-		addEEnumLiteral(datatypeEEnum, Datatype.TINYTEXT);
-		addEEnumLiteral(datatypeEEnum, Datatype.BLOB);
-		addEEnumLiteral(datatypeEEnum, Datatype.LONGTEXT);
-		addEEnumLiteral(datatypeEEnum, Datatype.SMALLINT);
-		addEEnumLiteral(datatypeEEnum, Datatype.BIGINT);
+		addEEnumLiteral(datatypeEEnum, Datatype.INT_LITERAL);
+		addEEnumLiteral(datatypeEEnum, Datatype.DOUBLE_LITERAL);
+		addEEnumLiteral(datatypeEEnum, Datatype.BOOLEAN_LITERAL);
+		addEEnumLiteral(datatypeEEnum, Datatype.STRING_LITERAL);
+		addEEnumLiteral(datatypeEEnum, Datatype.DATE_LITERAL);
+		addEEnumLiteral(datatypeEEnum, Datatype.FLOAT_LITERAL);
+		addEEnumLiteral(datatypeEEnum, Datatype.TIMESTAMP_LITERAL);
+		addEEnumLiteral(datatypeEEnum, Datatype.TEXT_LITERAL);
+		addEEnumLiteral(datatypeEEnum, Datatype.DECIMAL_LITERAL);
+		addEEnumLiteral(datatypeEEnum, Datatype.DATETIME_LITERAL);
+		addEEnumLiteral(datatypeEEnum, Datatype.VARCHAR_LITERAL);
+		addEEnumLiteral(datatypeEEnum, Datatype.CHAR_LITERAL);
+		addEEnumLiteral(datatypeEEnum, Datatype.TINYTEXT_LITERAL);
+		addEEnumLiteral(datatypeEEnum, Datatype.BLOB_LITERAL);
+		addEEnumLiteral(datatypeEEnum, Datatype.LONGTEXT_LITERAL);
+		addEEnumLiteral(datatypeEEnum, Datatype.SMALLINT_LITERAL);
+		addEEnumLiteral(datatypeEEnum, Datatype.BIGINT_LITERAL);
 
 		initEEnum(constraintTypeEEnum, ConstraintType.class, "ConstraintType");
-		addEEnumLiteral(constraintTypeEEnum, ConstraintType.PRIMARY_KEY);
-		addEEnumLiteral(constraintTypeEEnum, ConstraintType.FOREIGN_KEY);
-		addEEnumLiteral(constraintTypeEEnum, ConstraintType.UNIQUE);
-		addEEnumLiteral(constraintTypeEEnum, ConstraintType.COMPOSITE_PRIMARY_KEY);
+		addEEnumLiteral(constraintTypeEEnum, ConstraintType.PRIMARY_LITERAL);
+		addEEnumLiteral(constraintTypeEEnum, ConstraintType.FOREIGN_LITERAL);
+		addEEnumLiteral(constraintTypeEEnum, ConstraintType.UNIQUE_LITERAL);
+		addEEnumLiteral(constraintTypeEEnum, ConstraintType.COMPOSITE_PRIMARY_LITERAL);
 
 		// Create resource
 		createResource(eNS_URI);
