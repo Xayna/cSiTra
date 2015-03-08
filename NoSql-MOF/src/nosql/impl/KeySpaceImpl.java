@@ -119,7 +119,7 @@ public class KeySpaceImpl extends MinimalEObjectImpl.Container implements KeySpa
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected KeySpaceImpl() {
+	public KeySpaceImpl() {
 		super();
 	}
 
