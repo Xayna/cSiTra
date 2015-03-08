@@ -124,7 +124,7 @@ public class ColumnFamilyImpl extends MinimalEObjectImpl.Container implements Co
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected ColumnFamilyImpl() {
+	public ColumnFamilyImpl() {
 		super();
 	}
 
