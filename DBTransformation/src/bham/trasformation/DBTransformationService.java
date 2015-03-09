@@ -7,6 +7,8 @@ import java.util.Properties;
 
 import bham.transformation.model.Cell;
 import bham.transformation.model.Column;
+import bham.transformation.model.Constraint;
+import bham.transformation.model.Reference;
 import bham.transformation.model.Row;
 import bham.transformation.model.Table;
 
@@ -29,7 +31,7 @@ public class DBTransformationService {
 		}
 		
 		List<Table> tables = getTables(databaseName);
-		/*
+		
 		if(tables != null){
 			for(Table table : tables){
 				System.out.println("------------------");
@@ -45,17 +47,22 @@ public class DBTransformationService {
 				System.out.println("Values: ");
 				for(Row row : table.getRows()){
 					for(Cell cell : row.getCells()){
-						System.out.print(cell.getValue()+",");
+						System.out.println(cell.getValue());
 					}
 					System.out.println("");
 				}
-				System.out.println("=======================");
+				
+				System.out.println("++++++++");
+				System.out.println("Constraints: ");
+				for(Constraint constraint : table.getConstraints()){
+					System.out.println(constraint.getName());
+					System.out.println(constraint.getType());
+					System.out.println(constraint.getReference().getColumnName());
+				}
 			}
 		} else {
 			System.out.println("no tables found");
 		}
-		*/
-		
 	}
 
 	/** Read table from database **/
@@ -81,6 +88,10 @@ public class DBTransformationService {
 				/** get table rows & set into tables **/
 				List<Row> rows = getRows(table);
 				table.setRows(rows);
+				
+				/** get table constraints & set into tables **/
+				List<Constraint> constraints = getConstraints(table);
+				table.setConstraints(constraints);
 				
 				tables.add(table);
 			}
@@ -171,6 +182,58 @@ public class DBTransformationService {
 			rs.close();
 			st.close();
 			return cell;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public static List<Constraint> getConstraints(Table table){
+		List<Constraint> constraints = new ArrayList<Constraint>();
+		Reference reference = null;
+		Constraint constraint = null;
+		try {
+			PreparedStatement st = conn.prepareStatement("SELECT constraint_name, constraint_type "
+					+ "FROM information_schema.table_constraints "
+					+ "WHERE table_name = ?");
+			st.setString(1, table.getName());
+			ResultSet rs = st.executeQuery();
+			while (rs.next())
+			{
+				reference = getReference(rs.getString("constraint_name"));
+				constraint = new Constraint();
+				constraint.setName(rs.getString("constraint_name"));
+				constraint.setType(rs.getString("constraint_type"));
+				constraint.setReferences(reference);
+				constraints.add(constraint);
+			}
+			rs.close();
+			st.close();
+			return constraints;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public static Reference getReference(String constraintName){
+		Reference reference = new Reference();
+		try {
+			PreparedStatement st = conn.prepareStatement("SELECT column_name "
+					+ "FROM information_schema.constraint_column_usage "
+					+ "WHERE constraint_name = ?");
+			st.setString(1, constraintName);
+			ResultSet rs = st.executeQuery();
+			if (rs.next())
+			{
+				reference.setConstraintName(constraintName);
+				reference.setColumnName(rs.getString("column_name"));
+			}
+			rs.close();
+			st.close();
+			return reference;
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

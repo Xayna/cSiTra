@@ -6,6 +6,7 @@ public class Table {
 	private String name;
 	private List<Column> columns;
 	private List<Row> rows;
+	private List<Constraint> constraints;
 	
 	public String getName() {
 		return name;
@@ -25,4 +26,12 @@ public class Table {
 	public void setRows(List<Row> rows) {
 		this.rows = rows;
 	}
+	public List<Constraint> getConstraints() {
+		return constraints;
+	}
+	public void setConstraints(List<Constraint> constraints) {
+		this.constraints = constraints;
+	}
+	
+	
 }
