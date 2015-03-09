@@ -5,16 +5,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
+import bham.transformation.model.Cell;
 import bham.transformation.model.Column;
+import bham.transformation.model.Row;
 import bham.transformation.model.Table;
 
 public class DBTransformationService {
 
-	static List<Table> tables = null;
 	static Connection conn = null;
 	
 	public static void main(String[] args){
-		String databaseName = "axw412_aam";
+		String databaseName = "axw412_aam_spring";
 		String url = "jdbc:postgresql://localhost/" + databaseName;
 		Properties props = new Properties();
 		props.setProperty("user","axw412");
@@ -27,13 +28,39 @@ public class DBTransformationService {
 			e.printStackTrace();
 		}
 		
-		getTables(databaseName);
+		List<Table> tables = getTables(databaseName);
+		/*
+		if(tables != null){
+			for(Table table : tables){
+				System.out.println("------------------");
+				System.out.println(table.getName());
+				System.out.println("------------------");
+				for(Column column : table.getColumns()){
+					System.out.println(column.getName()
+							+" "+column.getType()+" "
+							+column.getSize()+" "
+							+Boolean.toString(column.isNullable()));
+				}
+				
+				System.out.println("Values: ");
+				for(Row row : table.getRows()){
+					for(Cell cell : row.getCells()){
+						System.out.print(cell.getValue()+",");
+					}
+					System.out.println("");
+				}
+				System.out.println("=======================");
+			}
+		} else {
+			System.out.println("no tables found");
+		}
+		*/
 		
 	}
 
 	/** Read table from database **/
 	public static List<Table> getTables(String databaseName){
-		tables = new ArrayList<Table>();
+		List<Table> tables = new ArrayList<Table>();
 		try {
 			PreparedStatement st = conn.prepareStatement("SELECT table_name "
 					+ "FROM information_schema.tables "
@@ -51,6 +78,10 @@ public class DBTransformationService {
 				List<Column> columns = getColumns(table);
 				table.setColumns(columns);
 				
+				/** get table rows & set into tables **/
+				List<Row> rows = getRows(table);
+				table.setRows(rows);
+				
 				tables.add(table);
 			}
 			rs.close();
@@ -64,13 +95,14 @@ public class DBTransformationService {
 	}
 	
 	/** Read column from database **/
-	public static List<Column> getColumns(Table tableName){
+	public static List<Column> getColumns(Table table){
 		List<Column> columns = new ArrayList<Column>();
 		try {
-			PreparedStatement st = conn.prepareStatement("SELECT column_name, data_type, character_maximum_length, is_nullable "
+			PreparedStatement st = conn.prepareStatement("SELECT "
+					+ "column_name, data_type, character_maximum_length, is_nullable "
 					+ "FROM information_schema.columns "
 					+ "WHERE table_name = ?");
-			st.setString(1, tableName.getName());
+			st.setString(1, table.getName());
 			ResultSet rs = st.executeQuery();
 			while (rs.next())
 			{
@@ -79,10 +111,66 @@ public class DBTransformationService {
 				column.setType(rs.getString("data_type"));
 				column.setSize(rs.getString("character_maximum_length"));
 				column.setNullable(rs.getBoolean("is_nullable"));
+				columns.add(column);
 			}
 			rs.close();
 			st.close();
 			return columns;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public static List<Row> getRows(Table table){
+		List<Row> rows = new ArrayList<Row>();
+		List<Column> columns = table.getColumns();
+		List<Cell> cells = new ArrayList<Cell>();
+		Cell cell = null;
+		try {
+			PreparedStatement st = conn.prepareStatement("SELECT COUNT(*) "
+					+ "FROM "+table.getName()+"");
+			ResultSet rs = st.executeQuery();
+			if (rs.next())
+			{
+				Row row = new Row();
+				for(int index=0; index<rs.getInt(1); index++)
+				{
+					for(Column column : columns){
+						cell = getCell(table, column, index);
+						cells.add(cell);
+					}
+					
+				}
+				row.setCells(cells);
+				rows.add(row);
+			}
+			rs.close();
+			st.close();
+			return rows;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public static Cell getCell(Table table, Column column, int offset){
+		Cell cell = new Cell();
+		try {
+			PreparedStatement st = conn.prepareStatement("SELECT "+column.getName()
+					+ " FROM "+table.getName()
+					+ " LIMIT"+ 1 +" OFFSET "+offset);
+			ResultSet rs = st.executeQuery();
+			if (rs.next())
+			{
+				cell.setColumn(column);
+				cell.setValue(rs.getString(1));
+			}
+			rs.close();
+			st.close();
+			return cell;
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
