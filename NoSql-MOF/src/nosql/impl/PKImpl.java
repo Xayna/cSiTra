@@ -39,7 +39,7 @@ public class PKImpl extends MinimalEObjectImpl.Container implements PK {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected PKImpl() {
+	public PKImpl() {
 		super();
 	}
 

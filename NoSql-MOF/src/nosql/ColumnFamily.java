@@ -3,7 +3,6 @@
 package nosql;
 
 import org.eclipse.emf.common.util.EList;
-
 import org.eclipse.emf.ecore.EObject;
 
 /**
@@ -154,4 +153,31 @@ public interface ColumnFamily extends EObject {
 	 */
 	EList getRows();
 
+	/**
+	 * Sets the value of the '{@link nosql.ColumnFamily#getColumns <em>Columns</em>}' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Columns</em>' containment reference.
+	 * @see #getColumns()
+	 */
+	void setColumns(EList columns);
+	
+	/**
+	 * Sets the value of the '{@link nosql.ColumnFamily#getOptions <em>Options</em>}' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Options</em>' containment reference.
+	 * @see #getOptions()
+	 */
+	void setOptions(EList options);
+	
+	/**
+	 * Sets the value of the '{@link nosql.ColumnFamily#getRows <em>Rows</em>}' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Rows</em>' containment reference.
+	 * @see #getRows()
+	 */
+	void setRows(EList rows);
+	
 } // ColumnFamily
