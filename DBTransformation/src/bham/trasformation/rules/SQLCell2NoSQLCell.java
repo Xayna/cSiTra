@@ -26,6 +26,7 @@ public class SQLCell2NoSQLCell implements Rule<metamodel.Cell , nosql.Cell> {
 	 */
 	public nosql.Cell build(Cell source, Transformer t) {
 		nosql.Cell cell = new CellImpl();
+		cell.setValue(source.getValue());	
 		return cell;
 	}
 
@@ -34,8 +35,6 @@ public class SQLCell2NoSQLCell implements Rule<metamodel.Cell , nosql.Cell> {
 	 */
 	public void setProperties(nosql.Cell target, Cell source, Transformer t) {
 		
-		if (source.getColumn().getName().equals(target.getColumn().getName()))
-		target.setValue(source.getValue());		
 	}
 	
 

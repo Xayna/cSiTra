@@ -25,7 +25,9 @@ public class Database2Keyspace implements Rule<metamodel.Database ,nosql.KeySpac
 	 */
 	public KeySpace build(Database source, Transformer t) {
 		nosql.KeySpace keySpace = new nosql.impl.KeySpaceImpl();
-		
+		if(source.getName()!= null){
+			keySpace.setName(source.getName());
+		}
 		return keySpace;		
 	}
 
@@ -33,9 +35,7 @@ public class Database2Keyspace implements Rule<metamodel.Database ,nosql.KeySpac
 	 * @see uk.ac.bham.sitra.Rule#setProperties(java.lang.Object, java.lang.Object, uk.ac.bham.sitra.Transformer)
 	 */
 	public void setProperties(KeySpace target, Database source, Transformer t) {
-		if(source.getName()!= null){
-			target.setName(source.getName());
-		}		
+				
 	}
 
 }

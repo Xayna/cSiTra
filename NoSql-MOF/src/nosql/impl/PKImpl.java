@@ -63,6 +63,9 @@ public class PKImpl extends MinimalEObjectImpl.Container implements PK {
 		}
 		return reference;
 	}
+	public void setReference(EList reference) {
+		this.reference = reference;
+	}
 
 	/**
 	 * <!-- begin-user-doc -->

@@ -36,7 +36,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
  *   <li>{@link metamodel.impl.ConstraintImpl#getReference <em>Reference</em>}</li>
  * </ul>
  * </p>
- *
+ */
  * @generated
  */
 public class ConstraintImpl extends MinimalEObjectImpl.Container implements Constraint {
