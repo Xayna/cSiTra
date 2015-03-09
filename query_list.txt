@@ -2,4 +2,12 @@ SQL Query
 
 /** Get column details **/
 -------------------------
-SELECT column_name, data_type, character_maximum_length, is_nullable FROM information_schema.columns WHERE table_name = 'assets';
+SELECT column_name, data_type, character_maximum_length, is_nullable FROM information_schema.columns WHERE table_name = %TABLE_NAME%;
+
+/** Get constraints from tables **/
+-----------------------------------
+select * from information_schema.table_constraints where table_name = %TABLE_NAME%;
+
+/** Get column which use the constraint **/
+-------------------------------------------
+select * from information_schema.constraint_column_usage where constraint_name = %CONSTRAINT_NAME%;
