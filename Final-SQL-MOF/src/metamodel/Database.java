@@ -66,6 +66,22 @@ public interface Database extends EObject {
 	 * @generated
 	 */
 	EList<Table> getTable();
+	
+	/**
+	 * Sets the value of the '<em><b>Table</b></em>' containment reference list.
+	 * The list contents are of type {@link metamodel.Table}.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Table</em>' containment reference list isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Table</em>' containment reference list.
+	 * @see metamodel.MetamodelPackage#getDatabase_Table()
+	 * @model containment="true"
+	 * @generated
+	 */
+	void setTable(EList<Table> tables);
 
 	/**
 	 * Returns the value of the '<em><b>Sequences</b></em>' containment reference list.

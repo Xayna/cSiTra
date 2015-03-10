@@ -1,13 +1,7 @@
 package bham.trasformation.rules;
 
 
-import nosql.ColumnFamily;
-import nosql.PK;
-import nosql.impl.ColumnFamilyImpl;
-import nosql.impl.PKImpl;
 import metamodel.Column;
-import metamodel.Constraint;
-import metamodel.ConstraintType;
 import uk.ac.bham.sitra.Rule;
 import uk.ac.bham.sitra.Transformer;
 

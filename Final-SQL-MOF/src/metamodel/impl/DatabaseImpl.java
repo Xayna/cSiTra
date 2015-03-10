@@ -84,7 +84,7 @@ public class DatabaseImpl extends MinimalEObjectImpl.Container implements Databa
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected DatabaseImpl() {
+	public DatabaseImpl() {
 		super();
 	}
 
@@ -254,6 +254,11 @@ public class DatabaseImpl extends MinimalEObjectImpl.Container implements Databa
 		result.append(name);
 		result.append(')');
 		return result.toString();
+	}
+
+	public void setTable(EList<Table> tables) {
+		// TODO Auto-generated method stub
+		table = tables;
 	}
 
 } //DatabaseImpl

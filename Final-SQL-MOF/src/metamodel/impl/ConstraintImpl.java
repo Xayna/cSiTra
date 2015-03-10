@@ -37,8 +37,6 @@ import org.eclipse.emf.ecore.util.InternalEList;
  * </ul>
  * </p>
  */
- * @generated
- */
 public class ConstraintImpl extends MinimalEObjectImpl.Container implements Constraint {
 	/**
 	 * The default value of the '{@link #getName() <em>Name</em>}' attribute.

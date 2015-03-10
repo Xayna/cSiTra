@@ -1,10 +1,18 @@
 package bham.trasformation;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
+import org.eclipse.emf.common.util.EList;
+
+import metamodel.Database;
+import metamodel.impl.DatabaseImpl;
 import bham.transformation.model.Cell;
 import bham.transformation.model.Column;
 import bham.transformation.model.Constraint;
@@ -16,7 +24,7 @@ public class DBTransformationService {
 
 	static Connection conn = null;
 	
-	public static void main(String[] args){
+	public Database generate(){
 		String databaseName = "axw412_aam_spring";
 		String url = "jdbc:postgresql://localhost/" + databaseName;
 		Properties props = new Properties();
@@ -30,7 +38,11 @@ public class DBTransformationService {
 			e.printStackTrace();
 		}
 		
+		Database db = new DatabaseImpl();
+		db.setName(databaseName);
+		
 		List<Table> tables = getTables(databaseName);
+		db.setTable((EList)tables);
 		
 		if(tables != null){
 			for(Table table : tables){
@@ -63,10 +75,11 @@ public class DBTransformationService {
 		} else {
 			System.out.println("no tables found");
 		}
+		return db;
 	}
 
 	/** Read table from database **/
-	public static List<Table> getTables(String databaseName){
+	protected List<Table> getTables(String databaseName){
 		List<Table> tables = new ArrayList<Table>();
 		try {
 			PreparedStatement st = conn.prepareStatement("SELECT table_name "
@@ -106,7 +119,7 @@ public class DBTransformationService {
 	}
 	
 	/** Read column from database **/
-	public static List<Column> getColumns(Table table){
+	protected List<Column> getColumns(Table table){
 		List<Column> columns = new ArrayList<Column>();
 		try {
 			PreparedStatement st = conn.prepareStatement("SELECT "
@@ -134,7 +147,7 @@ public class DBTransformationService {
 		return null;
 	}
 	
-	public static List<Row> getRows(Table table){
+	protected List<Row> getRows(Table table){
 		List<Row> rows = new ArrayList<Row>();
 		List<Column> columns = table.getColumns();
 		List<Cell> cells = new ArrayList<Cell>();
@@ -167,7 +180,7 @@ public class DBTransformationService {
 		return null;
 	}
 	
-	public static Cell getCell(Table table, Column column, int offset){
+	protected Cell getCell(Table table, Column column, int offset){
 		Cell cell = new Cell();
 		try {
 			PreparedStatement st = conn.prepareStatement("SELECT "+column.getName()
@@ -189,7 +202,7 @@ public class DBTransformationService {
 		return null;
 	}
 	
-	public static List<Constraint> getConstraints(Table table){
+	protected List<Constraint> getConstraints(Table table){
 		List<Constraint> constraints = new ArrayList<Constraint>();
 		Reference reference = null;
 		Constraint constraint = null;
@@ -218,7 +231,7 @@ public class DBTransformationService {
 		return null;
 	}
 	
-	public static Reference getReference(String constraintName){
+	protected Reference getReference(String constraintName){
 		Reference reference = new Reference();
 		try {
 			PreparedStatement st = conn.prepareStatement("SELECT column_name "

@@ -39,8 +39,7 @@ public class Table2ColumnFamily implements Rule<Table, ColumnFamily> {
 		// TODO Auto-generated method stub
 		try {
 			target.setName(source.getName());
-			target.setColumns((EList<Column>) t.transformAll(
-					SqlCol2NoSqlCol.class, source.getColumns()));
+			target.setColumns((EList<Column>) t.transformAll(SqlCol2NoSqlCol.class, source.getColumns()));
 
 			// to be impl by krishna
 			// target.setPK(null);
