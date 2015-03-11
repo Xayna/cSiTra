@@ -23,7 +23,6 @@ public class SqlCol2NoSqlCol implements Rule<Column, nosql.Column> {
 	public void setProperties(nosql.Column target, Column source, Transformer t) {
 		target.setName(source.getName());
 		target.setSize(source.getSize());
-		target.setPK(false);
 		target.setDatatype(DatatypeMapping.getType(source.getType()));
 		
 		
