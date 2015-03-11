@@ -3,19 +3,26 @@
 package nosql.impl;
 
 import java.util.Collection;
+
 import nosql.Column;
 import nosql.ColumnFamily;
+import nosql.KeySpace;
 import nosql.NosqlPackage;
 import nosql.Options;
 import nosql.PK;
 import nosql.Row;
+
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
+
 import org.eclipse.emf.common.util.EList;
+
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
+
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
+
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.EObjectResolvingEList;
 import org.eclipse.emf.ecore.util.InternalEList;
@@ -33,6 +40,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
  *   <li>{@link nosql.impl.ColumnFamilyImpl#getOptions <em>Options</em>}</li>
  *   <li>{@link nosql.impl.ColumnFamilyImpl#getPK <em>PK</em>}</li>
  *   <li>{@link nosql.impl.ColumnFamilyImpl#getRows <em>Rows</em>}</li>
+ *   <li>{@link nosql.impl.ColumnFamilyImpl#getKeyspace <em>Keyspace</em>}</li>
  * </ul>
  * </p>
  *
@@ -118,6 +126,16 @@ public class ColumnFamilyImpl extends MinimalEObjectImpl.Container implements Co
 	 * @ordered
 	 */
 	protected EList rows;
+
+	/**
+	 * The cached value of the '{@link #getKeyspace() <em>Keyspace</em>}' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getKeyspace()
+	 * @generated
+	 * @ordered
+	 */
+	protected KeySpace keyspace;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -246,43 +264,6 @@ public class ColumnFamilyImpl extends MinimalEObjectImpl.Container implements Co
 			eNotify(new ENotificationImpl(this, Notification.SET, NosqlPackage.COLUMN_FAMILY__PK, newPK, newPK));
 	}
 
-	
-	
-	/**
-	 * @return the pk
-	 */
-	public PK getPk() {
-		return pk;
-	}
-
-	/**
-	 * @param pk the pk to set
-	 */
-	public void setPk(PK pk) {
-		this.pk = pk;
-	}
-
-	/**
-	 * @param columns the columns to set
-	 */
-	public void setColumns(EList columns) {
-		this.columns = columns;
-	}
-
-	/**
-	 * @param options the options to set
-	 */
-	public void setOptions(EList options) {
-		this.options = options;
-	}
-
-	/**
-	 * @param rows the rows to set
-	 */
-	public void setRows(EList rows) {
-		this.rows = rows;
-	}
-
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -300,6 +281,49 @@ public class ColumnFamilyImpl extends MinimalEObjectImpl.Container implements Co
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public KeySpace getKeyspace() {
+		return keyspace;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public NotificationChain basicSetKeyspace(KeySpace newKeyspace, NotificationChain msgs) {
+		KeySpace oldKeyspace = keyspace;
+		keyspace = newKeyspace;
+		if (eNotificationRequired()) {
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, NosqlPackage.COLUMN_FAMILY__KEYSPACE, oldKeyspace, newKeyspace);
+			if (msgs == null) msgs = notification; else msgs.add(notification);
+		}
+		return msgs;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setKeyspace(KeySpace newKeyspace) {
+		if (newKeyspace != keyspace) {
+			NotificationChain msgs = null;
+			if (keyspace != null)
+				msgs = ((InternalEObject)keyspace).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - NosqlPackage.COLUMN_FAMILY__KEYSPACE, null, msgs);
+			if (newKeyspace != null)
+				msgs = ((InternalEObject)newKeyspace).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - NosqlPackage.COLUMN_FAMILY__KEYSPACE, null, msgs);
+			msgs = basicSetKeyspace(newKeyspace, msgs);
+			if (msgs != null) msgs.dispatch();
+		}
+		else if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, NosqlPackage.COLUMN_FAMILY__KEYSPACE, newKeyspace, newKeyspace));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case NosqlPackage.COLUMN_FAMILY__COLUMNS:
@@ -308,6 +332,8 @@ public class ColumnFamilyImpl extends MinimalEObjectImpl.Container implements Co
 				return ((InternalEList)getOptions()).basicRemove(otherEnd, msgs);
 			case NosqlPackage.COLUMN_FAMILY__PK:
 				return basicSetPK(null, msgs);
+			case NosqlPackage.COLUMN_FAMILY__KEYSPACE:
+				return basicSetKeyspace(null, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -331,6 +357,8 @@ public class ColumnFamilyImpl extends MinimalEObjectImpl.Container implements Co
 				return getPK();
 			case NosqlPackage.COLUMN_FAMILY__ROWS:
 				return getRows();
+			case NosqlPackage.COLUMN_FAMILY__KEYSPACE:
+				return getKeyspace();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -363,6 +391,9 @@ public class ColumnFamilyImpl extends MinimalEObjectImpl.Container implements Co
 				getRows().clear();
 				getRows().addAll((Collection)newValue);
 				return;
+			case NosqlPackage.COLUMN_FAMILY__KEYSPACE:
+				setKeyspace((KeySpace)newValue);
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -392,6 +423,9 @@ public class ColumnFamilyImpl extends MinimalEObjectImpl.Container implements Co
 			case NosqlPackage.COLUMN_FAMILY__ROWS:
 				getRows().clear();
 				return;
+			case NosqlPackage.COLUMN_FAMILY__KEYSPACE:
+				setKeyspace((KeySpace)null);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -415,6 +449,8 @@ public class ColumnFamilyImpl extends MinimalEObjectImpl.Container implements Co
 				return pk != null;
 			case NosqlPackage.COLUMN_FAMILY__ROWS:
 				return rows != null && !rows.isEmpty();
+			case NosqlPackage.COLUMN_FAMILY__KEYSPACE:
+				return keyspace != null;
 		}
 		return super.eIsSet(featureID);
 	}
@@ -435,5 +471,6 @@ public class ColumnFamilyImpl extends MinimalEObjectImpl.Container implements Co
 		result.append(')');
 		return result.toString();
 	}
+
 
 } //ColumnFamilyImpl
