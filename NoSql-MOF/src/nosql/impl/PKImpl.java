@@ -3,12 +3,18 @@
 package nosql.impl;
 
 import java.util.Collection;
+
+import nosql.Column;
 import nosql.NosqlPackage;
 import nosql.PK;
+
 import org.eclipse.emf.common.util.EList;
+
 import org.eclipse.emf.ecore.EClass;
+
 import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
-import org.eclipse.emf.ecore.util.EDataTypeUniqueEList;
+
+import org.eclipse.emf.ecore.util.EObjectResolvingEList;
 
 /**
  * <!-- begin-user-doc -->
@@ -17,7 +23,7 @@ import org.eclipse.emf.ecore.util.EDataTypeUniqueEList;
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link nosql.impl.PKImpl#getReference <em>Reference</em>}</li>
+ *   <li>{@link nosql.impl.PKImpl#getColumns <em>Columns</em>}</li>
  * </ul>
  * </p>
  *
@@ -25,14 +31,14 @@ import org.eclipse.emf.ecore.util.EDataTypeUniqueEList;
  */
 public class PKImpl extends MinimalEObjectImpl.Container implements PK {
 	/**
-	 * The cached value of the '{@link #getReference() <em>Reference</em>}' attribute list.
+	 * The cached value of the '{@link #getColumns() <em>Columns</em>}' reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getReference()
+	 * @see #getColumns()
 	 * @generated
 	 * @ordered
 	 */
-	protected EList reference;
+	protected EList columns;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -57,14 +63,11 @@ public class PKImpl extends MinimalEObjectImpl.Container implements PK {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EList getReference() {
-		if (reference == null) {
-			reference = new EDataTypeUniqueEList(String.class, this, NosqlPackage.PK__REFERENCE);
+	public EList getColumns() {
+		if (columns == null) {
+			columns = new EObjectResolvingEList(Column.class, this, NosqlPackage.PK__COLUMNS);
 		}
-		return reference;
-	}
-	public void setReference(EList reference) {
-		this.reference = reference;
+		return columns;
 	}
 
 	/**
@@ -74,8 +77,8 @@ public class PKImpl extends MinimalEObjectImpl.Container implements PK {
 	 */
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case NosqlPackage.PK__REFERENCE:
-				return getReference();
+			case NosqlPackage.PK__COLUMNS:
+				return getColumns();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -87,9 +90,9 @@ public class PKImpl extends MinimalEObjectImpl.Container implements PK {
 	 */
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case NosqlPackage.PK__REFERENCE:
-				getReference().clear();
-				getReference().addAll((Collection)newValue);
+			case NosqlPackage.PK__COLUMNS:
+				getColumns().clear();
+				getColumns().addAll((Collection)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -102,8 +105,8 @@ public class PKImpl extends MinimalEObjectImpl.Container implements PK {
 	 */
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case NosqlPackage.PK__REFERENCE:
-				getReference().clear();
+			case NosqlPackage.PK__COLUMNS:
+				getColumns().clear();
 				return;
 		}
 		super.eUnset(featureID);
@@ -116,25 +119,10 @@ public class PKImpl extends MinimalEObjectImpl.Container implements PK {
 	 */
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case NosqlPackage.PK__REFERENCE:
-				return reference != null && !reference.isEmpty();
+			case NosqlPackage.PK__COLUMNS:
+				return columns != null && !columns.isEmpty();
 		}
 		return super.eIsSet(featureID);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public String toString() {
-		if (eIsProxy()) return super.toString();
-
-		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (reference: ");
-		result.append(reference);
-		result.append(')');
-		return result.toString();
 	}
 
 } //PKImpl

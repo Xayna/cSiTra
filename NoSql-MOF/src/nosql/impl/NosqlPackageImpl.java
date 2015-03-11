@@ -12,11 +12,13 @@ import nosql.NosqlPackage;
 import nosql.Options;
 import nosql.Row;
 import nosql.Type;
+
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EEnum;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
+
 import org.eclipse.emf.ecore.impl.EPackageImpl;
 
 /**
@@ -317,6 +319,15 @@ public class NosqlPackageImpl extends EPackageImpl implements NosqlPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EReference getColumnFamily_Keyspace() {
+		return (EReference)columnFamilyEClass.getEStructuralFeatures().get(6);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getOptions() {
 		return optionsEClass;
 	}
@@ -389,7 +400,7 @@ public class NosqlPackageImpl extends EPackageImpl implements NosqlPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getColumn_Sth() {
+	public EReference getColumn_ColumnFamily() {
 		return (EReference)columnEClass.getEStructuralFeatures().get(4);
 	}
 
@@ -407,8 +418,8 @@ public class NosqlPackageImpl extends EPackageImpl implements NosqlPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getPK_Reference() {
-		return (EAttribute)pkEClass.getEStructuralFeatures().get(0);
+	public EReference getPK_Columns() {
+		return (EReference)pkEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -513,6 +524,7 @@ public class NosqlPackageImpl extends EPackageImpl implements NosqlPackage {
 		createEReference(columnFamilyEClass, COLUMN_FAMILY__OPTIONS);
 		createEReference(columnFamilyEClass, COLUMN_FAMILY__PK);
 		createEReference(columnFamilyEClass, COLUMN_FAMILY__ROWS);
+		createEReference(columnFamilyEClass, COLUMN_FAMILY__KEYSPACE);
 
 		optionsEClass = createEClass(OPTIONS);
 		createEAttribute(optionsEClass, OPTIONS__NAME);
@@ -523,10 +535,10 @@ public class NosqlPackageImpl extends EPackageImpl implements NosqlPackage {
 		createEAttribute(columnEClass, COLUMN__PK);
 		createEAttribute(columnEClass, COLUMN__DATATYPE);
 		createEAttribute(columnEClass, COLUMN__SIZE);
-		createEReference(columnEClass, COLUMN__STH);
+		createEReference(columnEClass, COLUMN__COLUMN_FAMILY);
 
 		pkEClass = createEClass(PK);
-		createEAttribute(pkEClass, PK__REFERENCE);
+		createEReference(pkEClass, PK__COLUMNS);
 
 		rowEClass = createEClass(ROW);
 		createEReference(rowEClass, ROW__CELLS);
@@ -586,6 +598,7 @@ public class NosqlPackageImpl extends EPackageImpl implements NosqlPackage {
 		initEReference(getColumnFamily_Options(), this.getOptions(), null, "options", null, 0, -1, ColumnFamily.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getColumnFamily_PK(), this.getPK(), null, "PK", null, 0, 1, ColumnFamily.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getColumnFamily_Rows(), this.getRow(), null, "rows", null, 0, -1, ColumnFamily.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getColumnFamily_Keyspace(), this.getKeySpace(), null, "keyspace", null, 1, 1, ColumnFamily.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(optionsEClass, Options.class, "Options", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getOptions_Name(), ecorePackage.getEString(), "name", null, 0, 1, Options.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -596,10 +609,10 @@ public class NosqlPackageImpl extends EPackageImpl implements NosqlPackage {
 		initEAttribute(getColumn_PK(), ecorePackage.getEBoolean(), "PK", null, 0, 1, Column.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getColumn_Datatype(), this.getType(), "datatype", null, 1, 1, Column.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getColumn_Size(), ecorePackage.getEString(), "size", null, 0, 1, Column.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getColumn_Sth(), this.getColumnFamily(), null, "sth", null, 0, 1, Column.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getColumn_ColumnFamily(), this.getColumnFamily(), null, "columnFamily", null, 0, 1, Column.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(pkEClass, nosql.PK.class, "PK", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getPK_Reference(), ecorePackage.getEString(), "reference", null, 0, -1, nosql.PK.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getPK_Columns(), this.getColumn(), null, "columns", null, 0, -1, nosql.PK.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(rowEClass, Row.class, "Row", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getRow_Cells(), this.getCell(), null, "cells", null, 1, -1, Row.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

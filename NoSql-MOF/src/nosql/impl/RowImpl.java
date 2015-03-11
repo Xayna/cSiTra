@@ -3,13 +3,18 @@
 package nosql.impl;
 
 import java.util.Collection;
+
 import nosql.Cell;
 import nosql.NosqlPackage;
 import nosql.Row;
+
 import org.eclipse.emf.common.notify.NotificationChain;
+
 import org.eclipse.emf.common.util.EList;
+
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
+
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
@@ -36,6 +41,7 @@ public class RowImpl extends ColumnFamilyImpl implements Row {
 	 * @ordered
 	 */
 	protected EList cells;
+
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

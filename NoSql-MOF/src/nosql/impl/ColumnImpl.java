@@ -10,8 +10,8 @@ import nosql.Type;
 import org.eclipse.emf.common.notify.Notification;
 
 import org.eclipse.emf.ecore.EClass;
-
 import org.eclipse.emf.ecore.InternalEObject;
+
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
 
@@ -26,7 +26,7 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
  *   <li>{@link nosql.impl.ColumnImpl#isPK <em>PK</em>}</li>
  *   <li>{@link nosql.impl.ColumnImpl#getDatatype <em>Datatype</em>}</li>
  *   <li>{@link nosql.impl.ColumnImpl#getSize <em>Size</em>}</li>
- *   <li>{@link nosql.impl.ColumnImpl#getSth <em>Sth</em>}</li>
+ *   <li>{@link nosql.impl.ColumnImpl#getColumnFamily <em>Column Family</em>}</li>
  * </ul>
  * </p>
  *
@@ -114,14 +114,14 @@ public class ColumnImpl extends MinimalEObjectImpl.Container implements Column {
 	protected String size = SIZE_EDEFAULT;
 
 	/**
-	 * The cached value of the '{@link #getSth() <em>Sth</em>}' reference.
+	 * The cached value of the '{@link #getColumnFamily() <em>Column Family</em>}' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getSth()
+	 * @see #getColumnFamily()
 	 * @generated
 	 * @ordered
 	 */
-	protected ColumnFamily sth;
+	protected ColumnFamily columnFamily;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -230,16 +230,16 @@ public class ColumnImpl extends MinimalEObjectImpl.Container implements Column {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public ColumnFamily getSth() {
-		if (sth != null && sth.eIsProxy()) {
-			InternalEObject oldSth = (InternalEObject)sth;
-			sth = (ColumnFamily)eResolveProxy(oldSth);
-			if (sth != oldSth) {
+	public ColumnFamily getColumnFamily() {
+		if (columnFamily != null && columnFamily.eIsProxy()) {
+			InternalEObject oldColumnFamily = (InternalEObject)columnFamily;
+			columnFamily = (ColumnFamily)eResolveProxy(oldColumnFamily);
+			if (columnFamily != oldColumnFamily) {
 				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, NosqlPackage.COLUMN__STH, oldSth, sth));
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, NosqlPackage.COLUMN__COLUMN_FAMILY, oldColumnFamily, columnFamily));
 			}
 		}
-		return sth;
+		return columnFamily;
 	}
 
 	/**
@@ -247,8 +247,8 @@ public class ColumnImpl extends MinimalEObjectImpl.Container implements Column {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public ColumnFamily basicGetSth() {
-		return sth;
+	public ColumnFamily basicGetColumnFamily() {
+		return columnFamily;
 	}
 
 	/**
@@ -256,11 +256,11 @@ public class ColumnImpl extends MinimalEObjectImpl.Container implements Column {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setSth(ColumnFamily newSth) {
-		ColumnFamily oldSth = sth;
-		sth = newSth;
+	public void setColumnFamily(ColumnFamily newColumnFamily) {
+		ColumnFamily oldColumnFamily = columnFamily;
+		columnFamily = newColumnFamily;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, NosqlPackage.COLUMN__STH, oldSth, sth));
+			eNotify(new ENotificationImpl(this, Notification.SET, NosqlPackage.COLUMN__COLUMN_FAMILY, oldColumnFamily, columnFamily));
 	}
 
 	/**
@@ -278,9 +278,9 @@ public class ColumnImpl extends MinimalEObjectImpl.Container implements Column {
 				return getDatatype();
 			case NosqlPackage.COLUMN__SIZE:
 				return getSize();
-			case NosqlPackage.COLUMN__STH:
-				if (resolve) return getSth();
-				return basicGetSth();
+			case NosqlPackage.COLUMN__COLUMN_FAMILY:
+				if (resolve) return getColumnFamily();
+				return basicGetColumnFamily();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -304,8 +304,8 @@ public class ColumnImpl extends MinimalEObjectImpl.Container implements Column {
 			case NosqlPackage.COLUMN__SIZE:
 				setSize((String)newValue);
 				return;
-			case NosqlPackage.COLUMN__STH:
-				setSth((ColumnFamily)newValue);
+			case NosqlPackage.COLUMN__COLUMN_FAMILY:
+				setColumnFamily((ColumnFamily)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -330,8 +330,8 @@ public class ColumnImpl extends MinimalEObjectImpl.Container implements Column {
 			case NosqlPackage.COLUMN__SIZE:
 				setSize(SIZE_EDEFAULT);
 				return;
-			case NosqlPackage.COLUMN__STH:
-				setSth((ColumnFamily)null);
+			case NosqlPackage.COLUMN__COLUMN_FAMILY:
+				setColumnFamily((ColumnFamily)null);
 				return;
 		}
 		super.eUnset(featureID);
@@ -352,8 +352,8 @@ public class ColumnImpl extends MinimalEObjectImpl.Container implements Column {
 				return datatype != DATATYPE_EDEFAULT;
 			case NosqlPackage.COLUMN__SIZE:
 				return SIZE_EDEFAULT == null ? size != null : !SIZE_EDEFAULT.equals(size);
-			case NosqlPackage.COLUMN__STH:
-				return sth != null;
+			case NosqlPackage.COLUMN__COLUMN_FAMILY:
+				return columnFamily != null;
 		}
 		return super.eIsSet(featureID);
 	}

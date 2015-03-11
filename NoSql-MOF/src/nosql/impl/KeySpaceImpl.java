@@ -382,28 +382,4 @@ public class KeySpaceImpl extends MinimalEObjectImpl.Container implements KeySpa
 		return result.toString();
 	}
 
-	@Override
-	public void setIdexes(EList indexes) {
-		// TODO Auto-generated method stub
-		this.idexes = indexes;
-	}
-
-	@Override
-	public void setFamilies(EList families) {
-		// TODO Auto-generated method stub
-		this.families = families;
-	}
-
-	@Override
-	public void getOptions(EList options) {
-		// TODO Auto-generated method stub
-		this.options = options;
-	}
-
-	@Override
-	public void setHasPK(EList hasPK) {
-		// TODO Auto-generated method stub
-		this.hasPK = hasPK;
-	}
-
 } //KeySpaceImpl
