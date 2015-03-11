@@ -8,18 +8,15 @@ import metamodel.Column;
 import metamodel.Constraint;
 import metamodel.ConstraintType;
 import metamodel.MetamodelPackage;
+import metamodel.Table;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
-
 import org.eclipse.emf.common.util.EList;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
-
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
@@ -96,7 +93,7 @@ public class ConstraintImpl extends MinimalEObjectImpl.Container implements Cons
 	 * @generated
 	 * @ordered
 	 */
-	protected static final String REFERENCE_EDEFAULT = null;
+	protected static final Table REFERENCE_EDEFAULT = null;
 
 	/**
 	 * The cached value of the '{@link #getReference() <em>Reference</em>}' attribute.
@@ -106,7 +103,7 @@ public class ConstraintImpl extends MinimalEObjectImpl.Container implements Cons
 	 * @generated
 	 * @ordered
 	 */
-	protected String reference = REFERENCE_EDEFAULT;
+	protected Table referenceTable = REFERENCE_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -186,8 +183,8 @@ public class ConstraintImpl extends MinimalEObjectImpl.Container implements Cons
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public String getReference() {
-		return reference;
+	public Table getReferenceTable() {
+		return referenceTable;
 	}
 
 	/**
@@ -195,11 +192,11 @@ public class ConstraintImpl extends MinimalEObjectImpl.Container implements Cons
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setReference(String newReference) {
-		String oldReference = reference;
-		reference = newReference;
+	public void setReferenceTable(Table newReferenceTable) {
+		Table oldReference = referenceTable;
+		referenceTable = newReferenceTable;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, MetamodelPackage.CONSTRAINT__REFERENCE, oldReference, reference));
+			eNotify(new ENotificationImpl(this, Notification.SET, MetamodelPackage.CONSTRAINT__REFERENCE, oldReference, referenceTable));
 	}
 
 	/**
@@ -231,7 +228,7 @@ public class ConstraintImpl extends MinimalEObjectImpl.Container implements Cons
 			case MetamodelPackage.CONSTRAINT__REFERENCES:
 				return getReferences();
 			case MetamodelPackage.CONSTRAINT__REFERENCE:
-				return getReference();
+				return getReferenceTable();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -256,7 +253,7 @@ public class ConstraintImpl extends MinimalEObjectImpl.Container implements Cons
 				getReferences().addAll((Collection<? extends Column>)newValue);
 				return;
 			case MetamodelPackage.CONSTRAINT__REFERENCE:
-				setReference((String)newValue);
+				setReferenceTable((Table)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -280,7 +277,7 @@ public class ConstraintImpl extends MinimalEObjectImpl.Container implements Cons
 				getReferences().clear();
 				return;
 			case MetamodelPackage.CONSTRAINT__REFERENCE:
-				setReference(REFERENCE_EDEFAULT);
+				setReferenceTable(REFERENCE_EDEFAULT);
 				return;
 		}
 		super.eUnset(featureID);
@@ -301,7 +298,7 @@ public class ConstraintImpl extends MinimalEObjectImpl.Container implements Cons
 			case MetamodelPackage.CONSTRAINT__REFERENCES:
 				return references != null && !references.isEmpty();
 			case MetamodelPackage.CONSTRAINT__REFERENCE:
-				return REFERENCE_EDEFAULT == null ? reference != null : !REFERENCE_EDEFAULT.equals(reference);
+				return REFERENCE_EDEFAULT == null ? referenceTable != null : !REFERENCE_EDEFAULT.equals(referenceTable);
 		}
 		return super.eIsSet(featureID);
 	}
@@ -320,8 +317,8 @@ public class ConstraintImpl extends MinimalEObjectImpl.Container implements Cons
 		result.append(name);
 		result.append(", type: ");
 		result.append(type);
-		result.append(", reference: ");
-		result.append(reference);
+		result.append(", referenceTable: ");
+		result.append(referenceTable);
 		result.append(')');
 		return result.toString();
 	}

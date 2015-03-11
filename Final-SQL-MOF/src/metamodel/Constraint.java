@@ -98,29 +98,29 @@ public interface Constraint extends EObject {
 	EList<Column> getReferences();
 
 	/**
-	 * Returns the value of the '<em><b>Reference</b></em>' attribute.
+	 * Returns the value of the '<em><b>Reference Table</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Reference</em>' attribute isn't clear,
+	 * If the meaning of the '<em>Reference Table</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Reference</em>' attribute.
-	 * @see #setReference(String)
+	 * @return the value of the '<em>Reference Table</em>' attribute.
+	 * @see #setReferenceTable(Table)
 	 * @see metamodel.MetamodelPackage#getConstraint_Reference()
 	 * @model id="true"
 	 * @generated
 	 */
-	String getReference();
+	Table getReferenceTable();
 
 	/**
-	 * Sets the value of the '{@link metamodel.Constraint#getReference <em>Reference</em>}' attribute.
+	 * Sets the value of the '{@link metamodel.Constraint#getReferenceTable <em>Reference Table</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Reference</em>' attribute.
-	 * @see #getReference()
+	 * @param value the new value of the '<em>Reference Table</em>' attribute.
+	 * @see #getReferenceTable()
 	 * @generated
 	 */
-	void setReference(String value);
+	void setReferenceTable(Table table);
 
 } // Constraint
