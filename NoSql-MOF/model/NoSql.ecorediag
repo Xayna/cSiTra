@@ -99,10 +99,6 @@
         <element xmi:type="ecore:EAttribute" href="NoSql.ecore#//Column/name"/>
         <layoutConstraint xmi:type="notation:Location" xmi:id="_p0HHwbC2EeSD9veidASnTA"/>
       </children>
-      <children xmi:type="notation:Node" xmi:id="_EfRs4LH2EeSC__F7TE5sDg" type="2001">
-        <element xmi:type="ecore:EAttribute" href="NoSql.ecore#//Column/PK"/>
-        <layoutConstraint xmi:type="notation:Location" xmi:id="_EfRs4bH2EeSC__F7TE5sDg"/>
-      </children>
       <children xmi:type="notation:Node" xmi:id="_raocULH4EeSC__F7TE5sDg" type="2001">
         <element xmi:type="ecore:EAttribute" href="NoSql.ecore#//Column/datatype"/>
         <layoutConstraint xmi:type="notation:Location" xmi:id="_raocUbH4EeSC__F7TE5sDg"/>
@@ -198,10 +194,6 @@
   <children xmi:type="notation:Node" xmi:id="_a3kMQLHwEeSC__F7TE5sDg" type="1001">
     <children xmi:type="notation:Node" xmi:id="_a3kMQ7HwEeSC__F7TE5sDg" type="4001"/>
     <children xmi:type="notation:Node" xmi:id="_a3kMRLHwEeSC__F7TE5sDg" type="5001">
-      <children xmi:type="notation:Node" xmi:id="_jzLcYLHwEeSC__F7TE5sDg" type="2001">
-        <element xmi:type="ecore:EAttribute" href="NoSql.ecore#//PK/reference"/>
-        <layoutConstraint xmi:type="notation:Location" xmi:id="_jzLcYbHwEeSC__F7TE5sDg"/>
-      </children>
       <styles xmi:type="notation:DrawerStyle" xmi:id="_a3kMRbHwEeSC__F7TE5sDg"/>
       <styles xmi:type="notation:SortingStyle" xmi:id="_a3kMRrHwEeSC__F7TE5sDg"/>
       <styles xmi:type="notation:FilteringStyle" xmi:id="_a3kMR7HwEeSC__F7TE5sDg"/>
@@ -390,5 +382,31 @@
     <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_vSnmc8NPEeSGg-TNPa1tvQ" points="[0, 1, 0, 1]$[0, 1, 0, 1]"/>
     <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_vSnmeMNPEeSGg-TNPa1tvQ" id="(0.0,0.1568627450980392)"/>
     <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_vSnmecNPEeSGg-TNPa1tvQ" id="(0.9669421487603306,0.6862745098039216)"/>
+  </edges>
+  <edges xmi:type="notation:Edge" xmi:id="_0MyfYMf6EeSFy-MJRM363A" type="3002" source="_a3kMQLHwEeSC__F7TE5sDg" target="_M5oVcLC2EeSD9veidASnTA">
+    <children xmi:type="notation:Node" xmi:id="_0MyfZMf6EeSFy-MJRM363A" type="4011">
+      <layoutConstraint xmi:type="notation:Location" xmi:id="_0MyfZcf6EeSFy-MJRM363A" x="-69" y="-38"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_0MyfZsf6EeSFy-MJRM363A" type="4012">
+      <layoutConstraint xmi:type="notation:Location" xmi:id="_0MyfZ8f6EeSFy-MJRM363A" x="-65" y="11"/>
+    </children>
+    <styles xmi:type="notation:ConnectorStyle" xmi:id="_0MyfYcf6EeSFy-MJRM363A" lineColor="4210752"/>
+    <styles xmi:type="notation:FontStyle" xmi:id="_0MyfYsf6EeSFy-MJRM363A" fontColor="4210752" fontName="Segoe UI" fontHeight="10"/>
+    <element xmi:type="ecore:EReference" href="NoSql.ecore#//PK/columns"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_0MyfY8f6EeSFy-MJRM363A" points="[-2, 25, 15, -193]$[-13, 168, 4, -50]"/>
+  </edges>
+  <edges xmi:type="notation:Edge" xmi:id="_NnJZ4Mf7EeSFy-MJRM363A" type="3002" source="_dygpALC0EeSD9veidASnTA" target="_3_AnkLCzEeSD9veidASnTA">
+    <children xmi:type="notation:Node" xmi:id="_NnJZ5Mf7EeSFy-MJRM363A" type="4011">
+      <layoutConstraint xmi:type="notation:Location" xmi:id="_NnJZ5cf7EeSFy-MJRM363A" x="-59" y="-28"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_NnJZ5sf7EeSFy-MJRM363A" type="4012">
+      <layoutConstraint xmi:type="notation:Location" xmi:id="_NnJZ58f7EeSFy-MJRM363A" x="10" y="10"/>
+    </children>
+    <styles xmi:type="notation:ConnectorStyle" xmi:id="_NnJZ4cf7EeSFy-MJRM363A" lineColor="4210752"/>
+    <styles xmi:type="notation:FontStyle" xmi:id="_NnJZ4sf7EeSFy-MJRM363A" fontColor="4210752" fontName="Segoe UI" fontHeight="10"/>
+    <element xmi:type="ecore:EReference" href="NoSql.ecore#//ColumnFamily/keyspace"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_NnJZ48f7EeSFy-MJRM363A" points="[-2, 0, 331, 134]$[-331, -119, 2, 15]"/>
+    <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_HRGBUsf8EeSFy-MJRM363A" id="(0.08759124087591241,0.014705882352941176)"/>
+    <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_HRGBU8f8EeSFy-MJRM363A" id="(0.9739130434782609,0.7058823529411765)"/>
   </edges>
 </notation:Diagram>

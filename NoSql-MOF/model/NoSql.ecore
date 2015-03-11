@@ -28,6 +28,8 @@
         eType="#//Options" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="PK" eType="#//PK" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="rows" upperBound="-1" eType="#//Row"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="keyspace" lowerBound="1"
+        eType="#//KeySpace" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Options">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
@@ -35,11 +37,10 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Column">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="PK" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="datatype" lowerBound="1"
         eType="#//Type"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="size" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="sth" eType="#//ColumnFamily"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="columnFamily" eType="#//ColumnFamily"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EEnum" name="Type">
     <eLiterals name="ascii" literal="ascii"/>
@@ -59,8 +60,8 @@
     <eLiterals name="bigint" value="1"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="PK">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="reference" upperBound="-1"
-        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="columns" upperBound="-1"
+        eType="#//Column"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Row" eSuperTypes="#//ColumnFamily">
     <eStructuralFeatures xsi:type="ecore:EReference" name="cells" lowerBound="1" upperBound="-1"

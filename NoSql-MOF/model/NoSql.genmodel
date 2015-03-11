@@ -42,6 +42,7 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference NoSql.ecore#//ColumnFamily/options"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference NoSql.ecore#//ColumnFamily/PK"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference NoSql.ecore#//ColumnFamily/rows"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference NoSql.ecore#//ColumnFamily/keyspace"/>
     </genClasses>
     <genClasses ecoreClass="NoSql.ecore#//Options">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute NoSql.ecore#//Options/name"/>
@@ -52,10 +53,10 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute NoSql.ecore#//Column/PK"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute NoSql.ecore#//Column/datatype"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute NoSql.ecore#//Column/size"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference NoSql.ecore#//Column/sth"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference NoSql.ecore#//Column/columnFamily"/>
     </genClasses>
     <genClasses ecoreClass="NoSql.ecore#//PK">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute NoSql.ecore#//PK/reference"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference NoSql.ecore#//PK/columns"/>
     </genClasses>
     <genClasses ecoreClass="NoSql.ecore#//Row">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference NoSql.ecore#//Row/cells"/>
