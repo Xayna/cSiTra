@@ -3,6 +3,7 @@
 package nosql;
 
 import org.eclipse.emf.common.util.EList;
+
 import org.eclipse.emf.ecore.EObject;
 
 /**
@@ -13,7 +14,7 @@ import org.eclipse.emf.ecore.EObject;
  * <p>
  * The following features are supported:
  * <ul>
- *   <li>{@link nosql.PK#getReference <em>Reference</em>}</li>
+ *   <li>{@link nosql.PK#getColumns <em>Columns</em>}</li>
  * </ul>
  * </p>
  *
@@ -23,19 +24,19 @@ import org.eclipse.emf.ecore.EObject;
  */
 public interface PK extends EObject {
 	/**
-	 * Returns the value of the '<em><b>Reference</b></em>' attribute list.
-	 * The list contents are of type {@link java.lang.String}.
+	 * Returns the value of the '<em><b>Columns</b></em>' reference list.
+	 * The list contents are of type {@link nosql.Column}.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Reference</em>' attribute isn't clear,
+	 * If the meaning of the '<em>Columns</em>' reference list isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Reference</em>' attribute list.
-	 * @see nosql.NosqlPackage#getPK_Reference()
-	 * @model
+	 * @return the value of the '<em>Columns</em>' reference list.
+	 * @see nosql.NosqlPackage#getPK_Columns()
+	 * @model type="nosql.Column"
 	 * @generated
 	 */
-	EList getReference();
+	EList getColumns();
 
 } // PK

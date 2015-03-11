@@ -240,13 +240,22 @@ public interface NosqlPackage extends EPackage {
 	int COLUMN_FAMILY__ROWS = 5;
 
 	/**
+	 * The feature id for the '<em><b>Keyspace</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int COLUMN_FAMILY__KEYSPACE = 6;
+
+	/**
 	 * The number of structural features of the '<em>Column Family</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int COLUMN_FAMILY_FEATURE_COUNT = 6;
+	int COLUMN_FAMILY_FEATURE_COUNT = 7;
 
 	/**
 	 * The meta object id for the '{@link nosql.impl.OptionsImpl <em>Options</em>}' class.
@@ -332,13 +341,13 @@ public interface NosqlPackage extends EPackage {
 	int COLUMN__SIZE = 3;
 
 	/**
-	 * The feature id for the '<em><b>Sth</b></em>' reference.
+	 * The feature id for the '<em><b>Column Family</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int COLUMN__STH = 4;
+	int COLUMN__COLUMN_FAMILY = 4;
 
 	/**
 	 * The number of structural features of the '<em>Column</em>' class.
@@ -360,13 +369,13 @@ public interface NosqlPackage extends EPackage {
 	int PK = 5;
 
 	/**
-	 * The feature id for the '<em><b>Reference</b></em>' attribute list.
+	 * The feature id for the '<em><b>Columns</b></em>' reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int PK__REFERENCE = 0;
+	int PK__COLUMNS = 0;
 
 	/**
 	 * The number of structural features of the '<em>PK</em>' class.
@@ -440,6 +449,15 @@ public interface NosqlPackage extends EPackage {
 	 * @ordered
 	 */
 	int ROW__ROWS = COLUMN_FAMILY__ROWS;
+
+	/**
+	 * The feature id for the '<em><b>Keyspace</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ROW__KEYSPACE = COLUMN_FAMILY__KEYSPACE;
 
 	/**
 	 * The feature id for the '<em><b>Cells</b></em>' containment reference list.
@@ -703,6 +721,17 @@ public interface NosqlPackage extends EPackage {
 	EReference getColumnFamily_Rows();
 
 	/**
+	 * Returns the meta object for the containment reference '{@link nosql.ColumnFamily#getKeyspace <em>Keyspace</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference '<em>Keyspace</em>'.
+	 * @see nosql.ColumnFamily#getKeyspace()
+	 * @see #getColumnFamily()
+	 * @generated
+	 */
+	EReference getColumnFamily_Keyspace();
+
+	/**
 	 * Returns the meta object for class '{@link nosql.Options <em>Options</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -789,15 +818,15 @@ public interface NosqlPackage extends EPackage {
 	EAttribute getColumn_Size();
 
 	/**
-	 * Returns the meta object for the reference '{@link nosql.Column#getSth <em>Sth</em>}'.
+	 * Returns the meta object for the reference '{@link nosql.Column#getColumnFamily <em>Column Family</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Sth</em>'.
-	 * @see nosql.Column#getSth()
+	 * @return the meta object for the reference '<em>Column Family</em>'.
+	 * @see nosql.Column#getColumnFamily()
 	 * @see #getColumn()
 	 * @generated
 	 */
-	EReference getColumn_Sth();
+	EReference getColumn_ColumnFamily();
 
 	/**
 	 * Returns the meta object for class '{@link nosql.PK <em>PK</em>}'.
@@ -810,15 +839,15 @@ public interface NosqlPackage extends EPackage {
 	EClass getPK();
 
 	/**
-	 * Returns the meta object for the attribute list '{@link nosql.PK#getReference <em>Reference</em>}'.
+	 * Returns the meta object for the reference list '{@link nosql.PK#getColumns <em>Columns</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute list '<em>Reference</em>'.
-	 * @see nosql.PK#getReference()
+	 * @return the meta object for the reference list '<em>Columns</em>'.
+	 * @see nosql.PK#getColumns()
 	 * @see #getPK()
 	 * @generated
 	 */
-	EAttribute getPK_Reference();
+	EReference getPK_Columns();
 
 	/**
 	 * Returns the meta object for class '{@link nosql.Row <em>Row</em>}'.
@@ -1056,6 +1085,14 @@ public interface NosqlPackage extends EPackage {
 		EReference COLUMN_FAMILY__ROWS = eINSTANCE.getColumnFamily_Rows();
 
 		/**
+		 * The meta object literal for the '<em><b>Keyspace</b></em>' containment reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference COLUMN_FAMILY__KEYSPACE = eINSTANCE.getColumnFamily_Keyspace();
+
+		/**
 		 * The meta object literal for the '{@link nosql.impl.OptionsImpl <em>Options</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -1124,12 +1161,12 @@ public interface NosqlPackage extends EPackage {
 		EAttribute COLUMN__SIZE = eINSTANCE.getColumn_Size();
 
 		/**
-		 * The meta object literal for the '<em><b>Sth</b></em>' reference feature.
+		 * The meta object literal for the '<em><b>Column Family</b></em>' reference feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference COLUMN__STH = eINSTANCE.getColumn_Sth();
+		EReference COLUMN__COLUMN_FAMILY = eINSTANCE.getColumn_ColumnFamily();
 
 		/**
 		 * The meta object literal for the '{@link nosql.impl.PKImpl <em>PK</em>}' class.
@@ -1142,12 +1179,12 @@ public interface NosqlPackage extends EPackage {
 		EClass PK = eINSTANCE.getPK();
 
 		/**
-		 * The meta object literal for the '<em><b>Reference</b></em>' attribute list feature.
+		 * The meta object literal for the '<em><b>Columns</b></em>' reference list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute PK__REFERENCE = eINSTANCE.getPK_Reference();
+		EReference PK__COLUMNS = eINSTANCE.getPK_Columns();
 
 		/**
 		 * The meta object literal for the '{@link nosql.impl.RowImpl <em>Row</em>}' class.

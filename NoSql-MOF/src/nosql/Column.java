@@ -16,7 +16,7 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link nosql.Column#isPK <em>PK</em>}</li>
  *   <li>{@link nosql.Column#getDatatype <em>Datatype</em>}</li>
  *   <li>{@link nosql.Column#getSize <em>Size</em>}</li>
- *   <li>{@link nosql.Column#getSth <em>Sth</em>}</li>
+ *   <li>{@link nosql.Column#getColumnFamily <em>Column Family</em>}</li>
  * </ul>
  * </p>
  *
@@ -133,29 +133,29 @@ public interface Column extends EObject {
 	void setSize(String value);
 
 	/**
-	 * Returns the value of the '<em><b>Sth</b></em>' reference.
+	 * Returns the value of the '<em><b>Column Family</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Sth</em>' reference isn't clear,
+	 * If the meaning of the '<em>Column Family</em>' reference isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Sth</em>' reference.
-	 * @see #setSth(ColumnFamily)
-	 * @see nosql.NosqlPackage#getColumn_Sth()
+	 * @return the value of the '<em>Column Family</em>' reference.
+	 * @see #setColumnFamily(ColumnFamily)
+	 * @see nosql.NosqlPackage#getColumn_ColumnFamily()
 	 * @model
 	 * @generated
 	 */
-	ColumnFamily getSth();
+	ColumnFamily getColumnFamily();
 
 	/**
-	 * Sets the value of the '{@link nosql.Column#getSth <em>Sth</em>}' reference.
+	 * Sets the value of the '{@link nosql.Column#getColumnFamily <em>Column Family</em>}' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Sth</em>' reference.
-	 * @see #getSth()
+	 * @param value the new value of the '<em>Column Family</em>' reference.
+	 * @see #getColumnFamily()
 	 * @generated
 	 */
-	void setSth(ColumnFamily value);
+	void setColumnFamily(ColumnFamily value);
 
 } // Column
