@@ -7,6 +7,7 @@ import nosql.KeySpace;
 
 import org.eclipse.emf.common.util.EList;
 
+import bham.trasformation.Main;
 import uk.ac.bham.sitra.Rule;
 import uk.ac.bham.sitra.RuleNotFoundException;
 import uk.ac.bham.sitra.Transformer;
@@ -34,7 +35,9 @@ public class Database2Keyspace implements Rule<metamodel.Database ,nosql.KeySpac
 			if(source.getName()!= null){
 				keySpace.setName(source.getName());
 			}
-			keySpace.setFamilies((EList)t.transformAll(Table2ColumnFamily.class, source.getTable()));
+			
+			Main.mainKeySpace = keySpace;
+			keySpace.getFamilies().add(((EList)t.transformAll(Table2ColumnFamily.class, source.getTable())));
 			return keySpace;
 		} catch (RuleNotFoundException e) {
 			// TODO Auto-generated catch block
