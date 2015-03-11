@@ -27,9 +27,10 @@ public class SQLCons2NoSQLCons implements Rule<metamodel.impl.ConstraintImpl , n
 	public PKImpl build(ConstraintImpl source, Transformer t) {
 		nosql.impl.PKImpl PKList = new nosql.impl.PKImpl();
 		ConstraintType key = source.getType();
-		if(key.getValue() == 0 ) //0 represents the primary key
-		{PKList.setReference((source.getReferences()));}
+		//if(key.getValue() == 0 ) //0 represents the primary key
+		//{PKList.setReference((source.getReferences()));}
 		return PKList;
+	
 	}
 
 	/* (non-Javadoc)
