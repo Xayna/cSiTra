@@ -23,10 +23,10 @@ import bham.transformation.model.Table;
 public class DBTransformationService {
 
 	static Connection conn = null;
-	
 	public Database generate(){
 		String databaseName = "axw412_aam_spring";
 		String url = "jdbc:postgresql://localhost/" + databaseName;
+		//dev.mysql.com/doc/employee/en
 		Properties props = new Properties();
 		props.setProperty("user","axw412");
 		props.setProperty("password","Tembok1991");
