@@ -16,6 +16,7 @@ import bham.trasformation.rules.SqlCol2NoSqlCol;
 import bham.trasformation.rules.Table2ColumnFamily;
 
 public class Main {
+	public static KeySpace mainKeySpace = null ;
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
