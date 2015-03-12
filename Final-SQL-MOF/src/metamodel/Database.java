@@ -3,7 +3,6 @@
 package metamodel;
 
 import org.eclipse.emf.common.util.EList;
-
 import org.eclipse.emf.ecore.EObject;
 
 /**
@@ -66,6 +65,9 @@ public interface Database extends EObject {
 	 * @generated
 	 */
 	EList<Table> getTable();
+	
+	
+	
 	
 	/**
 	 * Sets the value of the '<em><b>Table</b></em>' containment reference list.

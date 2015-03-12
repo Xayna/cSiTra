@@ -64,7 +64,7 @@ public class CellImpl extends MinimalEObjectImpl.Container implements Cell {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected CellImpl() {
+	public CellImpl() {
 		super();
 	}
 

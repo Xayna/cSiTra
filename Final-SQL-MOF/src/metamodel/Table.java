@@ -3,7 +3,6 @@
 package metamodel;
 
 import org.eclipse.emf.common.util.EList;
-
 import org.eclipse.emf.ecore.EObject;
 
 /**
@@ -50,6 +49,10 @@ public interface Table extends EObject {
 	 * @see #getName()
 	 * @generated
 	 */
+	void setRows(EList<Row> rows);
+	
+	void setConstraints(EList<Constraint> constraints);
+	
 	void setName(String value);
 
 	/**

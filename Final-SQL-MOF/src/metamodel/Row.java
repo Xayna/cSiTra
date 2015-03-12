@@ -3,7 +3,6 @@
 package metamodel;
 
 import org.eclipse.emf.common.util.EList;
-
 import org.eclipse.emf.ecore.EObject;
 
 /**
@@ -38,5 +37,5 @@ public interface Row extends EObject {
 	 * @generated
 	 */
 	EList<Cell> getCells();
-
+	void setCells(EList<Cell> cells);
 } // Row

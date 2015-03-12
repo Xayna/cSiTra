@@ -110,7 +110,7 @@ public class ConstraintImpl extends MinimalEObjectImpl.Container implements Cons
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected ConstraintImpl() {
+	public ConstraintImpl() {
 		super();
 	}
 

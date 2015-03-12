@@ -3,6 +3,7 @@
 package metamodel.impl;
 
 import java.util.Collection;
+import java.util.List;
 
 import metamodel.Column;
 import metamodel.Constraint;
@@ -12,15 +13,11 @@ import metamodel.Table;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
-
 import org.eclipse.emf.common.util.EList;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
-
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.EObjectResolvingEList;
 import org.eclipse.emf.ecore.util.InternalEList;
@@ -92,13 +89,25 @@ public class TableImpl extends MinimalEObjectImpl.Container implements Table {
 	 */
 	protected EList<Row> rows;
 
+	public void setRows(EList<Row> rows) {
+		this.rows = rows;
+	}
+
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected TableImpl() {
+	public TableImpl() {
 		super();
+	}
+
+	public void setColumns(EList<Column> columns) {
+		this.columns = columns;
+	}
+
+	public void setConstraints(EList<Constraint> constraints) {
+		this.constraints = constraints;
 	}
 
 	/**
@@ -291,5 +300,7 @@ public class TableImpl extends MinimalEObjectImpl.Container implements Table {
 		result.append(')');
 		return result.toString();
 	}
+
+	
 
 } //TableImpl

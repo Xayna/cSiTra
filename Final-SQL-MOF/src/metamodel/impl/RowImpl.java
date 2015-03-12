@@ -44,12 +44,16 @@ public class RowImpl extends MinimalEObjectImpl.Container implements Row {
 	 */
 	protected EList<Cell> cells;
 
+	public void setCells(EList<Cell> cells) {
+		this.cells = cells;
+	}
+
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected RowImpl() {
+	public RowImpl() {
 		super();
 	}
 

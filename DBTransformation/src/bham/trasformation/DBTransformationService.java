@@ -1,6 +1,7 @@
 package bham.trasformation;
 
 import java.sql.Connection;
+import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -11,246 +12,344 @@ import java.util.Properties;
 
 import org.eclipse.emf.common.util.EList;
 
+import metamodel.Cell;
+import metamodel.Constraint;
+import metamodel.ConstraintType;
 import metamodel.Database;
+import metamodel.Datatype;
+import metamodel.Row;
+import metamodel.Column;
+import metamodel.impl.ColumnImpl;
 import metamodel.impl.DatabaseImpl;
-import bham.transformation.model.Cell;
-import bham.transformation.model.Column;
-import bham.transformation.model.Constraint;
+import metamodel.impl.RowImpl;
+import metamodel.impl.TableImpl;
+import metamodel.impl.CellImpl;
+import metamodel.impl.ConstraintImpl;
 import bham.transformation.model.Reference;
-import bham.transformation.model.Row;
-import bham.transformation.model.Table;
+import metamodel.Table;
 
 public class DBTransformationService {
 
 	static Connection conn = null;
-	public Database generate(){
-		String databaseName = "axw412_aam_spring";
+
+	@SuppressWarnings("finally")
+	public Database generate() throws SQLException {
+		String databaseName = "postgres";
 		String url = "jdbc:postgresql://localhost/" + databaseName;
-		//dev.mysql.com/doc/employee/en
+		// dev.mysql.com/doc/employee/en
 		Properties props = new Properties();
-		props.setProperty("user","axw412");
-		props.setProperty("password","Tembok1991");
-		
+		props.setProperty("user", "postgres");
+		props.setProperty("password", "heman");
+		Database db = new DatabaseImpl();
 		try {
 			conn = DriverManager.getConnection(url, props);
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		Database db = new DatabaseImpl();
-		db.setName(databaseName);
-		
-		List<Table> tables = getTables(databaseName);
-		db.setTable((EList)tables);
-		
-		if(tables != null){
-			for(Table table : tables){
-				System.out.println("------------------");
-				System.out.println(table.getName());
-				System.out.println("------------------");
-				for(Column column : table.getColumns()){
-					System.out.println(column.getName()
-							+" "+column.getType()+" "
-							+column.getSize()+" "
-							+Boolean.toString(column.isNullable()));
-				}
-				
-				System.out.println("Values: ");
-				for(Row row : table.getRows()){
-					for(Cell cell : row.getCells()){
-						System.out.println(cell.getValue());
+
+			db.setName(databaseName);
+
+			getTables(db);
+
+			if (db.getTable() != null) {
+				for (Table table : db.getTable()) {
+					System.out.println("------------------");
+					System.out.println(table.getName());
+					System.out.println("------------------");
+					for (metamodel.Column column : table.getColumns()) {
+						System.out.println(column.getName() + " "
+								+ column.getType() + " " + column.getSize()
+								+ " " + Boolean.toString(column.isNullable()));
 					}
-					System.out.println("");
+
+					System.out.println("Values: ");
+					for (Row row : table.getRows()) {
+						for (metamodel.Cell cell : row.getCells()) {
+							System.out.println(cell.getValue());
+						}
+						System.out.println("");
+					}
+
+					/*
+					 * System.out.println("++++++++");
+					 * System.out.println("Constraints: "); for(Constraint
+					 * constraint : table.getConstraints()){
+					 * System.out.println(constraint.getName());
+					 * System.out.println(constraint.getType());
+					 * System.out.println(constraint.getReferenceTable()); }
+					 */
 				}
-				
-				System.out.println("++++++++");
-				System.out.println("Constraints: ");
-				for(Constraint constraint : table.getConstraints()){
-					System.out.println(constraint.getName());
-					System.out.println(constraint.getType());
-					System.out.println(constraint.getReference().getColumnName());
-				}
+			} else {
+				System.out.println("no tables found");
 			}
-		} else {
-			System.out.println("no tables found");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			conn.close();
+			return db;
 		}
-		return db;
+
 	}
 
-	/** Read table from database **/
-	protected List<Table> getTables(String databaseName){
-		List<Table> tables = new ArrayList<Table>();
+	/**
+	 * Read table from database
+	 * 
+	 * @param db
+	 * @throws SQLException 
+	 **/
+	protected void getTables(Database db) throws SQLException {
+		EList<Table> tables = db.getTable();
+		PreparedStatement st = null;
+		ResultSet rs = null;
 		try {
-			PreparedStatement st = conn.prepareStatement("SELECT table_name "
+			st = conn.prepareStatement("SELECT table_name "
 					+ "FROM information_schema.tables "
-					+ "WHERE table_schema = 'public'"
-					+ "ORDER BY table_name");
-			ResultSet rs = st.executeQuery();
-			while (rs.next())
-			{
-				Table table = new Table();
+					+ "WHERE table_schema = 'public'" + "ORDER BY table_name");
+			rs = st.executeQuery();
+			while (rs.next()) {
+				TableImpl table = new TableImpl();
 				
-				/** set table name **/
+				/** set table name & set its columns **/
 				table.setName(rs.getString("table_name"));
-				
-				/** get table columns & set into tables **/
-				List<Column> columns = getColumns(table);
-				table.setColumns(columns);
-				
+				getColumns(table);
+
 				/** get table rows & set into tables **/
-				List<Row> rows = getRows(table);
-				table.setRows(rows);
-				
+				getRows(table);
+
 				/** get table constraints & set into tables **/
-				List<Constraint> constraints = getConstraints(table);
-				table.setConstraints(constraints);
-				
+				getTableKeys(table);
+
 				tables.add(table);
 			}
-			rs.close();
-			st.close();
-			return tables;
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return null;
+		finally {
+			rs.close();
+			st.close();
+		}
 	}
-	
-	/** Read column from database **/
-	protected List<Column> getColumns(Table table){
-		List<Column> columns = new ArrayList<Column>();
+
+	/** Read column from database 
+	 * @throws SQLException **/
+	protected void getColumns(TableImpl table) throws SQLException {
+		PreparedStatement st = null;
+		ResultSet rs = null;
 		try {
-			PreparedStatement st = conn.prepareStatement("SELECT "
+			st = conn.prepareStatement("SELECT "
 					+ "column_name, data_type, character_maximum_length, is_nullable "
 					+ "FROM information_schema.columns "
 					+ "WHERE table_name = ?");
 			st.setString(1, table.getName());
-			ResultSet rs = st.executeQuery();
-			while (rs.next())
-			{
-				Column column = new Column();
+			rs = st.executeQuery();
+			while (rs.next()) {
+
+				Column column = new ColumnImpl();
 				column.setName(rs.getString("column_name"));
-				column.setType(rs.getString("data_type"));
+				switch (rs.getString("data_type").toLowerCase()) {
+				case "int":
+					column.setType(Datatype.INT);
+					break;
+				case "bigint":
+					column.setType(Datatype.BIGINT);
+					break;
+				case "boolean":
+					column.setType(Datatype.BOOLEAN);
+					break;
+				case "blob":
+					column.setType(Datatype.BLOB);
+					break;
+				case "char":
+					column.setType(Datatype.CHAR);
+					break;
+				case "date":
+					column.setType(Datatype.DATE);
+					break;
+				case "datetime":
+					column.setType(Datatype.DATETIME);
+					break;
+				case "decimal":
+					column.setType(Datatype.DECIMAL);
+					break;
+				case "double":
+					column.setType(Datatype.DOUBLE);
+					break;
+				case "float":
+					column.setType(Datatype.FLOAT);
+					break;
+				case "longtext":
+					column.setType(Datatype.LONGTEXT);
+					break;
+				case "smallint":
+					column.setType(Datatype.SMALLINT);
+					break;
+				case "string":
+					column.setType(Datatype.STRING);
+					break;
+				case "text":
+					column.setType(Datatype.TEXT);
+					break;
+				case "timestamp":
+					column.setType(Datatype.TIMESTAMP);
+					break;
+				case "tinytext":
+					column.setType(Datatype.TINYTEXT);
+					break;
+				case "varchar":
+					column.setType(Datatype.VARCHAR);
+					break;
+				}
+
 				column.setSize(rs.getString("character_maximum_length"));
 				column.setNullable(rs.getBoolean("is_nullable"));
-				columns.add(column);
+				table.getColumns().add(column);
 			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
 			rs.close();
 			st.close();
-			return columns;
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
-		return null;
 	}
-	
-	protected List<Row> getRows(Table table){
-		List<Row> rows = new ArrayList<Row>();
-		List<Column> columns = table.getColumns();
-		List<Cell> cells = new ArrayList<Cell>();
+
+	protected void getRows(TableImpl table) throws SQLException {
+		PreparedStatement st = null;
+		ResultSet rs = null;
 		Cell cell = null;
+		EList<Column> cols = table.getColumns();
 		try {
-			PreparedStatement st = conn.prepareStatement("SELECT COUNT(*) "
-					+ "FROM "+table.getName()+"");
-			ResultSet rs = st.executeQuery();
-			if (rs.next())
-			{
-				Row row = new Row();
-				for(int index=0; index<rs.getInt(1); index++)
-				{
-					for(Column column : columns){
-						cell = getCell(table, column, index);
-						cells.add(cell);
-					}
-					
+			st = conn.prepareStatement("SELECT *" + "FROM "
+					+ table.getName() + "");
+			rs = st.executeQuery();
+			while (rs.next()) {
+
+				Row row = new RowImpl();
+				for (Column col : cols) {
+					cell = new CellImpl();
+					cell.setValue(rs.getString(col.getName()));
+					cell.setColumn(col);
+					row.getCells().add(cell);
 				}
-				row.setCells(cells);
-				rows.add(row);
+				table.getRows().add(row);
 			}
 			rs.close();
 			st.close();
-			return rows;
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} finally {
+			rs.close();
+			st.close();
 		}
-		return null;
 	}
+
 	
-	protected Cell getCell(Table table, Column column, int offset){
-		Cell cell = new Cell();
+
+	public void getTableKeys(Table table) throws SQLException {
+		// Constraint constraint = null;
+		DatabaseMetaData metaData = null;
+		ResultSet keys = null;
 		try {
-			PreparedStatement st = conn.prepareStatement("SELECT "+column.getName()
-					+ " FROM "+table.getName()
-					+ " LIMIT"+ 1 +" OFFSET "+offset);
-			ResultSet rs = st.executeQuery();
-			if (rs.next())
-			{
-				cell.setColumn(column);
-				cell.setValue(rs.getString(1));
+			metaData = conn.getMetaData();
+			keys = metaData.getImportedKeys(conn.getCatalog(), null,
+					table.getName());
+
+			while (keys.next()) {
+
+				String fkTableName = keys.getString("FKTABLE_NAME");
+				String fkColumnName = keys.getString("FKCOLUMN_NAME");
+				String pkTableName = keys.getString("PKTABLE_NAME");
+				String pkColumnName = keys.getString("PKCOLUMN_NAME");
+				System.out.println();
+				System.out
+				.println("--------------------Foreign KEY Constraints-----------------");
+				System.out
+				.println("FKTableName.FKColumn -> PKTableName.PKColumn");
+				System.out.println(fkTableName + "." + fkColumnName + " -> "
+						+ pkTableName + "." + pkColumnName);
+
+				// here u add the above stuff to the Constraint object and then
+				// add add the Constraint Object to the talbes'constraint list
+				// for example
+				// cons.setName(foreignKey);
+				// cons.setType(FOREIGN KEY);
+				// cons.setRefTable(pkTableName);
+				// cons.setRefTabCol(pkColumnName);
+				// table.getconslist().add(cons);
 			}
-			rs.close();
-			st.close();
-			return cell;
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return null;
-	}
-	
-	protected List<Constraint> getConstraints(Table table){
-		List<Constraint> constraints = new ArrayList<Constraint>();
-		Reference reference = null;
-		Constraint constraint = null;
-		try {
-			PreparedStatement st = conn.prepareStatement("SELECT constraint_name, constraint_type "
-					+ "FROM information_schema.table_constraints "
-					+ "WHERE table_name = ?");
-			st.setString(1, table.getName());
-			ResultSet rs = st.executeQuery();
-			while (rs.next())
-			{
-				reference = getReference(rs.getString("constraint_name"));
-				constraint = new Constraint();
-				constraint.setName(rs.getString("constraint_name"));
-				constraint.setType(rs.getString("constraint_type"));
-				constraint.setReferences(reference);
-				constraints.add(constraint);
+			keys.close();
+
+			keys = metaData.getPrimaryKeys(conn.getCatalog(), null,
+					table.getName());
+			while (keys.next()) {
+
+				String pkName = keys.getString("PK_NAME");
+				String pkColumnName = keys.getString("COLUMN_NAME");
+				System.out.println();
+				System.out
+				.println("--------------------Primary key Constraints-----------------");
+				System.out.println("PKName.PKColumn");
+				System.out.println(pkName + "." + pkColumnName);
+
+				// here u add the above stuff to the Constraint object and then
+				// add add the Constraint Object to the talbes'constraint list
+				// for example
+				// cons.setName(primaryKey);
+				// cons.setType(PRIMARY KEY);
+				// cons.setRefTable(null);
+				// cons.setRefTabCol(null);
+				// table.getconslist().add(cons);
+
 			}
-			rs.close();
-			st.close();
-			return constraints;
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} finally {
+			keys.close();
+
 		}
-		return null;
 	}
-	
-	protected Reference getReference(String constraintName){
-		Reference reference = new Reference();
-		try {
-			PreparedStatement st = conn.prepareStatement("SELECT column_name "
-					+ "FROM information_schema.constraint_column_usage "
-					+ "WHERE constraint_name = ?");
-			st.setString(1, constraintName);
-			ResultSet rs = st.executeQuery();
-			if (rs.next())
-			{
-				reference.setConstraintName(constraintName);
-				reference.setColumnName(rs.getString("column_name"));
-			}
-			rs.close();
-			st.close();
-			return reference;
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return null;
-	}
+
 }
+
+/*
+ * PreparedStatement st =
+ * conn.prepareStatement("SELECT constraint_name, constraint_type " +
+ * "FROM information_schema.table_constraints " + "WHERE table_name = ?");
+ * st.setString(1, table.getName()); ResultSet rs = st.executeQuery(); while
+ * (rs.next()) { constraint = new ConstraintImpl();
+ * constraint.setName(rs.getString("constraint_name"));
+ * switch(rs.getString("constraint_type").toLowerCase()) { case "int" :
+ * constraint.setType(ConstraintType.FOREIGN_KEY); break; case "bigint" :
+ * constraint.setType(ConstraintType.UNIQUE); break; case "boolean" :
+ * constraint.setType(ConstraintType.COMPOSITE_PRIMARY_KEY); break; case "blob"
+ * : constraint.setType(ConstraintType.PRIMARY_KEY); break; }
+ * constraint.setReferenceTable(table); constraints.add(constraint); }
+ * rs.close(); st.close();
+ */
+/*
+ * protected Cell getCell(TableImpl table, Column column, int offset){ Cell
+ * cell = new CellImpl(); try { PreparedStatement st =
+ * conn.prepareStatement("SELECT "+column.getName() +
+ * " FROM "+table.getName() + " LIMIT"+ 1 +" OFFSET "+offset); ResultSet rs
+ * = st.executeQuery(); if (rs.next()) { cell.setColumn(column);
+ * cell.setValue(rs.getString(1)); } rs.close(); st.close(); return cell; }
+ * catch (SQLException e) { e.printStackTrace(); } return null; }
+ 
+
+protected Reference getReference(String constraintName) {
+	Reference reference = new Reference();
+	try {
+		PreparedStatement st = conn.prepareStatement("SELECT column_name "
+				+ "FROM information_schema.constraint_column_usage "
+				+ "WHERE constraint_name = ?");
+		st.setString(1, constraintName);
+		ResultSet rs = st.executeQuery();
+		if (rs.next()) {
+			reference.setConstraintName(constraintName);
+			reference.setColumnName(rs.getString("column_name"));
+		}
+		rs.close();
+		st.close();
+		return reference;
+	} catch (SQLException e) {
+		e.printStackTrace();
+	}
+	return null;
+}
+*/

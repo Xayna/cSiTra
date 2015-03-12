@@ -4,6 +4,7 @@ package metamodel.impl;
 
 import java.util.Collection;
 
+import metamodel.Column;
 import metamodel.Database;
 import metamodel.MetamodelPackage;
 import metamodel.Sequence;
@@ -11,15 +12,11 @@ import metamodel.Table;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
-
 import org.eclipse.emf.common.util.EList;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
-
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
@@ -68,6 +65,10 @@ public class DatabaseImpl extends MinimalEObjectImpl.Container implements Databa
 	 * @ordered
 	 */
 	protected EList<Table> table;
+
+	public void setTable(EList<Table> table) {
+		this.table = table;
+	}
 
 	/**
 	 * The cached value of the '{@link #getSequences() <em>Sequences</em>}' containment reference list.
@@ -256,9 +257,6 @@ public class DatabaseImpl extends MinimalEObjectImpl.Container implements Databa
 		return result.toString();
 	}
 
-	public void setTable(EList<Table> tables) {
-		// TODO Auto-generated method stub
-		table = tables;
-	}
+
 
 } //DatabaseImpl
