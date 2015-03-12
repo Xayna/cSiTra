@@ -61,7 +61,7 @@ public class Table2ColumnFamily implements Rule<Table, ColumnFamily> {
 
 	}
 
-	private void checkConstraints(Transformer t, nosql.Column col,
+	private void checkConstraints(Transformer t, nosql.Column targetCol,
 			metamodel.Column sourceCol) {
 		// to be impl by krishna
 		// target.setPK(null);
@@ -72,60 +72,61 @@ public class Table2ColumnFamily implements Rule<Table, ColumnFamily> {
 		// get options from UI
 		// target.setOptions(null);
 
-		PK pkObj = null;
+		PK pkObj;
 		for (Constraint constraint : sourceCol.getReferences()) {
 			try {
 				switch (constraint.getType().getValue()) {
-				case ConstraintType.COMPOSITE_PRIMARY_KEY_VALUE:
-					
-					break;
+				// there is no composite primary key type in my sql
+				// case ConstraintType.COMPOSITE_PRIMARY_KEY_VALUE:
+				//
+				// break;
 
 				case ConstraintType.PRIMARY_KEY_VALUE:
-					pkObj = new PKImpl();
-					pkObj.getColumns().add(col);
-					col.getColumnFamily().setPK(pkObj);
+					if (targetCol.getColumnFamily().getPK() == null)
+						pkObj = new PKImpl();
+					else
+						pkObj = targetCol.getColumnFamily().getPK();
+					pkObj.getColumns().add(targetCol);
+					targetCol.getColumnFamily().setPK(pkObj);
 					break;
 				case ConstraintType.UNIQUE_VALUE:
-					// no corresponding implementation in Cassandra , not to be implemented
+					// no corresponding implementation in Cassandra , not to be
+					// implemented
 					break;
 
 				case ConstraintType.FOREIGN_KEY_VALUE:
 
 					// create new column family
 					ColumnFamily ref = new ColumnFamilyImpl();
+					ref.setName(constraint.getReferenceTable().getName()+"_"+targetCol.getColumnFamily());
 					// initialize the PK and set the reference table name
 					pkObj = new PKImpl();
+
+					//
+					metamodel.Column refCol = constraint.getReferences().get(0);
+
+					// create primary key col.
+					nosql.Column pkCol = new nosql.impl.ColumnImpl();
+					
+					// set properties
+					pkCol.setDatatype(DatatypeMapping.getType(refCol
+							.getType()));
+					pkCol.setName(refCol.getName());
+					pkCol.setSize(refCol.getSize());
+
+					// add column to the family column.
+					ref.getColumns().add(pkCol);
+					// add the pkCol to pkObj list
+					pkObj.getColumns().add(pkCol);
+
+					// add the column to the column family
+					pkCol.setColumnFamily(ref);
 
 					// set the PK
 					ref.setPK(pkObj);
 
 					// add the column family to keyspace
 					ref.setKeyspace(Main.mainKeySpace);
-
-					// the assumption that each foreign key
-					// should reference to one pk key in sql
-					// but in case we have more than one pk in the reference
-					for (metamodel.Column refCol : constraint.getReferences()) {
-
-						// create primary key col.
-						nosql.Column pkCol = new nosql.impl.ColumnImpl();
-						// set properties
-						pkCol.setDatatype(DatatypeMapping.getType(sourceCol
-								.getType()));
-						pkCol.setName(col.getName().concat("_")
-								.concat(constraint.getName()));
-						pkCol.setPK(true);
-						pkCol.setSize(col.getSize());
-
-						// add column to the family column.
-						ref.getColumns().add(pkCol);
-						// add the pkCol to pkObj list
-						pkObj.getColumns().add(pkCol);
-
-						// add the column to the column family
-						pkCol.setColumnFamily(ref);
-
-					}
 
 					break;
 				default:
