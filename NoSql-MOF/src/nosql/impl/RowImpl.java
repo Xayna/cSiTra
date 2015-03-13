@@ -47,7 +47,7 @@ public class RowImpl extends ColumnFamilyImpl implements Row {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected RowImpl() {
+	public RowImpl() {
 		super();
 	}
 
