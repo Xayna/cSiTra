@@ -30,21 +30,26 @@ import metamodel.Table;
 
 public class DBTransformationService {
 
-	static Connection conn = null;
-
+	Connection conn = null;
+	String schemaName = null;
+	DBConnection dbConnection = null;
 	@SuppressWarnings("finally")
 	public Database generate() throws SQLException {
-		String databaseName = "postgres";
+		/*String databaseName = "postgres";
+		 schemaName ="zxm491";
 		String url = "jdbc:postgresql://localhost/" + databaseName;
 		// dev.mysql.com/doc/employee/en
 		Properties props = new Properties();
-		props.setProperty("user", "postgres");
-		props.setProperty("password", "heman");
+		props.setProperty("user", "zxm491");
+		props.setProperty("password", "zxm491");
+		*/
 		Database db = new DatabaseImpl();
 		try {
-			conn = DriverManager.getConnection(url, props);
-
-			db.setName(databaseName);
+			dbConnection = new DBConnection();
+			conn =dbConnection.connect();
+			
+			schemaName = dbConnection.getProps().getProperty(DBConnection.DB_SCHEMA_PROP);
+			db.setName(dbConnection.getProps().getProperty(DBConnection.DB_NAME_PROP));
 
 			getTables(db);
 
@@ -82,7 +87,7 @@ public class DBTransformationService {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			conn.close();
+			dbConnection.close();
 			return db;
 		}
 
@@ -101,7 +106,7 @@ public class DBTransformationService {
 		try {
 			st = conn.prepareStatement("SELECT table_name "
 					+ "FROM information_schema.tables "
-					+ "WHERE table_schema = 'public'" + "ORDER BY table_name");
+					+ "WHERE table_schema = '"+ schemaName +"'" + "ORDER BY table_name");
 			rs = st.executeQuery();
 			while (rs.next()) {
 				TableImpl table = new TableImpl();
