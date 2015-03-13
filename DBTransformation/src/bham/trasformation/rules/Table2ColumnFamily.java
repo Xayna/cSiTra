@@ -51,6 +51,11 @@ public class Table2ColumnFamily implements Rule<Table, ColumnFamily> {
 				target.getColumns().add(newCol);
 
 			}
+			
+			//remain the fk fill data part
+			fillData(source, target);
+			
+			
 			// target.setColumns((EList<Column>) t.transformAll(
 			// SqlCol2NoSqlCol.class, source.getColumns()));
 
@@ -140,4 +145,35 @@ public class Table2ColumnFamily implements Rule<Table, ColumnFamily> {
 
 		}
 	}
+
+	public ColumnFamily fillData (Table table , ColumnFamily colFamily)
+	{
+		
+		for (metamodel.Row sqlRow : table.getRows()) {
+			nosql.Row nSqlRow = new nosql.impl.RowImpl();
+			nSqlRow.setComment(colFamily.getComment());
+			nSqlRow.setKeyspace(colFamily.getKeyspace());
+			nSqlRow.setName(colFamily.getName());
+			nSqlRow.setPK(colFamily.getPK());
+			
+			for (metamodel.Cell sqlCell : sqlRow.getCells()) {
+				nosql.Cell nSqlCell = new nosql.impl.CellImpl();
+				nSqlCell.setValue(sqlCell.getValue());
+				nSqlCell.setColumn(getNoSqlColumn(colFamily.getColumns() , sqlCell.getColumn().getName()));
+				nSqlRow.getRows().add(nSqlCell);
+			}
+			colFamily.getRows().add(nSqlRow);
+		}
+		return colFamily;
+		
+	}
+
+	private Column getNoSqlColumn(EList columns, String name) {
+		for (Object object : columns) {
+			if(((Column)object).getName().equalsIgnoreCase(name))
+				return (Column)object;
+		}
+		return null;
+	}
+
 }
