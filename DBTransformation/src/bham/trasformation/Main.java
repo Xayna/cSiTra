@@ -1,5 +1,7 @@
 package bham.trasformation;
 
+import java.sql.Connection;
+
 import metamodel.Database;
 import nosql.Column;
 import nosql.ColumnFamily;
@@ -32,6 +34,7 @@ public class Main {
 			DBTransformationService dbConnector = new DBTransformationService();
 			Database db = dbConnector.generate();
 			
+			
 			KeySpace keyspace = converter.transform(Database2Keyspace.class, db);
 			
 			System.out.println("Keyspace: "+keyspace.getName());
@@ -51,7 +54,12 @@ public class Main {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	
 		
+		 catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 	}
 
 }
