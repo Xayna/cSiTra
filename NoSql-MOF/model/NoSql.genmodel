@@ -50,7 +50,6 @@
     </genClasses>
     <genClasses ecoreClass="NoSql.ecore#//Column">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute NoSql.ecore#//Column/name"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute NoSql.ecore#//Column/PK"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute NoSql.ecore#//Column/datatype"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute NoSql.ecore#//Column/size"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference NoSql.ecore#//Column/columnFamily"/>
@@ -60,6 +59,7 @@
     </genClasses>
     <genClasses ecoreClass="NoSql.ecore#//Row">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference NoSql.ecore#//Row/cells"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference NoSql.ecore#//Row/additionalColumns"/>
     </genClasses>
     <genClasses ecoreClass="NoSql.ecore#//Cell">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute NoSql.ecore#//Cell/value"/>

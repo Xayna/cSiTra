@@ -409,4 +409,18 @@
     <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_HRGBUsf8EeSFy-MJRM363A" id="(0.08759124087591241,0.014705882352941176)"/>
     <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_HRGBU8f8EeSFy-MJRM363A" id="(0.9739130434782609,0.7058823529411765)"/>
   </edges>
+  <edges xmi:type="notation:Edge" xmi:id="_R05bYMsqEeSok9kfLeE1Cw" type="3002" source="_YMQVMLHzEeSC__F7TE5sDg" target="_M5oVcLC2EeSD9veidASnTA">
+    <children xmi:type="notation:Node" xmi:id="_R05bZMsqEeSok9kfLeE1Cw" type="4011">
+      <layoutConstraint xmi:type="notation:Location" xmi:id="_R05bZcsqEeSok9kfLeE1Cw" x="-85" y="6"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_R05bZssqEeSok9kfLeE1Cw" type="4012">
+      <layoutConstraint xmi:type="notation:Location" xmi:id="_R05bZ8sqEeSok9kfLeE1Cw" x="-65" y="-11"/>
+    </children>
+    <styles xmi:type="notation:ConnectorStyle" xmi:id="_R05bYcsqEeSok9kfLeE1Cw" lineColor="4210752"/>
+    <styles xmi:type="notation:FontStyle" xmi:id="_R05bYssqEeSok9kfLeE1Cw" fontColor="4210752" fontName="Segoe UI" fontHeight="10"/>
+    <element xmi:type="ecore:EReference" href="NoSql.ecore#//Row/additionalColumns"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_R05bY8sqEeSok9kfLeE1Cw" points="[0, 0, 196, -51]$[-194, 29, 2, -22]"/>
+    <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_R0_iAMsqEeSok9kfLeE1Cw" id="(0.00980392156862745,0.18604651162790697)"/>
+    <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_R0_iAcsqEeSok9kfLeE1Cw" id="(0.9752066115702479,0.27058823529411763)"/>
+  </edges>
 </notation:Diagram>
