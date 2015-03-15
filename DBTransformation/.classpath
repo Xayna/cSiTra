@@ -7,5 +7,6 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="lib" path="libs/postgresql-9.4-1201.jdbc41.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Cassandra-JDBC dependencies"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

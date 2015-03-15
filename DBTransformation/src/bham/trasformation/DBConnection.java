@@ -33,8 +33,7 @@ public class DBConnection {
 	public static final String DB_SCHEMA_PROP = "database.schema";
 	public static final String DB_URL = "database.url";
 	// this should be dynamic ,used as  static for testing only
-	private static final String TEMP_FILE_PATH = "src/bham/trasformation/";
-	
+	private static final String TEMP_FILE_PATH = "src/bham/trasformation/";	
 	private static final String GET_DB_USER_NAME = "Enter your database username:";
 	private static final String GET_DB_USER_PASS = "Enter your database password:";
 	private static final String GET_DB_URL = "Enter your database URL:";
