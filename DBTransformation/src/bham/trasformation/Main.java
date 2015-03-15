@@ -9,6 +9,8 @@ import nosql.KeySpace;
 
 import org.eclipse.emf.common.util.EList;
 
+import com.datastax.driver.core.Session;
+
 import uk.ac.bham.sitra.RuleNotFoundException;
 import uk.ac.bham.sitra.SimpleTransformerImpl;
 import bham.trasformation.rules.Database2Keyspace;
@@ -31,6 +33,7 @@ public class Main {
 			converter.addRuleType(SQLCell2NoSQLCell.class);
 			converter.addRuleType(SQLCons2NoSQLCons.class);
 			
+			
 			DBTransformationService dbConnector = new DBTransformationService();
 			Database db = dbConnector.generate();
 			
@@ -50,7 +53,8 @@ public class Main {
 				System.out.println("----------------------------------------------");
 			}
 			
-		} catch (RuleNotFoundException e) {
+		} 
+		catch (RuleNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
