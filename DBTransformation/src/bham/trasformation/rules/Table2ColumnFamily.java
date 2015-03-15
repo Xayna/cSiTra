@@ -12,6 +12,7 @@ import metamodel.Table;
 import nosql.Column;
 import nosql.ColumnFamily;
 import nosql.PK;
+import nosql.impl.CellImpl;
 import nosql.impl.ColumnFamilyImpl;
 import nosql.impl.PKImpl;
 
@@ -183,7 +184,13 @@ public class Table2ColumnFamily implements Rule<Table, ColumnFamily> {
 						refTableCol.setDatatype(((nosql.Column)noSqlRow.getPK().getColumns().get(0)).getDatatype());
 						refTableCol.setSize(((nosql.Column)noSqlRow.getPK().getColumns().get(0)).getSize());
 						refTableCol.setName(((nosql.Column)noSqlRow.getPK().getColumns().get(0)).getName()+":"+new SimpleDateFormat("yyyyMddHHmmss").format(Calendar.getInstance().getTime()));
-						//refTableCol.setPK(false);
+						refTableRow.getAdditionalColumns().add(refTableCol);
+						nosql.Cell refTableCell = new nosql.impl.CellImpl();
+						refTableCell.setValue(getCell(noSqlRow.getCells(), cons.getReferences().get(0).getName()).getValue());
+						refTableCell.setColumn(refTableCol);
+						refTableRow.getCells().add(refTableCell);
+						
+						refTable.getRows().add(refTableRow);
 					}
 				}
 			}

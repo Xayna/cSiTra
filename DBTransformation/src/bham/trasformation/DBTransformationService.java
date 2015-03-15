@@ -16,6 +16,7 @@ import metamodel.Row;
 import metamodel.Table;
 import metamodel.impl.CellImpl;
 import metamodel.impl.ColumnImpl;
+import metamodel.impl.ConstraintImpl;
 import metamodel.impl.DatabaseImpl;
 import metamodel.impl.RowImpl;
 import metamodel.impl.TableImpl;
@@ -133,7 +134,7 @@ public class DBTransformationService {
 		ResultSet rs = null;
 		try {
 			
-			if(oneColumn){
+			if(!oneColumn){
 				st = conn.prepareStatement("SELECT "
 						+ "column_name, data_type, character_maximum_length, is_nullable "
 						+ "FROM information_schema.columns "
@@ -250,7 +251,7 @@ public class DBTransformationService {
 
 	
 
-	public void getTableKeys(Table table) throws SQLException {
+	public void getTableKeys(TableImpl table) throws SQLException {
 		DatabaseMetaData metaData = null;
 		ResultSet keys = null;
 		try {
@@ -260,7 +261,7 @@ public class DBTransformationService {
 
 			while (keys.next()) {
 				
-				Constraint cons = null;
+				Constraint cons = new ConstraintImpl();
 				String fkName = keys.getString("FK_NAME");
 				String fkTableName = keys.getString("FKTABLE_NAME");
 				String fkColumnName = keys.getString("FKCOLUMN_NAME");
@@ -274,19 +275,19 @@ public class DBTransformationService {
 				System.out.println(fkTableName + "." + fkColumnName + " -> "
 						+ pkTableName + "." + pkColumnName);
 
-				// here u add the above stuff to the Constraint object and then
-				// add add the Constraint Object to the talbes'constraint list
-				// for example
 				cons.setName(fkName);
 				cons.setType(ConstraintType.FOREIGN_KEY);
 				TableImpl refTable = new TableImpl();
 				refTable.setName(pkTableName);
 				getColumns(refTable, pkColumnName, true);
 				cons.setReferenceTable(refTable);
-				TableImpl currTable = new TableImpl();
-				currTable.setName(fkTableName);
-				getColumns(currTable, fkColumnName, true);
-				cons.setReferences(currTable.getColumns());
+				for(Column col:table.getColumns()){
+					if(col.getName().equalsIgnoreCase(fkColumnName)){
+						cons.getReferences().add(col);
+						col.getReferences().add(cons);
+						break;
+					}
+				}
 				table.getConstraints().add(cons);
 			}
 			keys.close();
@@ -295,22 +296,24 @@ public class DBTransformationService {
 					table.getName());
 			while (keys.next()) {
 
+				Constraint cons = new ConstraintImpl();
 				String pkName = keys.getString("PK_NAME");
 				String pkColumnName = keys.getString("COLUMN_NAME");
 				System.out.println();
-				System.out
-				.println("--------------------Primary key Constraints-----------------");
+				System.out.println("--------------------Primary key Constraints-----------------");
 				System.out.println("PKName.PKColumn");
 				System.out.println(pkName + "." + pkColumnName);
 
-				// here u add the above stuff to the Constraint object and then
-				// add add the Constraint Object to the talbes'constraint list
-				// for example
-				// cons.setName(primaryKey);
-				// cons.setType(PRIMARY KEY);
-				// cons.setRefTable(null);
-				// cons.setRefTabCol(null);
-				// table.getconslist().add(cons);
+				cons.setName(pkName);
+				cons.setType(ConstraintType.PRIMARY_KEY);
+				for(Column col:table.getColumns()){
+					if(col.getName().equalsIgnoreCase(pkColumnName)){
+						cons.getReferences().add(col);
+						col.getReferences().add(cons);
+						break;
+					}
+				}
+				table.getConstraints().add(cons);
 
 			}
 		} catch (SQLException e) {
