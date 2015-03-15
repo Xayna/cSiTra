@@ -183,7 +183,7 @@ public class Table2ColumnFamily implements Rule<Table, ColumnFamily> {
 						refTableCol.setDatatype(((nosql.Column)noSqlRow.getPK().getColumns().get(0)).getDatatype());
 						refTableCol.setSize(((nosql.Column)noSqlRow.getPK().getColumns().get(0)).getSize());
 						refTableCol.setName(((nosql.Column)noSqlRow.getPK().getColumns().get(0)).getName()+":"+new SimpleDateFormat("yyyyMddHHmmss").format(Calendar.getInstance().getTime()));
-						refTableCol.setPK(false);
+						//refTableCol.setPK(false);
 					}
 				}
 			}
