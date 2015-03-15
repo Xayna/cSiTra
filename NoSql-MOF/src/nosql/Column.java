@@ -13,7 +13,6 @@ import org.eclipse.emf.ecore.EObject;
  * The following features are supported:
  * <ul>
  *   <li>{@link nosql.Column#getName <em>Name</em>}</li>
- *   <li>{@link nosql.Column#isPK <em>PK</em>}</li>
  *   <li>{@link nosql.Column#getDatatype <em>Datatype</em>}</li>
  *   <li>{@link nosql.Column#getSize <em>Size</em>}</li>
  *   <li>{@link nosql.Column#getColumnFamily <em>Column Family</em>}</li>
@@ -50,32 +49,6 @@ public interface Column extends EObject {
 	 * @generated
 	 */
 	void setName(String value);
-
-	/**
-	 * Returns the value of the '<em><b>PK</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>PK</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>PK</em>' attribute.
-	 * @see #setPK(boolean)
-	 * @see nosql.NosqlPackage#getColumn_PK()
-	 * @model
-	 * @generated
-	 */
-	boolean isPK();
-
-	/**
-	 * Sets the value of the '{@link nosql.Column#isPK <em>PK</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>PK</em>' attribute.
-	 * @see #isPK()
-	 * @generated
-	 */
-	void setPK(boolean value);
 
 	/**
 	 * Returns the value of the '<em><b>Datatype</b></em>' attribute.

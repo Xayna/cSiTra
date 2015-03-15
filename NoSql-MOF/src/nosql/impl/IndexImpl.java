@@ -86,7 +86,7 @@ public class IndexImpl extends MinimalEObjectImpl.Container implements Index {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected IndexImpl() {
+	public IndexImpl() {
 		super();
 	}
 

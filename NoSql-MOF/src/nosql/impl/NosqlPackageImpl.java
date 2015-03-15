@@ -373,7 +373,7 @@ public class NosqlPackageImpl extends EPackageImpl implements NosqlPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getColumn_PK() {
+	public EAttribute getColumn_Datatype() {
 		return (EAttribute)columnEClass.getEStructuralFeatures().get(1);
 	}
 
@@ -382,7 +382,7 @@ public class NosqlPackageImpl extends EPackageImpl implements NosqlPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getColumn_Datatype() {
+	public EAttribute getColumn_Size() {
 		return (EAttribute)columnEClass.getEStructuralFeatures().get(2);
 	}
 
@@ -391,17 +391,8 @@ public class NosqlPackageImpl extends EPackageImpl implements NosqlPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getColumn_Size() {
-		return (EAttribute)columnEClass.getEStructuralFeatures().get(3);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public EReference getColumn_ColumnFamily() {
-		return (EReference)columnEClass.getEStructuralFeatures().get(4);
+		return (EReference)columnEClass.getEStructuralFeatures().get(3);
 	}
 
 	/**
@@ -438,6 +429,15 @@ public class NosqlPackageImpl extends EPackageImpl implements NosqlPackage {
 	 */
 	public EReference getRow_Cells() {
 		return (EReference)rowEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getRow_AdditionalColumns() {
+		return (EReference)rowEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -532,7 +532,6 @@ public class NosqlPackageImpl extends EPackageImpl implements NosqlPackage {
 
 		columnEClass = createEClass(COLUMN);
 		createEAttribute(columnEClass, COLUMN__NAME);
-		createEAttribute(columnEClass, COLUMN__PK);
 		createEAttribute(columnEClass, COLUMN__DATATYPE);
 		createEAttribute(columnEClass, COLUMN__SIZE);
 		createEReference(columnEClass, COLUMN__COLUMN_FAMILY);
@@ -542,6 +541,7 @@ public class NosqlPackageImpl extends EPackageImpl implements NosqlPackage {
 
 		rowEClass = createEClass(ROW);
 		createEReference(rowEClass, ROW__CELLS);
+		createEReference(rowEClass, ROW__ADDITIONAL_COLUMNS);
 
 		cellEClass = createEClass(CELL);
 		createEAttribute(cellEClass, CELL__VALUE);
@@ -606,7 +606,6 @@ public class NosqlPackageImpl extends EPackageImpl implements NosqlPackage {
 
 		initEClass(columnEClass, Column.class, "Column", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getColumn_Name(), ecorePackage.getEString(), "name", null, 1, 1, Column.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getColumn_PK(), ecorePackage.getEBoolean(), "PK", null, 0, 1, Column.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getColumn_Datatype(), this.getType(), "datatype", null, 1, 1, Column.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getColumn_Size(), ecorePackage.getEString(), "size", null, 0, 1, Column.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getColumn_ColumnFamily(), this.getColumnFamily(), null, "columnFamily", null, 0, 1, Column.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -616,6 +615,7 @@ public class NosqlPackageImpl extends EPackageImpl implements NosqlPackage {
 
 		initEClass(rowEClass, Row.class, "Row", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getRow_Cells(), this.getCell(), null, "cells", null, 1, -1, Row.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getRow_AdditionalColumns(), this.getColumn(), null, "additionalColumns", null, 1, -1, Row.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(cellEClass, Cell.class, "Cell", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getCell_Value(), ecorePackage.getEString(), "value", null, 0, 1, Cell.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

@@ -5,6 +5,7 @@ package nosql.impl;
 import java.util.Collection;
 
 import nosql.Cell;
+import nosql.Column;
 import nosql.NosqlPackage;
 import nosql.Row;
 
@@ -26,6 +27,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
  * The following features are implemented:
  * <ul>
  *   <li>{@link nosql.impl.RowImpl#getCells <em>Cells</em>}</li>
+ *   <li>{@link nosql.impl.RowImpl#getAdditionalColumns <em>Additional Columns</em>}</li>
  * </ul>
  * </p>
  *
@@ -41,6 +43,16 @@ public class RowImpl extends ColumnFamilyImpl implements Row {
 	 * @ordered
 	 */
 	protected EList cells;
+
+	/**
+	 * The cached value of the '{@link #getAdditionalColumns() <em>Additional Columns</em>}' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getAdditionalColumns()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList additionalColumns;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -77,10 +89,24 @@ public class RowImpl extends ColumnFamilyImpl implements Row {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EList getAdditionalColumns() {
+		if (additionalColumns == null) {
+			additionalColumns = new EObjectContainmentEList(Column.class, this, NosqlPackage.ROW__ADDITIONAL_COLUMNS);
+		}
+		return additionalColumns;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case NosqlPackage.ROW__CELLS:
 				return ((InternalEList)getCells()).basicRemove(otherEnd, msgs);
+			case NosqlPackage.ROW__ADDITIONAL_COLUMNS:
+				return ((InternalEList)getAdditionalColumns()).basicRemove(otherEnd, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -94,6 +120,8 @@ public class RowImpl extends ColumnFamilyImpl implements Row {
 		switch (featureID) {
 			case NosqlPackage.ROW__CELLS:
 				return getCells();
+			case NosqlPackage.ROW__ADDITIONAL_COLUMNS:
+				return getAdditionalColumns();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -109,6 +137,10 @@ public class RowImpl extends ColumnFamilyImpl implements Row {
 				getCells().clear();
 				getCells().addAll((Collection)newValue);
 				return;
+			case NosqlPackage.ROW__ADDITIONAL_COLUMNS:
+				getAdditionalColumns().clear();
+				getAdditionalColumns().addAll((Collection)newValue);
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -123,6 +155,9 @@ public class RowImpl extends ColumnFamilyImpl implements Row {
 			case NosqlPackage.ROW__CELLS:
 				getCells().clear();
 				return;
+			case NosqlPackage.ROW__ADDITIONAL_COLUMNS:
+				getAdditionalColumns().clear();
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -136,6 +171,8 @@ public class RowImpl extends ColumnFamilyImpl implements Row {
 		switch (featureID) {
 			case NosqlPackage.ROW__CELLS:
 				return cells != null && !cells.isEmpty();
+			case NosqlPackage.ROW__ADDITIONAL_COLUMNS:
+				return additionalColumns != null && !additionalColumns.isEmpty();
 		}
 		return super.eIsSet(featureID);
 	}

@@ -314,22 +314,13 @@ public interface NosqlPackage extends EPackage {
 	int COLUMN__NAME = 0;
 
 	/**
-	 * The feature id for the '<em><b>PK</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int COLUMN__PK = 1;
-
-	/**
 	 * The feature id for the '<em><b>Datatype</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int COLUMN__DATATYPE = 2;
+	int COLUMN__DATATYPE = 1;
 
 	/**
 	 * The feature id for the '<em><b>Size</b></em>' attribute.
@@ -338,7 +329,7 @@ public interface NosqlPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int COLUMN__SIZE = 3;
+	int COLUMN__SIZE = 2;
 
 	/**
 	 * The feature id for the '<em><b>Column Family</b></em>' reference.
@@ -347,7 +338,7 @@ public interface NosqlPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int COLUMN__COLUMN_FAMILY = 4;
+	int COLUMN__COLUMN_FAMILY = 3;
 
 	/**
 	 * The number of structural features of the '<em>Column</em>' class.
@@ -356,7 +347,7 @@ public interface NosqlPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int COLUMN_FEATURE_COUNT = 5;
+	int COLUMN_FEATURE_COUNT = 4;
 
 	/**
 	 * The meta object id for the '{@link nosql.impl.PKImpl <em>PK</em>}' class.
@@ -469,13 +460,22 @@ public interface NosqlPackage extends EPackage {
 	int ROW__CELLS = COLUMN_FAMILY_FEATURE_COUNT + 0;
 
 	/**
+	 * The feature id for the '<em><b>Additional Columns</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ROW__ADDITIONAL_COLUMNS = COLUMN_FAMILY_FEATURE_COUNT + 1;
+
+	/**
 	 * The number of structural features of the '<em>Row</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ROW_FEATURE_COUNT = COLUMN_FAMILY_FEATURE_COUNT + 1;
+	int ROW_FEATURE_COUNT = COLUMN_FAMILY_FEATURE_COUNT + 2;
 
 	/**
 	 * The meta object id for the '{@link nosql.impl.CellImpl <em>Cell</em>}' class.
@@ -785,17 +785,6 @@ public interface NosqlPackage extends EPackage {
 	EAttribute getColumn_Name();
 
 	/**
-	 * Returns the meta object for the attribute '{@link nosql.Column#isPK <em>PK</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>PK</em>'.
-	 * @see nosql.Column#isPK()
-	 * @see #getColumn()
-	 * @generated
-	 */
-	EAttribute getColumn_PK();
-
-	/**
 	 * Returns the meta object for the attribute '{@link nosql.Column#getDatatype <em>Datatype</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -869,6 +858,17 @@ public interface NosqlPackage extends EPackage {
 	 * @generated
 	 */
 	EReference getRow_Cells();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link nosql.Row#getAdditionalColumns <em>Additional Columns</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Additional Columns</em>'.
+	 * @see nosql.Row#getAdditionalColumns()
+	 * @see #getRow()
+	 * @generated
+	 */
+	EReference getRow_AdditionalColumns();
 
 	/**
 	 * Returns the meta object for class '{@link nosql.Cell <em>Cell</em>}'.
@@ -1137,14 +1137,6 @@ public interface NosqlPackage extends EPackage {
 		EAttribute COLUMN__NAME = eINSTANCE.getColumn_Name();
 
 		/**
-		 * The meta object literal for the '<em><b>PK</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute COLUMN__PK = eINSTANCE.getColumn_PK();
-
-		/**
 		 * The meta object literal for the '<em><b>Datatype</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -1203,6 +1195,14 @@ public interface NosqlPackage extends EPackage {
 		 * @generated
 		 */
 		EReference ROW__CELLS = eINSTANCE.getRow_Cells();
+
+		/**
+		 * The meta object literal for the '<em><b>Additional Columns</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference ROW__ADDITIONAL_COLUMNS = eINSTANCE.getRow_AdditionalColumns();
 
 		/**
 		 * The meta object literal for the '{@link nosql.impl.CellImpl <em>Cell</em>}' class.

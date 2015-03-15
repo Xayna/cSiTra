@@ -13,6 +13,7 @@ import org.eclipse.emf.common.util.EList;
  * The following features are supported:
  * <ul>
  *   <li>{@link nosql.Row#getCells <em>Cells</em>}</li>
+ *   <li>{@link nosql.Row#getAdditionalColumns <em>Additional Columns</em>}</li>
  * </ul>
  * </p>
  *
@@ -36,5 +37,21 @@ public interface Row extends ColumnFamily {
 	 * @generated
 	 */
 	EList getCells();
+
+	/**
+	 * Returns the value of the '<em><b>Additional Columns</b></em>' containment reference list.
+	 * The list contents are of type {@link nosql.Column}.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Additional Columns</em>' containment reference list isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Additional Columns</em>' containment reference list.
+	 * @see nosql.NosqlPackage#getRow_AdditionalColumns()
+	 * @model type="nosql.Column" containment="true" required="true"
+	 * @generated
+	 */
+	EList getAdditionalColumns();
 
 } // Row

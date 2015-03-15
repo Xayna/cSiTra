@@ -23,7 +23,6 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
  * The following features are implemented:
  * <ul>
  *   <li>{@link nosql.impl.ColumnImpl#getName <em>Name</em>}</li>
- *   <li>{@link nosql.impl.ColumnImpl#isPK <em>PK</em>}</li>
  *   <li>{@link nosql.impl.ColumnImpl#getDatatype <em>Datatype</em>}</li>
  *   <li>{@link nosql.impl.ColumnImpl#getSize <em>Size</em>}</li>
  *   <li>{@link nosql.impl.ColumnImpl#getColumnFamily <em>Column Family</em>}</li>
@@ -52,26 +51,6 @@ public class ColumnImpl extends MinimalEObjectImpl.Container implements Column {
 	 * @ordered
 	 */
 	protected String name = NAME_EDEFAULT;
-
-	/**
-	 * The default value of the '{@link #isPK() <em>PK</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #isPK()
-	 * @generated
-	 * @ordered
-	 */
-	protected static final boolean PK_EDEFAULT = false;
-
-	/**
-	 * The cached value of the '{@link #isPK() <em>PK</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #isPK()
-	 * @generated
-	 * @ordered
-	 */
-	protected boolean pk = PK_EDEFAULT;
 
 	/**
 	 * The default value of the '{@link #getDatatype() <em>Datatype</em>}' attribute.
@@ -167,27 +146,6 @@ public class ColumnImpl extends MinimalEObjectImpl.Container implements Column {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public boolean isPK() {
-		return pk;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void setPK(boolean newPK) {
-		boolean oldPK = pk;
-		pk = newPK;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, NosqlPackage.COLUMN__PK, oldPK, pk));
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public Type getDatatype() {
 		return datatype;
 	}
@@ -272,8 +230,6 @@ public class ColumnImpl extends MinimalEObjectImpl.Container implements Column {
 		switch (featureID) {
 			case NosqlPackage.COLUMN__NAME:
 				return getName();
-			case NosqlPackage.COLUMN__PK:
-				return isPK() ? Boolean.TRUE : Boolean.FALSE;
 			case NosqlPackage.COLUMN__DATATYPE:
 				return getDatatype();
 			case NosqlPackage.COLUMN__SIZE:
@@ -294,9 +250,6 @@ public class ColumnImpl extends MinimalEObjectImpl.Container implements Column {
 		switch (featureID) {
 			case NosqlPackage.COLUMN__NAME:
 				setName((String)newValue);
-				return;
-			case NosqlPackage.COLUMN__PK:
-				setPK(((Boolean)newValue).booleanValue());
 				return;
 			case NosqlPackage.COLUMN__DATATYPE:
 				setDatatype((Type)newValue);
@@ -321,9 +274,6 @@ public class ColumnImpl extends MinimalEObjectImpl.Container implements Column {
 			case NosqlPackage.COLUMN__NAME:
 				setName(NAME_EDEFAULT);
 				return;
-			case NosqlPackage.COLUMN__PK:
-				setPK(PK_EDEFAULT);
-				return;
 			case NosqlPackage.COLUMN__DATATYPE:
 				setDatatype(DATATYPE_EDEFAULT);
 				return;
@@ -346,8 +296,6 @@ public class ColumnImpl extends MinimalEObjectImpl.Container implements Column {
 		switch (featureID) {
 			case NosqlPackage.COLUMN__NAME:
 				return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
-			case NosqlPackage.COLUMN__PK:
-				return pk != PK_EDEFAULT;
 			case NosqlPackage.COLUMN__DATATYPE:
 				return datatype != DATATYPE_EDEFAULT;
 			case NosqlPackage.COLUMN__SIZE:
@@ -369,8 +317,6 @@ public class ColumnImpl extends MinimalEObjectImpl.Container implements Column {
 		StringBuffer result = new StringBuffer(super.toString());
 		result.append(" (name: ");
 		result.append(name);
-		result.append(", PK: ");
-		result.append(pk);
 		result.append(", datatype: ");
 		result.append(datatype);
 		result.append(", size: ");
