@@ -3,6 +3,9 @@
  */
 package bham.trasformation.rules;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
 import metamodel.Constraint;
 import metamodel.ConstraintType;
 import metamodel.Table;
@@ -14,10 +17,10 @@ import nosql.impl.PKImpl;
 
 import org.eclipse.emf.common.util.EList;
 
-import bham.trasformation.Main;
 import uk.ac.bham.sitra.Rule;
 import uk.ac.bham.sitra.RuleNotFoundException;
 import uk.ac.bham.sitra.Transformer;
+import bham.trasformation.Main;
 
 /**
  * @author Manali
@@ -66,8 +69,7 @@ public class Table2ColumnFamily implements Rule<Table, ColumnFamily> {
 
 	}
 
-	private void checkConstraints(Transformer t, nosql.Column targetCol,
-			metamodel.Column sourceCol) {
+	private void checkConstraints(Transformer t, nosql.Column targetCol, metamodel.Column sourceCol) {
 		// to be impl by krishna
 		// target.setPK(null);
 
@@ -106,30 +108,17 @@ public class Table2ColumnFamily implements Rule<Table, ColumnFamily> {
 					ref.setName(constraint.getReferenceTable().getName()+"_"+targetCol.getColumnFamily());
 					// initialize the PK and set the reference table name
 					pkObj = new PKImpl();
-
-					//
-					metamodel.Column refCol = constraint.getReferences().get(0);
-
 					// create primary key col.
-					nosql.Column pkCol = new nosql.impl.ColumnImpl();
-					
-					// set properties
-					pkCol.setDatatype(DatatypeMapping.getType(refCol
-							.getType()));
-					pkCol.setName(refCol.getName());
-					pkCol.setSize(refCol.getSize());
-
+					nosql.Column pkCol = (nosql.Column)t.transform(SqlCol2NoSqlCol.class, constraint.getReferenceTable().getColumns().get(0));
+					pkCol.setName(constraint.getReferenceTable().getName()+"_"+pkCol.getName());
 					// add column to the family column.
 					ref.getColumns().add(pkCol);
 					// add the pkCol to pkObj list
 					pkObj.getColumns().add(pkCol);
-
 					// add the column to the column family
 					pkCol.setColumnFamily(ref);
-
 					// set the PK
 					ref.setPK(pkObj);
-
 					// add the column family to keyspace
 					ref.setKeyspace(Main.mainKeySpace);
 
@@ -150,19 +139,54 @@ public class Table2ColumnFamily implements Rule<Table, ColumnFamily> {
 	{
 		
 		for (metamodel.Row sqlRow : table.getRows()) {
-			nosql.Row nSqlRow = new nosql.impl.RowImpl();
-			nSqlRow.setComment(colFamily.getComment());
-			nSqlRow.setKeyspace(colFamily.getKeyspace());
-			nSqlRow.setName(colFamily.getName());
-			nSqlRow.setPK(colFamily.getPK());
+			nosql.Row noSqlRow = new nosql.impl.RowImpl();
+			noSqlRow.setComment(colFamily.getComment());
+			noSqlRow.setKeyspace(colFamily.getKeyspace());
+			noSqlRow.setName(colFamily.getName());
+			noSqlRow.setPK(colFamily.getPK());
 			
 			for (metamodel.Cell sqlCell : sqlRow.getCells()) {
-				nosql.Cell nSqlCell = new nosql.impl.CellImpl();
-				nSqlCell.setValue(sqlCell.getValue());
-				nSqlCell.setColumn(getNoSqlColumn(colFamily.getColumns() , sqlCell.getColumn().getName()));
-				nSqlRow.getRows().add(nSqlCell);
+				nosql.Cell noSqlCell = new nosql.impl.CellImpl();
+				noSqlCell.setValue(sqlCell.getValue());
+				noSqlCell.setColumn(getNoSqlColumn(colFamily.getColumns() , sqlCell.getColumn().getName()));
+				noSqlRow.getCells().add(noSqlCell);
 			}
-			colFamily.getRows().add(nSqlRow);
+			colFamily.getRows().add(noSqlRow);
+			for(Constraint cons: table.getConstraints()){
+				if(cons.getType() == ConstraintType.FOREIGN_KEY){
+					ColumnFamily refTable = getColumnFamily(cons.getReferenceTable().getName()+"_"+table.getName());
+					if(refTable == null)
+						System.err.println("FOREIGN KEY REFERENCE TABLE NOT FOUND!!");
+					else{
+						String refValue = getCell(noSqlRow.getCells(), cons.getReferenceTable().getColumns().get(0).getName()).getValue();
+						boolean present = false;
+						nosql.Row refTableRow = null;
+						for(nosql.Row rows: (EList<nosql.Row>)refTable.getRows()){
+							if(getCell(rows.getCells(), ((nosql.Column)rows.getPK().getColumns().get(0)).getName()).equals(refValue)){
+								present = true;
+								refTableRow = rows;
+								break;
+							}
+						}
+						if(!present){
+							refTableRow = new nosql.impl.RowImpl();
+							refTableRow.setKeyspace(refTable.getKeyspace());
+							refTableRow.setName(refTable.getName());
+							refTableRow.setPK(refTable.getPK());
+							nosql.Cell refTablePKCell = new nosql.impl.CellImpl();
+							refTablePKCell.setValue(refValue);
+							refTablePKCell.setColumn((nosql.Column)noSqlRow.getPK().getColumns().get(0));
+							refTableRow.getCells().add(refTablePKCell);
+						}
+						nosql.Column refTableCol = new nosql.impl.ColumnImpl();
+						refTableCol.setColumnFamily(refTableRow);
+						refTableCol.setDatatype(((nosql.Column)noSqlRow.getPK().getColumns().get(0)).getDatatype());
+						refTableCol.setSize(((nosql.Column)noSqlRow.getPK().getColumns().get(0)).getSize());
+						refTableCol.setName(((nosql.Column)noSqlRow.getPK().getColumns().get(0)).getName()+":"+new SimpleDateFormat("yyyyMddHHmmss").format(Calendar.getInstance().getTime()));
+						refTableCol.setPK(false);
+					}
+				}
+			}
 		}
 		return colFamily;
 		
@@ -172,6 +196,22 @@ public class Table2ColumnFamily implements Rule<Table, ColumnFamily> {
 		for (Object object : columns) {
 			if(((Column)object).getName().equalsIgnoreCase(name))
 				return (Column)object;
+		}
+		return null;
+	}
+
+	private ColumnFamily getColumnFamily(String name) {
+		for (Object object : Main.mainKeySpace.getFamilies()) {
+			if(((ColumnFamily)object).getName().equalsIgnoreCase(name))
+				return (ColumnFamily)object;
+		}
+		return null;
+	}
+
+	private nosql.Cell getCell(EList cells, String name) {
+		for (Object object : cells) {
+			if(((nosql.Cell)object).getColumn().getName().equalsIgnoreCase(name))
+				return (nosql.Cell)object;
 		}
 		return null;
 	}

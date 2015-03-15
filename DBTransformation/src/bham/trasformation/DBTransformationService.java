@@ -2,31 +2,25 @@ package bham.trasformation;
 
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
-
-import org.eclipse.emf.common.util.EList;
 
 import metamodel.Cell;
+import metamodel.Column;
 import metamodel.Constraint;
 import metamodel.ConstraintType;
 import metamodel.Database;
 import metamodel.Datatype;
 import metamodel.Row;
-import metamodel.Column;
+import metamodel.Table;
+import metamodel.impl.CellImpl;
 import metamodel.impl.ColumnImpl;
 import metamodel.impl.DatabaseImpl;
 import metamodel.impl.RowImpl;
 import metamodel.impl.TableImpl;
-import metamodel.impl.CellImpl;
-import metamodel.impl.ConstraintImpl;
-import bham.transformation.model.Reference;
-import metamodel.Table;
+
+import org.eclipse.emf.common.util.EList;
 
 public class DBTransformationService {
 
@@ -113,7 +107,7 @@ public class DBTransformationService {
 				
 				/** set table name & set its columns **/
 				table.setName(rs.getString("table_name"));
-				getColumns(table);
+				getColumns(table, null, false);
 
 				/** get table rows & set into tables **/
 				getRows(table);
@@ -134,15 +128,25 @@ public class DBTransformationService {
 
 	/** Read column from database 
 	 * @throws SQLException **/
-	protected void getColumns(TableImpl table) throws SQLException {
+	protected void getColumns(TableImpl table, String columnName, boolean oneColumn) throws SQLException {
 		PreparedStatement st = null;
 		ResultSet rs = null;
 		try {
-			st = conn.prepareStatement("SELECT "
-					+ "column_name, data_type, character_maximum_length, is_nullable "
-					+ "FROM information_schema.columns "
-					+ "WHERE table_name = ?");
-			st.setString(1, table.getName());
+			
+			if(oneColumn){
+				st = conn.prepareStatement("SELECT "
+						+ "column_name, data_type, character_maximum_length, is_nullable "
+						+ "FROM information_schema.columns "
+						+ "WHERE table_name = ?");
+				st.setString(1, table.getName());
+			} else {
+				st = conn.prepareStatement("SELECT "
+						+ "column_name, data_type, character_maximum_length, is_nullable "
+						+ "FROM information_schema.columns "
+						+ "WHERE table_name = ? AND column_name = ?");
+				st.setString(1, table.getName());
+				st.setString(2, columnName);
+			}
 			rs = st.executeQuery();
 			while (rs.next()) {
 
@@ -247,7 +251,6 @@ public class DBTransformationService {
 	
 
 	public void getTableKeys(Table table) throws SQLException {
-		// Constraint constraint = null;
 		DatabaseMetaData metaData = null;
 		ResultSet keys = null;
 		try {
@@ -256,7 +259,9 @@ public class DBTransformationService {
 					table.getName());
 
 			while (keys.next()) {
-
+				
+				Constraint cons = null;
+				String fkName = keys.getString("FK_NAME");
 				String fkTableName = keys.getString("FKTABLE_NAME");
 				String fkColumnName = keys.getString("FKCOLUMN_NAME");
 				String pkTableName = keys.getString("PKTABLE_NAME");
@@ -272,11 +277,17 @@ public class DBTransformationService {
 				// here u add the above stuff to the Constraint object and then
 				// add add the Constraint Object to the talbes'constraint list
 				// for example
-				// cons.setName(foreignKey);
-				// cons.setType(FOREIGN KEY);
-				// cons.setRefTable(pkTableName);
-				// cons.setRefTabCol(pkColumnName);
-				// table.getconslist().add(cons);
+				cons.setName(fkName);
+				cons.setType(ConstraintType.FOREIGN_KEY);
+				TableImpl refTable = new TableImpl();
+				refTable.setName(pkTableName);
+				getColumns(refTable, pkColumnName, true);
+				cons.setReferenceTable(refTable);
+				TableImpl currTable = new TableImpl();
+				currTable.setName(fkTableName);
+				getColumns(currTable, fkColumnName, true);
+				cons.setReferences(currTable.getColumns());
+				table.getConstraints().add(cons);
 			}
 			keys.close();
 
@@ -309,7 +320,7 @@ public class DBTransformationService {
 
 		}
 	}
-
+	
 }
 
 /*

@@ -96,6 +96,22 @@ public interface Constraint extends EObject {
 	 * @generated
 	 */
 	EList<Column> getReferences();
+	
+	/**
+	 * Sets the value of the '<em><b>References</b></em>' containment reference list.
+	 * The list contents are of type {@link metamodel.Column}.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>References</em>' containment reference list isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>References</em>' containment reference list.
+	 * @see metamodel.MetamodelPackage#getConstraint_References()
+	 * @model containment="true" required="true"
+	 * @generated
+	 */
+	void setReferences(EList<Column> columns);
 
 	/**
 	 * Returns the value of the '<em><b>Reference Table</b></em>' attribute.

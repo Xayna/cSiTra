@@ -2,6 +2,7 @@
  */
 package metamodel.impl;
 
+import java.awt.List;
 import java.util.Collection;
 
 import metamodel.Column;
@@ -177,7 +178,19 @@ public class ConstraintImpl extends MinimalEObjectImpl.Container implements Cons
 		}
 		return references;
 	}
-
+	
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setReferences(EList<Column> newColumns) {
+		EList<Column> oldColumns = references;
+		references = newColumns;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, MetamodelPackage.CONSTRAINT__REFERENCES, oldColumns, references));
+	}
+	
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
