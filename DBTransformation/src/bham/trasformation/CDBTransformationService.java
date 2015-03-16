@@ -2,23 +2,37 @@ package bham.trasformation;
 
 import org.eclipse.emf.common.util.EList;
 
+import com.datastax.driver.core.Cluster;
+import com.datastax.driver.core.Host;
+import com.datastax.driver.core.Metadata;
 import com.datastax.driver.core.Session;
 
 import nosql.*;
 
 public class CDBTransformationService {
 
-	NoSQLConnection conn;
+	 Cluster conn;
 	Session session;
 
 	public void generate(KeySpace myKeySpace) {
 		try {
-
-			conn = new NoSQLConnection();
+			conn = Cluster.builder().addContactPoint("127.0.0.1").build();
 			session = conn.connect();
+			 Metadata metadata = conn.getMetadata();
+		      System.out.printf("Connected to cluster: %s\n", 
+		            metadata.getClusterName());
+		      for ( Host host : metadata.getAllHosts() ) {
+		         System.out.printf("Datatacenter: %s; Host: %s; Rack: %s\n",
+		               host.getDatacenter(), host.getAddress(), host.getRack());
+		      }
+			System.out.println("i'm here");
+
+		//	conn = new NoSQLConnection();
+		//	session = conn.connect();
 			createSchema(session, myKeySpace);
-			fillData(session, myKeySpace);
-			conn.close();
+			System.out.println("i'm here");
+		//	fillData(session, myKeySpace);
+		//	conn.close();
 
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -26,8 +40,29 @@ public class CDBTransformationService {
 	}
 
 	private void fillData(Session mySession, KeySpace myKeySpace) {
-		// TODO Auto-generated method stub
+	 try{
+			EList<ColumnFamily> tables = myKeySpace.getFamilies();
+			for( ColumnFamily tab : tables){
+				EList<Row> rows =  tab.getRows();
+				for(Row row: rows){
+					EList<Cell> cells =  row.getCells();
+					for(Cell cell : cells){
+						//if((cell.getColumn().getName() != ta) && (cell.getColumn().getName()))
+						session.execute("INSERT INTO " + tab.getName() + "(" +cell.getColumn().getName()+ ")" + " VALUES ('"+ cell.getValue() +");");
+						//	session.execute("INSERT INTO users (firstname, lastname, age, email, city) VALUES ('John', 'Smith', 46, 'johnsmith@email.com', 'Sacramento');");
 
+					}
+				} 			
+			}
+	 }catch(Exception e){
+		 e.printStackTrace();
+	 }
+			
+			/*
+			session.execute("INSERT INTO users (firstname, lastname, age, email, city) VALUES ('Jane', 'Doe', 36, 'janedoe@email.com', 'Beverly Hills');");
+
+			session.execute(" INSERT INTO users (firstname, lastname, age, email, city) VALUES ('Rob', 'Byrne', 24, 'robbyrne@email.com', 'San Diego');");
+	*/
 	}
 
 	private void createSchema(Session mySession, KeySpace myKeySpace) {
