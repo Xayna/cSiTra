@@ -149,6 +149,10 @@ public class DBConnection {
 		// get the schema
 		String schema = props.getProperty(DB_SCHEMA_PROP);
 
+		String usernameP = props.getProperty(DB_USER_NAME_PROP);
+		
+		String pass = props.getProperty(DB_PASSWORD_PROP);
+		
 		JTextField dbDriver = new JTextField((drivers == null) ? "" : drivers,
 				50);
 		JTextField dbURL = new JTextField((databaseUrl == null) ? ""
@@ -156,8 +160,8 @@ public class DBConnection {
 		JTextField dbName = new JTextField((database == null) ? "" : database,
 				20);
 		JTextField dbSchema = new JTextField((schema == null) ? "" : schema, 20);
-		JTextField username = new JTextField(20);
-		JPasswordField password = new JPasswordField(20);
+		JTextField username = new JTextField((usernameP == null) ? "" : usernameP, 20);
+		JPasswordField password = new JPasswordField((pass == null) ? "" : pass, 20);
 
 		final Object[] fields = { GET_DB_DRIVER, dbDriver, GET_DB_URL, dbURL,
 				GET_DB_NAME, dbName, GET_DB_SCHEMA, dbSchema, GET_DB_USER_NAME,
@@ -191,6 +195,10 @@ public class DBConnection {
 		// set the schema
 		props.setProperty(DB_SCHEMA_PROP, dbInfo[3]);
 
+		props.setProperty(DB_USER_NAME_PROP, dbInfo[4]);
+		
+		props.setProperty(DB_PASSWORD_PROP, dbInfo[5]);
+		
 		File file = new File(TEMP_FILE_PATH
 				+ NEW_PROPERTIES_FILE_NAME);
 		OutputStream out = null;

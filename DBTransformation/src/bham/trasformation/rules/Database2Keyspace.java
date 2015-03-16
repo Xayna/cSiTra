@@ -7,13 +7,10 @@ import java.util.List;
 import metamodel.Database;
 import nosql.ColumnFamily;
 import nosql.KeySpace;
-
-import org.eclipse.emf.common.util.EList;
-
-import bham.trasformation.Main;
 import uk.ac.bham.sitra.Rule;
 import uk.ac.bham.sitra.RuleNotFoundException;
 import uk.ac.bham.sitra.Transformer;
+import bham.trasformation.Main;
 /**
  * @author kris
  *

@@ -40,12 +40,11 @@ public class Main {
 			
 			KeySpace keyspace = converter.transform(Database2Keyspace.class, db);
 			
-			CDBTransformationService t = new CDBTransformationService();
-			t.generate(keyspace);
 			
 			
 			System.out.println("Keyspace: "+keyspace.getName());
 			System.out.println("---------------------------------------");
+			System.out.println("---------------------- NO OF COLUMN FAMILES: "+keyspace.getFamilies().size());
 			for(ColumnFamily colFam: (EList<ColumnFamily>)keyspace.getFamilies()){
 				System.out.println("Column Family: "+colFam.getName());
 				for(Column col: (EList<Column>)colFam.getColumns()){
@@ -54,19 +53,23 @@ public class Main {
 					System.out.println("--Size: "+col.getSize());
 					System.out.println();
 				}
-				System.out.println("----------------------------------------------");
+				System.out.println();
 				for(nosql.Row row: (EList<nosql.Row>)colFam.getRows()){
 					for(nosql.Cell cell: (EList<nosql.Cell>)row.getCells()){
-						System.out.print(cell.getValue()+"("+cell.getColumn()+")\t");
+						System.out.print(cell.getValue()+"("+cell.getColumn().getName()+")\t");
 					}
 					System.out.println();
 				}
-				System.out.println("Primary Key -------");
+				System.out.print("Primary Key ------- ");
 				for(Column col: (EList<Column>)colFam.getPK().getColumns()){
-					System.out.print(col+"\t");
+					System.out.print(col.getName()+"\t");
 				}
+				System.out.println();
+				System.out.println("----------------------------------------------");
 			}
-			
+
+			CDBTransformationService t = new CDBTransformationService();
+			t.generate(keyspace);
 		} 
 		catch (RuleNotFoundException e) {
 			// TODO Auto-generated catch block

@@ -1,13 +1,17 @@
 package bham.trasformation;
 
+import nosql.Cell;
+import nosql.Column;
+import nosql.ColumnFamily;
+import nosql.KeySpace;
+import nosql.Row;
+
 import org.eclipse.emf.common.util.EList;
 
 import com.datastax.driver.core.Cluster;
 import com.datastax.driver.core.Host;
 import com.datastax.driver.core.Metadata;
 import com.datastax.driver.core.Session;
-
-import nosql.*;
 
 public class CDBTransformationService {
 
@@ -67,10 +71,20 @@ public class CDBTransformationService {
 
 	private void createSchema(Session mySession, KeySpace myKeySpace) {
 		try {
+			try{
+			//drop keySpace 
+			session.execute("DROP KEYSPACE " + myKeySpace.getName() );
+			}catch (Exception ex)
+			{
+				System.out.println("createSchema : Keyspace "+myKeySpace.getName()+" does not exists"  );
+			}
 			// keySpace
-			session.execute("CREATE KEYSPACE " + myKeySpace.getName()
+			String keySpaceStr = "CREATE KEYSPACE " + myKeySpace.getName()
 					+ " WITH replication "
-					+ "= {'class':'SimpleStrategy', 'replication_factor':1};");
+					+ "= {'class':'SimpleStrategy', 'replication_factor':1};" ;
+			
+			System.out.println(keySpaceStr);
+			session.execute(keySpaceStr);
 
 			session.execute("USE " + myKeySpace.getName() + ";");
 
@@ -90,19 +104,25 @@ public class CDBTransformationService {
 					// columnsStr += "(" + col.getSize() + ")";
 					// columnsStr += ",";
 				}
-
-				if ((pkColumns = family.getPK().getColumns()).size() > 0) {
+				/*System.out.println("1 ---- "+(family.getPK() != null?"not null":"null"));
+				System.out.println(" 2 ---- " + ((pkColumns = family.getPK().getColumns()) != null));
+				System.out.println(" 3 ---- "+ (pkColumns.size() > 0));*/
+				if ( family.getPK() != null && (pkColumns = family.getPK().getColumns()) != null && pkColumns.size() > 0) {
 					int index = 0;
+					//System.out.println(pkColumns.size()+"!!!!!!!!");
 					while (index < pkColumns.size() - 1) {
 						pkStr += ((Column) pkColumns.get(index)).getName();
 						pkStr += ",";
 						index++;
 					}
 					pkStr += ((Column) pkColumns.get(index)).getName();
+					//System.out.println(pkStr);
+					
 				}
-				String noSqlStr = "CREATE TABLE" + family.getName() + "("
-						+ columnsStr + "PRIMARY KEY (" + pkStr + "));";
-
+				pkStr = "PRIMARY KEY (" + pkStr + ")";
+				String noSqlStr = "CREATE TABLE " + family.getName() + "("
+						+ columnsStr + pkStr +  ");";
+				System.out.println(noSqlStr);
 				session.execute(noSqlStr);
 			}
 

@@ -38,7 +38,7 @@ public class PKImpl extends MinimalEObjectImpl.Container implements PK {
 	 * @generated
 	 * @ordered
 	 */
-	protected EList columns;
+	protected EList<nosql.Column> columns;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -63,9 +63,9 @@ public class PKImpl extends MinimalEObjectImpl.Container implements PK {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EList getColumns() {
+	public EList<nosql.Column> getColumns() {
 		if (columns == null) {
-			columns = new EObjectResolvingEList(Column.class, this, NosqlPackage.PK__COLUMNS);
+			columns = new EObjectResolvingEList<nosql.Column>(nosql.Column.class, this, NosqlPackage.PK__COLUMNS);
 		}
 		return columns;
 	}

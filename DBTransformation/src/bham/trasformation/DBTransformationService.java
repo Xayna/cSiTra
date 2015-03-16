@@ -44,7 +44,7 @@ public class DBTransformationService {
 			conn =dbConnection.connect();
 			
 			schemaName = dbConnection.getProps().getProperty(DBConnection.DB_SCHEMA_PROP);
-			db.setName(dbConnection.getProps().getProperty(DBConnection.DB_NAME_PROP));
+			db.setName(schemaName);
 
 			getTables(db);
 
@@ -53,10 +53,18 @@ public class DBTransformationService {
 					System.out.println("------------------");
 					System.out.println(table.getName());
 					System.out.println("------------------");
+					System.out.println("Number of Columns :" + table.getColumns().size());
 					for (metamodel.Column column : table.getColumns()) {
 						System.out.println(column.getName() + " "
 								+ column.getType() + " " + column.getSize()
 								+ " " + Boolean.toString(column.isNullable()));
+						/*System.out.println("Refrences*****************************************");
+						EList<Constraint> cons = column.getReferences();
+						for (Constraint constraint : cons) {
+							System.out.println("Ref : " + constraint.getName()+ " " + constraint.getType().getName());
+						
+							
+						}*/
 					}
 
 					System.out.println("Values: ");
@@ -66,8 +74,10 @@ public class DBTransformationService {
 						}
 						System.out.println("");
 					}
+					
+					System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
 					for(Constraint con: table.getConstraints()){
-						System.out.print(con.getName()+" with type "+con.getType() +" on");
+						System.out.print(con.getName()+" with type "+con.getType() +" on ");
 						for(metamodel.Column col: con.getReferences()){
 							System.out.print(col.getName()+", ");
 						}
@@ -160,6 +170,7 @@ public class DBTransformationService {
 
 				Column column = new ColumnImpl();
 				column.setName(rs.getString("column_name"));
+				
 				switch (rs.getString("data_type").toLowerCase()) {
 				case "int":
 					column.setType(Datatype.INT);
@@ -218,6 +229,8 @@ public class DBTransformationService {
 				column.setNullable(rs.getBoolean("is_nullable"));
 				table.getColumns().add(column);
 			}
+			//System.out.println("Afer adding columns the side is : " + table.getColumns().size());	
+			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
@@ -232,8 +245,8 @@ public class DBTransformationService {
 		Cell cell = null;
 		EList<Column> cols = table.getColumns();
 		try {
-			st = conn.prepareStatement("SELECT *" + "FROM "
-					+ table.getName() + "");
+			st = conn.prepareStatement("SELECT * " + "FROM "
+					+schemaName +"."+ table.getName() + "");
 			rs = st.executeQuery();
 			while (rs.next()) {
 
@@ -262,6 +275,7 @@ public class DBTransformationService {
 		DatabaseMetaData metaData = null;
 		ResultSet keys = null;
 		try {
+			System.out.println("getTablekey : # of col" + table.getColumns().size());
 			metaData = conn.getMetaData();
 			keys = metaData.getImportedKeys(conn.getCatalog(), null,
 					table.getName());
@@ -275,27 +289,35 @@ public class DBTransformationService {
 				String pkTableName = keys.getString("PKTABLE_NAME");
 				String pkColumnName = keys.getString("PKCOLUMN_NAME");
 				System.out.println();
-				System.out
-				.println("--------------------Foreign KEY Constraints-----------------");
-				System.out
-				.println("FKTableName.FKColumn -> PKTableName.PKColumn");
-				System.out.println(fkTableName + "." + fkColumnName + " -> "
-						+ pkTableName + "." + pkColumnName);
+				System.out.println("--------------------Foreign KEY Constraints-----------------");
+				System.out.println("FKTableName.FKColumn -> PKTableName.PKColumn");
+				System.out.println(fkTableName + "." + fkColumnName + " -> "+ pkTableName + "." + pkColumnName);
 
 				cons.setName(fkName);
 				cons.setType(ConstraintType.FOREIGN_KEY);
+			
 				TableImpl refTable = new TableImpl();
 				refTable.setName(pkTableName);
 				getColumns(refTable, pkColumnName, true);
 				cons.setReferenceTable(refTable);
-				for(Column col:table.getColumns()){
-					if(col.getName().equalsIgnoreCase(fkColumnName)){
-						cons.getReferences().add(col);
-						col.getReferences().add(cons);
-						break;
+				
+				Column tempCol = getColumnByName (table , fkColumnName);
+				if (tempCol != null)
+				{
+					cons.getReferences().add(tempCol);
+				
+					table.getConstraints().add(cons);
+					int index = 0;
+					if(table.getColumns().contains(tempCol))
+					{
+						index = table.getColumns().indexOf(tempCol);
+						table.getColumns().remove(tempCol);
 					}
+					tempCol.getReferences().add(cons);
+				
+					table.getColumns().add(index,tempCol);
+					System.out.println("^^^^^^^^^^^^^^^^^^^ "+table.getConstraints().size());
 				}
-				table.getConstraints().add(cons);
 			}
 			keys.close();
 
@@ -303,25 +325,50 @@ public class DBTransformationService {
 					table.getName());
 			while (keys.next()) {
 
-				Constraint cons = new ConstraintImpl();
 				String pkName = keys.getString("PK_NAME");
 				String pkColumnName = keys.getString("COLUMN_NAME");
-				System.out.println();
+				/*System.out.println();
 				System.out.println("--------------------Primary key Constraints-----------------");
 				System.out.println("PKName.PKColumn");
 				System.out.println(pkName + "." + pkColumnName);
 
-				cons.setName(pkName);
-				cons.setType(ConstraintType.PRIMARY_KEY);
-				for(Column col:table.getColumns()){
+				System.out.println("getTablekey  at the middle: # of col" + table.getColumns().size());*/
+				Column tempCol = getColumnByName (table , pkColumnName);
+				if (tempCol != null)
+				{
+					Constraint cons = new ConstraintImpl();
+					cons.setName(pkName);
+					cons.setType(ConstraintType.PRIMARY_KEY);
+					cons.getReferences().add(tempCol);
+				
+					table.getConstraints().add(cons);
+					int index = 0;
+					if(table.getColumns().contains(tempCol))
+					{
+						index = table.getColumns().indexOf(tempCol);
+						table.getColumns().remove(tempCol);
+					}
+					tempCol.getReferences().add(cons);
+				
+					table.getColumns().add(index,tempCol);
+					System.out.println("^^^^^^^^^^^^^^^^^^^ "+table.getConstraints().size());
+					
+				}
+				/*for(Column col:table.getColumns()){
 					if(col.getName().equalsIgnoreCase(pkColumnName)){
+						System.out.println("inside pk adding it cons and col "+ pkColumnName);
 						cons.getReferences().add(col);
 						col.getReferences().add(cons);
+						
+						System.out.println("inside pk adding it cons and col "+ pkColumnName);
+						
 						break;
 					}
-				}
-				table.getConstraints().add(cons);
-
+				}*/
+				
+				
+				//System.out.println("getTablekey  at the end: # of col" + table.getColumns().size());
+				
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -329,6 +376,20 @@ public class DBTransformationService {
 			keys.close();
 
 		}
+	}
+	
+	
+	private Column getColumnByName (Table table , String name)
+	{
+		Column temp = null;
+		for(Column col:table.getColumns()){
+			if(col.getName().equalsIgnoreCase(name)){
+				temp = col;
+				break;
+			}
+		}
+		return temp;
+		
 	}
 	
 }

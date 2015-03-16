@@ -5,4 +5,4 @@ Bundle-SymbolicName: DBTransformation; singleton:=true
 Bundle-Version: 0.1.0.qualifier
 Require-Bundle: org.eclipse.emf.ecore,
  org.junit
-Import-Package: metamodel
+Import-Package: nosql
