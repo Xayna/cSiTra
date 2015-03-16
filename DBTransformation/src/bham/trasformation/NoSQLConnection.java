@@ -38,7 +38,7 @@ public class NoSQLConnection {
 		
 		//this only for testing 
 		// should be deleted after testing is done
-		try{
+		/*try{
 		connect();
 		createTestSchema(session);
 		fillTestData(session);
@@ -47,7 +47,7 @@ public class NoSQLConnection {
 		catch (Exception ex)
 		{
 			ex.printStackTrace();
-		}
+		}*/
 	}
 
 	public  Session connect() throws Exception {

@@ -2,7 +2,10 @@
  * 
  */
 package bham.trasformation.rules;
+import java.util.List;
+
 import metamodel.Database;
+import nosql.ColumnFamily;
 import nosql.KeySpace;
 
 import org.eclipse.emf.common.util.EList;
@@ -37,7 +40,8 @@ public class Database2Keyspace implements Rule<metamodel.Database ,nosql.KeySpac
 			}
 			
 			Main.mainKeySpace = keySpace;
-			keySpace.getFamilies().add(((EList)t.transformAll(Table2ColumnFamily.class, source.getTable())));
+			List<ColumnFamily> list = (List<ColumnFamily>) t.transformAll(Table2ColumnFamily.class, source.getTable());
+			keySpace.getFamilies().addAll(list);
 			return keySpace;
 		} catch (RuleNotFoundException e) {
 			// TODO Auto-generated catch block

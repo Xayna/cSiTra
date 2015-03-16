@@ -40,6 +40,10 @@ public class Main {
 			
 			KeySpace keyspace = converter.transform(Database2Keyspace.class, db);
 			
+			CDBTransformationService t = new CDBTransformationService();
+			t.generate(keyspace);
+			
+			
 			System.out.println("Keyspace: "+keyspace.getName());
 			System.out.println("---------------------------------------");
 			for(ColumnFamily colFam: (EList<ColumnFamily>)keyspace.getFamilies()){
