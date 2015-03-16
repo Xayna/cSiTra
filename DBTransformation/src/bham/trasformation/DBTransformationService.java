@@ -62,9 +62,16 @@ public class DBTransformationService {
 					System.out.println("Values: ");
 					for (Row row : table.getRows()) {
 						for (metamodel.Cell cell : row.getCells()) {
-							System.out.println(cell.getValue());
+							System.out.println(cell.getValue()+"\t");
 						}
 						System.out.println("");
+					}
+					for(Constraint con: table.getConstraints()){
+						System.out.print(con.getName()+" with type "+con.getType() +" on");
+						for(metamodel.Column col: con.getReferences()){
+							System.out.print(col.getName()+", ");
+						}
+						System.out.print("\nReference: Table: "+con.getReferenceTable().getName()+ "( "+con.getReferenceTable().getColumns().get(0).getName()+" )\n\n");
 					}
 
 					/*

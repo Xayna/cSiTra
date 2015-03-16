@@ -55,6 +55,16 @@ public class Main {
 					System.out.println();
 				}
 				System.out.println("----------------------------------------------");
+				for(nosql.Row row: (EList<nosql.Row>)colFam.getRows()){
+					for(nosql.Cell cell: (EList<nosql.Cell>)row.getCells()){
+						System.out.print(cell.getValue()+"("+cell.getColumn()+")\t");
+					}
+					System.out.println();
+				}
+				System.out.println("Primary Key -------");
+				for(Column col: (EList<Column>)colFam.getPK().getColumns()){
+					System.out.print(col+"\t");
+				}
 			}
 			
 		} 
