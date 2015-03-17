@@ -1,15 +1,11 @@
 package bham.trasformation;
 
-import java.sql.Connection;
-
 import metamodel.Database;
 import nosql.Column;
 import nosql.ColumnFamily;
 import nosql.KeySpace;
 
 import org.eclipse.emf.common.util.EList;
-
-import com.datastax.driver.core.Session;
 
 import uk.ac.bham.sitra.RuleNotFoundException;
 import uk.ac.bham.sitra.SimpleTransformerImpl;
