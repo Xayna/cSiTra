@@ -23,11 +23,27 @@ public class DatatypeMapping {
 		return typesMap.get(datatype);
 
 	}
+	
+
+	public static boolean isStringType(Type type) {
+		boolean result = false;
+		switch (type.getValue()) {
+		case Type.ASCII:
+		case Type.TIMESTAMP:
+		case Type.TEXT:
+		case Type.VARCHAR:
+			result = true;
+			break;
+
+		}
+
+		return result;
+	}
 
 	private static void setTypes() {
 		try {
 			typesMap = new HashMap<Datatype, Type>();
-			
+
 			typesMap.put(Datatype.BIGINT, Type.INT_LITERAL);
 			typesMap.put(Datatype.BLOB, Type.BLOB_LITERAL);
 			typesMap.put(Datatype.BOOLEAN, Type.BOOLEAN_LITERAL);
@@ -45,9 +61,7 @@ public class DatatypeMapping {
 			typesMap.put(Datatype.TIMESTAMP, Type.TIMESTAMP_LITERAL);
 			typesMap.put(Datatype.TINYTEXT, Type.TEXT_LITERAL);
 			typesMap.put(Datatype.VARCHAR, Type.VARCHAR_LITERAL);
-			
-			
-			
+
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
