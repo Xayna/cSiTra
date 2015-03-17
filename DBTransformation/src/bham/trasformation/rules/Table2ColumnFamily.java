@@ -12,7 +12,6 @@ import metamodel.Table;
 import nosql.Column;
 import nosql.ColumnFamily;
 import nosql.PK;
-import nosql.impl.CellImpl;
 import nosql.impl.ColumnFamilyImpl;
 import nosql.impl.PKImpl;
 
@@ -22,6 +21,7 @@ import uk.ac.bham.sitra.Rule;
 import uk.ac.bham.sitra.RuleNotFoundException;
 import uk.ac.bham.sitra.Transformer;
 import bham.trasformation.Main;
+import bham.trasformation.NoSQLConnection;
 
 /**
  * @author Manali
@@ -55,9 +55,9 @@ public class Table2ColumnFamily implements Rule<Table, ColumnFamily> {
 				nosql.Column newCol = t.transform(SqlCol2NoSqlCol.class, col);
 				newCol.setColumnFamily(target);
 				target.getColumns().add(newCol);
-				System.out.println("Before constraint");
+				//System.out.println("Before constraint");
 				checkConstraints(t, newCol, col);
-				System.out.println("After constraint");
+				//System.out.println("After constraint");
 				/*System.out.print("The columns: ");
 				for(nosql.Column col2: (EList<nosql.Column>)target.getPK().getColumns()){
 					System.out.print(col2.getName()+" ");
@@ -67,7 +67,7 @@ public class Table2ColumnFamily implements Rule<Table, ColumnFamily> {
 			}
 			
 			//remain the fk fill data part
-			System.out.println(" --- No of constraints: "+source.getConstraints().size());
+			//System.out.println(" --- No of constraints: "+source.getConstraints().size());
 			fillData(source, target);
 			
 			
@@ -130,7 +130,8 @@ public class Table2ColumnFamily implements Rule<Table, ColumnFamily> {
 
 				case ConstraintType.FOREIGN_KEY_VALUE:
 					System.out.println("Hiii I am FK " + targetCol.getColumnFamily().getName() );
-					
+					//System.out.println(constraint.getName()+" with type "+constraint.getType() +" on "+constraint.getReferences().get(0));
+					//System.out.println("Reference: Table: "+constraint.getReferenceTable().getName()+ "( "+constraint.getReferenceTable().getColumns().get(0).getName()+" )\n\n");
 					// create new column family
 					ColumnFamily ref = new ColumnFamilyImpl();
 					ref.setName(constraint.getReferenceTable().getName()+"_"+targetCol.getColumnFamily().getName());
@@ -150,7 +151,10 @@ public class Table2ColumnFamily implements Rule<Table, ColumnFamily> {
 					// add the column family to keyspace
 					Main.mainKeySpace.getFamilies().add(ref);
 					ref.setKeyspace(Main.mainKeySpace);
-					
+					/*for(nosql.Column c: (EList<Column>)ref.getColumns()){
+						System.out.print(c.getName()+"\t");
+					}*/
+					//System.out.println();
 					break;
 				default:
 					break;
@@ -166,8 +170,8 @@ public class Table2ColumnFamily implements Rule<Table, ColumnFamily> {
 
 	public ColumnFamily fillData (Table table , ColumnFamily colFamily)
 	{
-		System.out.println(" ---- No of constraints: "+table.getConstraints().size());
-		System.out.println("~~~~~~~~~~~~ Fill Data for table: "+table.getName());
+		//System.out.println(" ---- No of constraints: "+table.getConstraints().size());
+		//System.out.println("~~~~~~~~~~~~ Fill Data for table: "+table.getName());
 		for (metamodel.Row sqlRow : table.getRows()) {
 			nosql.Row noSqlRow = new nosql.impl.RowImpl();
 			noSqlRow.setComment(colFamily.getComment());
@@ -182,47 +186,58 @@ public class Table2ColumnFamily implements Rule<Table, ColumnFamily> {
 				noSqlRow.getCells().add(noSqlCell);
 			}
 			colFamily.getRows().add(noSqlRow);
-			System.out.println(" ---- No of constraints: "+table.getConstraints().size());
-			for(Constraint cons: table.getConstraints()){
-				System.out.println(" -----Cons of type: "+cons.getType().getName());
-				if(cons.getType() == ConstraintType.FOREIGN_KEY){
-					System.out.println(" @@@@@@@@@@@@ IN FOREIGN KEY @@@@@@@@@@@@@@@@@@@");
-					ColumnFamily refTable = getColumnFamily(cons.getReferenceTable().getName()+"_"+table.getName());
-					if(refTable == null)
-						System.err.println("FOREIGN KEY REFERENCE TABLE NOT FOUND!!");
-					else{
-						String refValue = getCell(noSqlRow.getCells(), cons.getReferenceTable().getColumns().get(0).getName()).getValue();
-						boolean present = false;
-						nosql.Row refTableRow = null;
-						for(nosql.Row rows: (EList<nosql.Row>)refTable.getRows()){
-							if(getCell(rows.getCells(), ((nosql.Column)rows.getPK().getColumns().get(0)).getName()).equals(refValue)){
-								present = true;
-								refTableRow = rows;
-								break;
+			
+			
+			for(metamodel.Column col: table.getColumns()){
+			
+			
+				for(Constraint cons: col.getReferences()){
+					//System.out.println(" -----Cons of type: "+cons.getType().getName());
+					if(cons.getType() == ConstraintType.FOREIGN_KEY){
+						//System.out.println(" @@@@@@@@@@@@ IN FOREIGN KEY @@@@@@@@@@@@@@@@@@@");
+						ColumnFamily refTable = getColumnFamily(cons.getReferenceTable().getName()+"_"+table.getName());
+						if(refTable == null)
+							System.err.println("FOREIGN KEY REFERENCE TABLE NOT FOUND!!");
+						else{
+							//System.out.println("Finding column: "+col.getName());
+							String refValue = getCell(noSqlRow.getCells(), col.getName()).getValue();
+							//System.out.println("RefValue----> "+refValue);
+							boolean present = false;
+							nosql.Row refTableRow = null;
+							for(nosql.Row rows: (EList<nosql.Row>)refTable.getRows()){
+								if(getCell(rows.getCells(), ((nosql.Column)refTable.getPK().getColumns().get(0)).getName()).getValue().equals(refValue)){
+									present = true;
+									//System.out.println("Its present.... will add additional column to same row");
+									refTableRow = rows;
+									break;
+								}
 							}
+							if(!present){
+								refTableRow = new nosql.impl.RowImpl();
+								refTableRow.setKeyspace(refTable.getKeyspace());
+								refTableRow.setName(refTable.getName());
+								//refTableRow.setPK(refTable.getPK());
+								
+								nosql.Cell refTablePKCell = new nosql.impl.CellImpl();
+								refTablePKCell.setValue(refValue);
+								refTablePKCell.setColumn((nosql.Column)refTable.getPK().getColumns().get(0));
+								refTableRow.getCells().add(refTablePKCell);
+							}
+							
+							nosql.Column refTableCol = new nosql.impl.ColumnImpl();
+							refTableCol.setColumnFamily(refTableRow);
+							refTableCol.setDatatype(((nosql.Column)colFamily.getPK().getColumns().get(0)).getDatatype());
+							refTableCol.setSize(((nosql.Column)colFamily.getPK().getColumns().get(0)).getSize());
+							refTableCol.setName(((nosql.Column)colFamily.getPK().getColumns().get(0)).getName()+":"+new SimpleDateFormat("yyyyMddHHmmss").format(Calendar.getInstance().getTime()));
+							refTableRow.getAdditionalColumns().add(refTableCol);
+							
+							nosql.Cell refTableCell = new nosql.impl.CellImpl();
+							refTableCell.setValue(getCell(noSqlRow.getCells(), ((nosql.Column)colFamily.getPK().getColumns().get(0)).getName()).getValue());
+							refTableCell.setColumn(refTableCol);
+							refTableRow.getCells().add(refTableCell);
+							
+							refTable.getRows().add(refTableRow);
 						}
-						if(!present){
-							refTableRow = new nosql.impl.RowImpl();
-							refTableRow.setKeyspace(refTable.getKeyspace());
-							refTableRow.setName(refTable.getName());
-							//refTableRow.setPK(refTable.getPK());
-							nosql.Cell refTablePKCell = new nosql.impl.CellImpl();
-							refTablePKCell.setValue(refValue);
-							refTablePKCell.setColumn((nosql.Column)noSqlRow.getPK().getColumns().get(0));
-							refTableRow.getCells().add(refTablePKCell);
-						}
-						nosql.Column refTableCol = new nosql.impl.ColumnImpl();
-						refTableCol.setColumnFamily(refTableRow);
-						refTableCol.setDatatype(((nosql.Column)noSqlRow.getPK().getColumns().get(0)).getDatatype());
-						refTableCol.setSize(((nosql.Column)noSqlRow.getPK().getColumns().get(0)).getSize());
-						refTableCol.setName(((nosql.Column)noSqlRow.getPK().getColumns().get(0)).getName()+":"+new SimpleDateFormat("yyyyMddHHmmss").format(Calendar.getInstance().getTime()));
-						refTableRow.getAdditionalColumns().add(refTableCol);
-						nosql.Cell refTableCell = new nosql.impl.CellImpl();
-						refTableCell.setValue(getCell(noSqlRow.getCells(), cons.getReferences().get(0).getName()).getValue());
-						refTableCell.setColumn(refTableCol);
-						refTableRow.getCells().add(refTableCell);
-						
-						refTable.getRows().add(refTableRow);
 					}
 				}
 			}
@@ -254,7 +269,9 @@ public class Table2ColumnFamily implements Rule<Table, ColumnFamily> {
 	}
 
 	private nosql.Cell getCell(EList cells, String name) {
+		//System.out.println("\n\n");
 		for (Object object : cells) {
+			//System.out.println("                      Matching : "+ ((nosql.Cell)object).getColumn().getName()+ " --> "+name);
 			if(((nosql.Cell)object).getColumn().getName().equalsIgnoreCase(name))
 				return (nosql.Cell)object;
 		}
