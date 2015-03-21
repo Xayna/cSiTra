@@ -1,10 +1,10 @@
 package bham.trasformation;
 
+import java.util.Calendar;
 import metamodel.Database;
 import nosql.Column;
 import nosql.ColumnFamily;
 import nosql.KeySpace;
-
 import org.eclipse.emf.common.util.EList;
 
 import uk.ac.bham.sitra.RuleNotFoundException;
@@ -17,27 +17,30 @@ import bham.trasformation.rules.Table2ColumnFamily;
 
 public class Main {
 	public static KeySpace mainKeySpace = null ;
-
+	public static int colNameCounter = 0;
+	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		
 		try {
+			System.out.println("Started :" + Calendar.getInstance().getTime().toString());
+			
 			SimpleTransformerImpl converter = new SimpleTransformerImpl(null);
 			converter.addRuleType(Database2Keyspace.class);
 			converter.addRuleType(Table2ColumnFamily.class);
 			converter.addRuleType(SqlCol2NoSqlCol.class);
 			converter.addRuleType(SQLCell2NoSQLCell.class);
 			converter.addRuleType(SQLCons2NoSQLCons.class);
-			
-			
+
+			System.out.println("starting generate Sql MM objects :" + Calendar.getInstance().getTime().toString());
 			DBTransformationService dbConnector = new DBTransformationService();
 			Database db = dbConnector.generate();
 			
-			
+			System.out.println("converting Sql to NoSql MM objects :" + Calendar.getInstance().getTime().toString());
 			KeySpace keyspace = converter.transform(Database2Keyspace.class, db);
 			
 			
-			
+			/*
 			System.out.println("Keyspace: "+keyspace.getName());
 			System.out.println("---------------------------------------");
 			System.out.println("---------------------- NO OF COLUMN FAMILES: "+keyspace.getFamilies().size());
@@ -63,9 +66,13 @@ public class Main {
 				System.out.println();
 				System.out.println("----------------------------------------------");
 			}
-
+			*/
+			System.out.println("inserting to casandra :" + Calendar.getInstance().getTime().toString());
 			CDBTransformationService t = new CDBTransformationService();
 			t.generate(keyspace);
+			
+			System.out.println("finished :" + Calendar.getInstance().getTime().toString());
+			
 		} 
 		catch (RuleNotFoundException e) {
 			// TODO Auto-generated catch block
@@ -77,6 +84,7 @@ public class Main {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+		
 	}
 
 }
