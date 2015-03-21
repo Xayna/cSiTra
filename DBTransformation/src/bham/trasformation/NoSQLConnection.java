@@ -10,6 +10,8 @@ import java.util.Date;
 import java.util.Properties;
 
 import com.datastax.driver.core.Cluster;
+import com.datastax.driver.core.Host;
+import com.datastax.driver.core.Metadata;
 import com.datastax.driver.core.Session;
 
 public class NoSQLConnection {
@@ -27,6 +29,7 @@ public class NoSQLConnection {
 	
 	public NoSQLConnection ()
 	{
+		
 		// to test this from another class like Main use the following
 		/*
 		NoSQLConnection test = new NoSQLConnection();
@@ -54,6 +57,15 @@ public class NoSQLConnection {
 		try {
 			cluster = Cluster.builder().addContactPoint("127.0.0.1").build();
 			session = cluster.connect();
+			Metadata metadata = cluster.getMetadata();
+			System.out.printf("Connected to cluster: %s\n",
+					metadata.getClusterName());
+			for (Host host : metadata.getAllHosts()) {
+				System.out
+						.printf("Datatacenter: %s; Host: %s; Rack: %s\n",
+								host.getDatacenter(), host.getAddress(),
+								host.getRack());
+			}
 
 		
 

@@ -1,5 +1,7 @@
 package bham.trasformation;
 
+import java.util.Calendar;
+
 import nosql.Cell;
 import nosql.Column;
 import nosql.ColumnFamily;
@@ -17,38 +19,35 @@ import com.datastax.driver.core.Session;
 
 public class CDBTransformationService {
 
-	Cluster conn;
+	NoSQLConnection conn;
 	Session session;
 
 	public void generate(KeySpace myKeySpace) {
 		try {
-			conn = Cluster.builder().addContactPoint("127.0.0.1").build();
-			session = conn.connect();
-			Metadata metadata = conn.getMetadata();
-			System.out.printf("Connected to cluster: %s\n",
-					metadata.getClusterName());
-			for (Host host : metadata.getAllHosts()) {
-				System.out
-						.printf("Datatacenter: %s; Host: %s; Rack: %s\n",
-								host.getDatacenter(), host.getAddress(),
-								host.getRack());
-			}
-			System.out.println("i'm here");
+			//conn = Cluster.builder().addContactPoint("127.0.0.1").build();
+			//session = conn.connect();
+			
+			//System.out.println("i'm here");
 
-			// conn = new NoSQLConnection();
-			// session = conn.connect();
+			 conn = new NoSQLConnection();
+			 session = conn.connect();
+			 
 			createSchema(session, myKeySpace);
-			System.out.println("i'm here");
+			
 			fillData(session, myKeySpace);
-			// conn.close();
+			 conn.close();
 
 		} catch (Exception ex) {
 			ex.printStackTrace();
+		}
+		finally {
+			
 		}
 	}
 
 	private void fillData(Session mySession, KeySpace myKeySpace) {
 		try {
+			System.out.println("Filling data : " + Calendar.getInstance().getTime().toString());
 			EList<ColumnFamily> tables = myKeySpace.getFamilies();
 			for (ColumnFamily tab : tables) {
 				EList<Row> rows = tab.getRows();
@@ -85,7 +84,7 @@ public class CDBTransformationService {
 						String sql = "INSERT INTO " + tab.getName() + "("
 								+ colNames + ")" + " VALUES (" + cellsValues
 								+ ");";
-						System.out.println(sql);
+						//System.out.println(sql);
 						session.execute(sql);
 						
 						// the syntax for add new col
@@ -99,6 +98,9 @@ public class CDBTransformationService {
 					}
 				}
 			}
+			
+			System.out.println("Inserting is finished : " + Calendar.getInstance().getTime().toString());
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -117,7 +119,7 @@ public class CDBTransformationService {
 	private void createSchema(Session mySession, KeySpace myKeySpace) {
 		try {
 			try {
-				// drop keySpace
+				// drop keySpace check there is command DORP KEYSPACE IFEXISTS
 				session.execute("DROP KEYSPACE " + myKeySpace.getName());
 			} catch (Exception ex) {
 				System.out.println("createSchema : Keyspace "
@@ -128,7 +130,7 @@ public class CDBTransformationService {
 					+ " WITH replication "
 					+ "= {'class':'SimpleStrategy', 'replication_factor':1};";
 
-			System.out.println(keySpaceStr);
+			System.out.println(keySpaceStr + Calendar.getInstance().getTime().toString());
 			session.execute(keySpaceStr);
 
 			session.execute("USE " + myKeySpace.getName() + ";");
@@ -144,6 +146,8 @@ public class CDBTransformationService {
 				EList columns = family.getColumns();
 				for (Object object : columns) {
 					Column col = (Column) object;
+					// to-do see why the columns are doubled through transformation
+					//if(!columnsStr.contains(col.getName()))
 					columnsStr += col.getName() + " " + col.getDatatype() + ",";
 					// if(!col.getSize().isEmpty())
 					// columnsStr += "(" + col.getSize() + ")";
@@ -155,6 +159,7 @@ public class CDBTransformationService {
 				 * ((pkColumns = family.getPK().getColumns()) != null));
 				 * System.out.println(" 3 ---- "+ (pkColumns.size() > 0));
 				 */
+				
 				if (family.getPK() != null
 						&& (pkColumns = family.getPK().getColumns()) != null
 						&& pkColumns.size() > 0) {
@@ -169,6 +174,17 @@ public class CDBTransformationService {
 					// System.out.println(pkStr);
 
 				}
+				
+				// check options 
+				/*
+				 * if it has options
+				 * withStr = "WITH "
+				 * if (options)
+				 * {
+				 * 	for each option in Options
+				 * 		withstr += option.getname + option.value==""?"":"="+options.value ;
+				 * } 
+				 */
 				pkStr = "PRIMARY KEY (" + pkStr + ")";
 				String noSqlStr = "CREATE TABLE " + family.getName() + "("
 						+ columnsStr + pkStr + ");";

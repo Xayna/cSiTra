@@ -27,6 +27,8 @@ public class DBTransformationService {
 
 	Connection conn = null;
 	String schemaName = null;
+	String serverName = null;
+	
 	DBConnection dbConnection = null;
 	@SuppressWarnings("finally")
 	public Database generate() throws SQLException {
@@ -44,10 +46,12 @@ public class DBTransformationService {
 			conn =dbConnection.connect();
 			
 			schemaName = dbConnection.getProps().getProperty(DBConnection.DB_SCHEMA_PROP);
+			serverName = conn.getCatalog();
+			
 			db.setName(schemaName);
-
+			System.out.println("MY SCHEMA :" + schemaName);
 			getTables(db);
-
+			/*
 			if (db.getTable() != null) {
 				System.err.println(db.getTable().size());
 				for (Table table : db.getTable()){
@@ -73,7 +77,7 @@ public class DBTransformationService {
 				}
 			} else {
 				System.out.println("no tables found");
-			}
+			}*/
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
@@ -96,7 +100,10 @@ public class DBTransformationService {
 		try {
 			st = conn.prepareStatement("SELECT table_name "
 					+ "FROM information_schema.tables "
-					+ "WHERE table_schema = '"+ schemaName +"'" + "ORDER BY table_name");
+					+ "WHERE table_schema = ? AND table_catalog = ? ORDER BY table_name");
+			st.setString(1,schemaName);
+			st.setString(2, serverName);
+			
 			rs = st.executeQuery();
 			while (rs.next()) {
 				TableImpl table = new TableImpl();
@@ -134,16 +141,25 @@ public class DBTransformationService {
 				st = conn.prepareStatement("SELECT "
 						+ "column_name, data_type, character_maximum_length, is_nullable "
 						+ "FROM information_schema.columns "
-						+ "WHERE table_name = ?");
+						+ "WHERE table_name = ? "
+						+ "AND table_schema = ? "
+						+ "AND table_catalog = ? " );
 				st.setString(1, table.getName());
+				st.setString(2,schemaName);
+				st.setString(3, serverName);
 			} else {
 				st = conn.prepareStatement("SELECT "
 						+ "column_name, data_type, character_maximum_length, is_nullable "
 						+ "FROM information_schema.columns "
-						+ "WHERE table_name = ? AND column_name = ?");
+						+ "WHERE table_name = ? AND column_name = ?"
+						+ "AND table_schema = ? "
+						+ "AND table_catalog = ? " );
 				st.setString(1, table.getName());
 				st.setString(2, columnName);
+				st.setString(3,schemaName);
+				st.setString(4, serverName);
 			}
+			System.out.println(serverName + " "+ schemaName);
 			rs = st.executeQuery();
 			while (rs.next()) {
 
@@ -257,7 +273,7 @@ public class DBTransformationService {
 		try {
 			//System.out.println("getTablekey : # of col" + table.getColumns().size());
 			metaData = conn.getMetaData();
-			keys = metaData.getImportedKeys(conn.getCatalog(), null,
+			keys = metaData.getImportedKeys(conn.getCatalog(), schemaName,
 					table.getName());
 
 			while (keys.next()) {
@@ -301,7 +317,7 @@ public class DBTransformationService {
 			}
 			keys.close();
 
-			keys = metaData.getPrimaryKeys(conn.getCatalog(), null,
+			keys = metaData.getPrimaryKeys(conn.getCatalog(), schemaName,
 					table.getName());
 			while (keys.next()) {
 
