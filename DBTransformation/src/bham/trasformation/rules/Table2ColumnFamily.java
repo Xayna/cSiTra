@@ -21,7 +21,6 @@ import uk.ac.bham.sitra.Rule;
 import uk.ac.bham.sitra.RuleNotFoundException;
 import uk.ac.bham.sitra.Transformer;
 import bham.trasformation.Main;
-import bham.trasformation.NoSQLConnection;
 
 /**
  * @author Manali
@@ -45,7 +44,7 @@ public class Table2ColumnFamily implements Rule<Table, ColumnFamily> {
 		try {
 			// set the name of the column family
 			
-			System.out.println("Setting properties for: "+source.getName() +" with constraints: "+source.getConstraints().size());
+			//System.out.println("Setting properties for: "+source.getName() +" with constraints: "+source.getConstraints().size());
 			
 			target.setName(source.getName());
 			target.setKeyspace(Main.mainKeySpace);
@@ -99,7 +98,7 @@ public class Table2ColumnFamily implements Rule<Table, ColumnFamily> {
 		PK pkObj;
 		for (Constraint constraint : sourceCol.getReferences()) {
 			try {
-				System.out.println("in side constraint " + constraint.getName() + " " + constraint.getType().getName());
+				//System.out.println("in side constraint " + constraint.getName() + " " + constraint.getType().getName());
 				switch (constraint.getType().getValue()) {
 				// there is no composite primary key type in my sql
 				// case ConstraintType.COMPOSITE_PRIMARY_KEY_VALUE:
@@ -129,7 +128,7 @@ public class Table2ColumnFamily implements Rule<Table, ColumnFamily> {
 					break;
 
 				case ConstraintType.FOREIGN_KEY_VALUE:
-					System.out.println("Hiii I am FK " + targetCol.getColumnFamily().getName() );
+					//System.out.println("Hiii I am FK " + targetCol.getColumnFamily().getName() );
 					//System.out.println(constraint.getName()+" with type "+constraint.getType() +" on "+constraint.getReferences().get(0));
 					//System.out.println("Reference: Table: "+constraint.getReferenceTable().getName()+ "( "+constraint.getReferenceTable().getColumns().get(0).getName()+" )\n\n");
 					// create new column family
@@ -190,7 +189,7 @@ public class Table2ColumnFamily implements Rule<Table, ColumnFamily> {
 			
 			for(metamodel.Column col: table.getColumns()){
 			
-			
+				
 				for(Constraint cons: col.getReferences()){
 					//System.out.println(" -----Cons of type: "+cons.getType().getName());
 					if(cons.getType() == ConstraintType.FOREIGN_KEY){
@@ -202,6 +201,7 @@ public class Table2ColumnFamily implements Rule<Table, ColumnFamily> {
 							//System.out.println("Finding column: "+col.getName());
 							String refValue = getCell(noSqlRow.getCells(), col.getName()).getValue();
 							//System.out.println("RefValue----> "+refValue);
+							
 							boolean present = false;
 							nosql.Row refTableRow = null;
 							for(nosql.Row rows: (EList<nosql.Row>)refTable.getRows()){
@@ -228,7 +228,8 @@ public class Table2ColumnFamily implements Rule<Table, ColumnFamily> {
 							refTableCol.setColumnFamily(refTableRow);
 							refTableCol.setDatatype(((nosql.Column)colFamily.getPK().getColumns().get(0)).getDatatype());
 							refTableCol.setSize(((nosql.Column)colFamily.getPK().getColumns().get(0)).getSize());
-							refTableCol.setName(((nosql.Column)colFamily.getPK().getColumns().get(0)).getName()+":"+new SimpleDateFormat("yyyyMddHHmmss").format(Calendar.getInstance().getTime()));
+							refTableCol.setName(((nosql.Column)colFamily.getPK().getColumns().get(0)).getName()+"_"+new SimpleDateFormat("yyyyMddHHmmss").format(Calendar.getInstance().getTime())+"_"+ Main.colNameCounter);
+											
 							refTableRow.getAdditionalColumns().add(refTableCol);
 							
 							nosql.Cell refTableCell = new nosql.impl.CellImpl();
@@ -237,6 +238,12 @@ public class Table2ColumnFamily implements Rule<Table, ColumnFamily> {
 							refTableRow.getCells().add(refTableCell);
 							
 							refTable.getRows().add(refTableRow);
+							refTable.getColumns().add(refTableCol);
+							//System.out.println("name of ref col " + refTableCol.getName());
+							
+							Main.colNameCounter++;
+							
+					
 						}
 					}
 				}
