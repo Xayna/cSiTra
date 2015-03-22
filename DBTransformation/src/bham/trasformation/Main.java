@@ -7,8 +7,6 @@ import nosql.KeySpace;
 import uk.ac.bham.sitra.RuleNotFoundException;
 import uk.ac.bham.sitra.SimpleTransformerImpl;
 import bham.trasformation.rules.Database2Keyspace;
-import bham.trasformation.rules.SQLCell2NoSQLCell;
-import bham.trasformation.rules.SQLCons2NoSQLCons;
 import bham.trasformation.rules.SqlCol2NoSqlCol;
 import bham.trasformation.rules.Table2ColumnFamily;
 
@@ -26,8 +24,7 @@ public class Main {
 			converter.addRuleType(Database2Keyspace.class);
 			converter.addRuleType(Table2ColumnFamily.class);
 			converter.addRuleType(SqlCol2NoSqlCol.class);
-			converter.addRuleType(SQLCell2NoSQLCell.class);
-			converter.addRuleType(SQLCons2NoSQLCons.class);
+	
 
 			// converting sql db into objects using the sql meta model
 			System.out.println("starting generate Sql MM objects :"

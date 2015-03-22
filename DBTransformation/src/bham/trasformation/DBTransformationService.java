@@ -23,6 +23,8 @@ import metamodel.impl.TableImpl;
 
 import org.eclipse.emf.common.util.EList;
 
+import bham.trasformation.util.Helper;
+
 public class DBTransformationService {
 
 	Connection conn = null;
@@ -46,8 +48,8 @@ public class DBTransformationService {
 			conn = dbConnection.connect();
 
 			// geting db properties
-			schemaName = dbConnection.getProps().getProperty(DBConnection.DB_SCHEMA_PROP);
-			dbName = dbConnection.getProps().getProperty(DBConnection.DB_NAME_PROP);
+			schemaName = dbConnection.getProps().getProperty(Helper.DB_SCHEMA_PROP);
+			dbName = dbConnection.getProps().getProperty(Helper.DB_NAME_PROP);
 			serverName = conn.getCatalog();
 
 			db.setName(dbName + "_" + schemaName);
@@ -289,11 +291,11 @@ public class DBTransformationService {
 				refTable.setName(pkTableName);
 				getColumns(refTable, pkColumnName, true);
 				cons.setReferenceTable(refTable);
-				// System.out.println("!!!!!!!!!!!!!!");
+
+				// get fk column object
 				Column tempCol = getColumnByName(table, fkColumnName);
 				if (tempCol != null) {
 					cons.getReferences().add(tempCol);
-
 					table.getConstraints().add(cons);
 					int index = 0;
 					if (table.getColumns().contains(tempCol)) {
@@ -301,61 +303,41 @@ public class DBTransformationService {
 						table.getColumns().remove(tempCol);
 					}
 					tempCol.getReferences().add(cons);
-
 					table.getColumns().add(index, tempCol);
 				}
-				// System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"+cons.getReferences().size());
 			}
 			keys.close();
 
+			//get the Primary key constraint
 			keys = metaData.getPrimaryKeys(conn.getCatalog(), schemaName,
 					table.getName());
 			while (keys.next()) {
 
 				String pkName = keys.getString("PK_NAME");
 				String pkColumnName = keys.getString("COLUMN_NAME");
-				/*
-				 * System.out.println(); System.out.println(
-				 * "--------------------Primary key Constraints-----------------"
-				 * ); System.out.println("PKName.PKColumn");
-				 * System.out.println(pkName + "." + pkColumnName);
-				 * 
-				 * System.out.println("getTablekey  at the middle: # of col" +
-				 * table.getColumns().size());
-				 */
+				// get the PK column object
 				Column tempCol = getColumnByName(table, pkColumnName);
 				if (tempCol != null) {
+					// create new constraint object
 					Constraint cons = new ConstraintImpl();
 					cons.setName(pkName);
 					cons.setType(ConstraintType.PRIMARY_KEY);
 					cons.getReferences().add(tempCol);
-
+					// add the constraint to the table
 					table.getConstraints().add(cons);
+					
+					//get the index of the pk columns, remove , update it then re-add it 
 					int index = 0;
 					if (table.getColumns().contains(tempCol)) {
 						index = table.getColumns().indexOf(tempCol);
 						table.getColumns().remove(tempCol);
+					
 					}
 					tempCol.getReferences().add(cons);
-
 					table.getColumns().add(index, tempCol);
 
 				}
-				/*
-				 * for(Column col:table.getColumns()){
-				 * if(col.getName().equalsIgnoreCase(pkColumnName)){
-				 * System.out.println("inside pk adding it cons and col "+
-				 * pkColumnName); cons.getReferences().add(col);
-				 * col.getReferences().add(cons);
-				 * 
-				 * System.out.println("inside pk adding it cons and col "+
-				 * pkColumnName);
-				 * 
-				 * break; } }
-				 */
-
-				// System.out.println("getTablekey  at the end: # of col" +
-				// table.getColumns().size());
+				
 
 			}
 		} catch (SQLException e) {
