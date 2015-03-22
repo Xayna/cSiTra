@@ -1,6 +1,3 @@
-/**
- * 
- */
 package bham.trasformation.rules;
 import java.util.List;
 
@@ -15,6 +12,10 @@ import bham.trasformation.Main;
  * @author kris
  *
  */
+
+/*
+ * Mapping Sql database to Cassandra keySpace
+ */
 public class Database2Keyspace implements Rule<metamodel.Database ,nosql.KeySpace >{
 
 	/* (non-Javadoc)
@@ -28,21 +29,24 @@ public class Database2Keyspace implements Rule<metamodel.Database ,nosql.KeySpac
 	/* (non-Javadoc)
 	 * @see uk.ac.bham.sitra.Rule#build(java.lang.Object, uk.ac.bham.sitra.Transformer)
 	 */
+	@SuppressWarnings("unchecked")
 	public KeySpace build(Database source, Transformer t) {
 		
 		try {
+			//create new KeySpace object
 			nosql.KeySpace keySpace = new nosql.impl.KeySpaceImpl();
 			if(source.getName()!= null){
 				keySpace.setName(source.getName());
 			}
 			
+			//Setting the creating object into Main.mainKeySpace to be used in other mapping rules
 			Main.mainKeySpace = keySpace;
+			//Call transformation and mapping rule from sql tales to cassandra tables
 			List<ColumnFamily> list = (List<ColumnFamily>) t.transformAll(Table2ColumnFamily.class, source.getTable());
 			keySpace.getFamilies().addAll(list);
 			return keySpace;
 		} catch (RuleNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+				e.printStackTrace();
 		}	
 		return null;
 	}

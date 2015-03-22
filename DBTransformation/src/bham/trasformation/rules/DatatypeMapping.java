@@ -1,6 +1,5 @@
 package bham.trasformation.rules;
 
-import java.sql.Types;
 import java.util.HashMap;
 
 import nosql.Type;
@@ -9,13 +8,19 @@ import metamodel.Datatype;
 public class DatatypeMapping {
 
 	private static HashMap<Datatype, Type> typesMap = null;
-
-	//
-
+	
+	/*
+	 * Default constructor
+	 */
 	public DatatypeMapping() {
 
 	}
 
+	/*
+	 * Get sql datatype and return nosql datatype
+	 * @param datatype
+	 * @return Type
+	 */
 	public static Type getType(Datatype datatype) {
 		if (typesMap == null || typesMap.isEmpty())
 			setTypes();
@@ -24,7 +29,11 @@ public class DatatypeMapping {
 
 	}
 	
-
+	/*
+	 * Check if the passed nosql type is string nosql datatype
+	 * @param type,
+	 * @return boolean
+	 */
 	public static boolean isStringType(Type type) {
 		boolean result = false;
 		switch (type.getValue()) {
@@ -40,6 +49,10 @@ public class DatatypeMapping {
 		return result;
 	}
 
+	/*
+	 * Initialing datatypes hashmap
+	 * @return
+	 */
 	private static void setTypes() {
 		try {
 			typesMap = new HashMap<Datatype, Type>();
