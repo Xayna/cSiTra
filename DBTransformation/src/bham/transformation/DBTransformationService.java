@@ -88,6 +88,7 @@ public class DBTransformationService {
 
 				/** set table name & set its columns **/
 				table.setName(rs.getString("table_name"));
+				System.out.print("Reading sql table :" + table.getName());
 				getColumns(table, null, false);
 
 				/** get table rows & set into tables **/
@@ -117,6 +118,7 @@ public class DBTransformationService {
 		PreparedStatement st = null;
 		ResultSet rs = null;
 		try {
+			System.out.println("Getting columns for " + table.getName());
 			// selecting info for multiple columns
 			if (!oneColumn) {
 				st = conn.prepareStatement("SELECT "
@@ -232,6 +234,8 @@ public class DBTransformationService {
 		// get list of columns
 		EList<Column> cols = table.getColumns();
 		try {
+			System.out.println("Getting rows for " + table.getName());
+			
 			// getting data within a table
 			st = conn.prepareStatement("SELECT * " + "FROM " + schemaName + "."+ table.getName() + "");
 			rs = st.executeQuery();
@@ -267,6 +271,7 @@ public class DBTransformationService {
 		DatabaseMetaData metaData = null;
 		ResultSet keys = null;
 		try {
+			System.out.println("Getting keys for " + table.getName());
 			// getting database meta data
 			metaData = conn.getMetaData();
 
