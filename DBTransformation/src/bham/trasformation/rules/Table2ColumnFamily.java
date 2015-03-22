@@ -147,6 +147,8 @@ public class Table2ColumnFamily implements Rule<Table, ColumnFamily> {
 					pkCol.setColumnFamily(ref);
 					// set the PK
 					ref.setPK(pkObj);
+					//add comment
+					ref.setComment("Reference Table for Foreign Key");
 					// add the column family to keyspace
 					Main.mainKeySpace.getFamilies().add(ref);
 					ref.setKeyspace(Main.mainKeySpace);
@@ -228,7 +230,7 @@ public class Table2ColumnFamily implements Rule<Table, ColumnFamily> {
 							refTableCol.setColumnFamily(refTableRow);
 							refTableCol.setDatatype(((nosql.Column)colFamily.getPK().getColumns().get(0)).getDatatype());
 							refTableCol.setSize(((nosql.Column)colFamily.getPK().getColumns().get(0)).getSize());
-							refTableCol.setName(((nosql.Column)colFamily.getPK().getColumns().get(0)).getName()+"_"+new SimpleDateFormat("yyyyMddHHmmss").format(Calendar.getInstance().getTime())+"_"+ Main.colNameCounter);
+							refTableCol.setName(((nosql.Column)colFamily.getPK().getColumns().get(0)).getName());
 											
 							refTableRow.getAdditionalColumns().add(refTableCol);
 							

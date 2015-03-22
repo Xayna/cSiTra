@@ -1,12 +1,9 @@
 package bham.trasformation;
 
 import java.util.Calendar;
-import metamodel.Database;
-import nosql.Column;
-import nosql.ColumnFamily;
-import nosql.KeySpace;
-import org.eclipse.emf.common.util.EList;
 
+import metamodel.Database;
+import nosql.KeySpace;
 import uk.ac.bham.sitra.RuleNotFoundException;
 import uk.ac.bham.sitra.SimpleTransformerImpl;
 import bham.trasformation.rules.Database2Keyspace;
@@ -21,7 +18,7 @@ public class Main {
 	public static int colNameCounter = 0;
 
 	public static void main(String[] args) {
-			try {
+		try {
 			System.out.println("Started :"
 					+ Calendar.getInstance().getTime().toString());
 			// initializing rules

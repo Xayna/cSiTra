@@ -63,60 +63,102 @@ public class CDBTransformationService {
 			EList<ColumnFamily> tables = myKeySpace.getFamilies();
 			for (ColumnFamily tab : tables) {
 				// get list of rows associated with each table
+				System.out.println("Filling Table : " + tab.getName());
 				EList<Row> rows = tab.getRows();
-				for (Row row : rows) {
-					// get list of cells associated with each row
-					EList<Cell> cells = row.getCells();
-					if (cells != null && cells.size() > 0) {
-						// extract associated column names to insert the values
-						// in the same order
-						String colNames = "";
-						String cellsValues = "";
+				if (tab.getComment() != null
+						&& tab.getComment().equals(
+								"Reference Table for Foreign Key")) {
+					for (Row row : rows) {
+						String colNames = "", cellValues = "", sql = "", addCellValues = "";
+						colNames = ((Column) tab.getPK().getColumns().get(0))
+								.getName()
+								+ ", "
+								+ ((Column) ((Cell) (row.getCells().get(1)))
+										.getColumn()).getName() + "List";
 
-						int index = 0;
-						// enter the while if there is more than one cell
-						// which means we have more than one column
-						while (index < cells.size() - 1) {
-
-							Column tempCol = cells.get(index).getColumn();
-							Cell tempCell = cells.get(index);
-
-							colNames += tempCol.getName();
-							colNames += ",";
-							// if the column type is string then and 'value'
-							if (DatatypeMapping.isStringType(tempCol
-									.getDatatype()))
-								cellsValues += "'" + tempCell.getValue() + "'";
+						EList<Cell> cells = row.getCells();
+						for (Cell cell : (EList<Cell>) row.getCells()) {
+							if (cell.getColumn()
+									.getName()
+									.equals(((Column) tab.getPK().getColumns()
+											.get(0)).getName()))
+								if (DatatypeMapping.isStringType(cell
+										.getColumn().getDatatype()))
+									cellValues += "'" + cell.getValue() + "', ";
+								else
+									cellValues += cell.getValue() + ", ";
+							else if (DatatypeMapping.isStringType(cell
+									.getColumn().getDatatype()))
+								addCellValues += "'" + cell.getValue() + "', ";
 							else
-								cellsValues += tempCell.getValue();
-							cellsValues += ",";
-							index++;
+								addCellValues += cell.getValue() + ", ";
 						}
-						// get the frist/last column info
-						colNames += cells.get(index).getColumn().getName();
+						addCellValues = addCellValues.substring(0,
+								addCellValues.length() - 2);
 
-						if (DatatypeMapping.isStringType(cells.get(index)
-								.getColumn().getDatatype()))
-							cellsValues += "'" + cells.get(index).getValue()
-									+ "'";
-						else
-							cellsValues += cells.get(index).getValue();
+						sql = "INSERT INTO " + tab.getName() + "(" + colNames
+								+ ")" + " VALUES (" + cellValues + " ["
+								+ addCellValues + "]);";
+						System.out.println(sql);
+						session.execute(sql);
+					}
+				} else {
+					for (Row row : rows) {
+						// get list of cells associated with each row
+						EList<Cell> cells = row.getCells();
+						if (cells != null && cells.size() > 0) {
+							// extract associated column names to insert the
+							// values
+							// in the same order
+							String colNames = "";
+							String cellsValues = "";
 
-						// prepare nosql string
-						String nosql = "INSERT INTO " + tab.getName() + "("
-								+ colNames + ")" + " VALUES (" + cellsValues
-								+ ");";
+							int index = 0;
+							// enter the while if there is more than one cell
+							// which means we have more than one column
+							while (index < cells.size() - 1) {
 
-						session.execute(nosql);
+								Column tempCol = cells.get(index).getColumn();
+								Cell tempCell = cells.get(index);
 
-						// the syntax for add new col
-						/*
-						 * ALTER column_name TYPE cql_type | ( ADD column_name
-						 * cql_type ) | ( DROP column_name ) | ( RENAME
-						 * column_name TO column_name ) | ( WITH property AND
-						 * property ... )
-						 */
+								colNames += tempCol.getName();
+								colNames += ",";
+								// if the column type is string then and 'value'
+								if (DatatypeMapping.isStringType(tempCol
+										.getDatatype()))
+									cellsValues += "'" + tempCell.getValue()
+											+ "'";
+								else
+									cellsValues += tempCell.getValue();
+								cellsValues += ",";
+								index++;
+							}
+							// get the frist/last column info
+							colNames += cells.get(index).getColumn().getName();
 
+							if (DatatypeMapping.isStringType(cells.get(index)
+									.getColumn().getDatatype()))
+								cellsValues += "'"
+										+ cells.get(index).getValue() + "'";
+							else
+								cellsValues += cells.get(index).getValue();
+
+							// prepare nosql string
+							String nosql = "INSERT INTO " + tab.getName() + "("
+									+ colNames + ")" + " VALUES ("
+									+ cellsValues + ");";
+
+							session.execute(nosql);
+
+							// the syntax for add new col
+							/*
+							 * ALTER column_name TYPE cql_type | ( ADD
+							 * column_name cql_type ) | ( DROP column_name ) | (
+							 * RENAME column_name TO column_name ) | ( WITH
+							 * property AND property ... )
+							 */
+
+						}
 					}
 				}
 			}
@@ -145,7 +187,7 @@ public class CDBTransformationService {
 		try {
 			try {
 				// drop keySpace check there is command DORP KEYSPACE IFEXISTS
-				session.execute("DROP KEYSPACE IF EXISTS "
+				session.execute("DROP KEYSPACE IF EXISTS"
 						+ myKeySpace.getName());
 			} catch (Exception ex) {
 				System.out
@@ -176,14 +218,25 @@ public class CDBTransformationService {
 				EList pkColumns;
 
 				EList columns = family.getColumns();
-				for (Object object : columns) {
-					Column col = (Column) object;
-					columnsStr += col.getName() + " " + col.getDatatype() + ",";
-
-					// cassandra does not support size
-					// if(!col.getSize().isEmpty())
-					// columnsStr += "(" + col.getSize() + ")";
-					// columnsStr += ",";
+				if (family.getComment() != null
+						&& family.getComment().equals(
+								"Reference Table for Foreign Key")) {
+					Column col = (Column) family.getPK().getColumns().get(0);
+					columnsStr = col.getName() + " " + col.getDatatype() + ",";
+					col = (Column) ((Cell) ((Row) family.getRows().get(0))
+							.getCells().get(1)).getColumn();
+					columnsStr += col.getName() + "List list<"
+							+ col.getDatatype() + ">,";
+				} else {
+					for (Object object : columns) {
+						Column col = (Column) object;
+						columnsStr += col.getName() + " " + col.getDatatype()
+								+ ",";
+						// cassandra does not support size
+						// if(!col.getSize().isEmpty())
+						// columnsStr += "(" + col.getSize() + ")";
+						// columnsStr += ",";
+					}
 				}
 
 				// get the pk
@@ -199,18 +252,16 @@ public class CDBTransformationService {
 						index++;
 					}
 					pkStr += ((Column) pkColumns.get(index)).getName();
-				
+
 				}
 
 				// check options
-				//future work , to be implemented later
+				// future work , to be implemented later
 				/*
 				 * if it has options withStr = "WITH " if (options) { for each
 				 * option in Options withstr += option.getname +
 				 * option.value==""?"":"="+options.value ; }
 				 */
-				
-				//preparing and executing nosql create table string 
 				pkStr = "PRIMARY KEY (" + pkStr + ")";
 				String noSqlStr = "CREATE TABLE " + family.getName() + "("
 						+ columnsStr + pkStr + ");";

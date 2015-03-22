@@ -28,6 +28,7 @@ public class DBTransformationService {
 	Connection conn = null;
 	String schemaName = null;
 	String serverName = null;
+	String dbName = null;
 
 	DBConnection dbConnection = null;
 
@@ -45,12 +46,12 @@ public class DBTransformationService {
 			conn = dbConnection.connect();
 
 			// geting db properties
-			schemaName = dbConnection.getProps().getProperty(
-					DBConnection.DB_SCHEMA_PROP);
+			schemaName = dbConnection.getProps().getProperty(DBConnection.DB_SCHEMA_PROP);
+			dbName = dbConnection.getProps().getProperty(DBConnection.DB_NAME_PROP);
 			serverName = conn.getCatalog();
 
-			db.setName(schemaName);
-			System.out.println("MY SCHEMA :" + schemaName);
+			db.setName(dbName + "_" + schemaName);
+			System.out.println("MY SCHEMA :" + db.getName());
 			getTables(db);
 
 		} catch (SQLException e) {
@@ -73,8 +74,7 @@ public class DBTransformationService {
 		PreparedStatement st = null;
 		ResultSet rs = null;
 		try {
-			st = conn
-					.prepareStatement("SELECT table_name "
+			st = conn.prepareStatement("SELECT table_name "
 							+ "FROM information_schema.tables "
 							+ "WHERE table_schema = ? AND table_catalog = ? ORDER BY table_name");
 			st.setString(1, schemaName);
@@ -117,8 +117,7 @@ public class DBTransformationService {
 		try {
 			// selecting info for multiple columns
 			if (!oneColumn) {
-				st = conn
-						.prepareStatement("SELECT "
+				st = conn.prepareStatement("SELECT "
 								+ "column_name, data_type, character_maximum_length, is_nullable "
 								+ "FROM information_schema.columns "
 								+ "WHERE table_name = ? "
@@ -129,8 +128,7 @@ public class DBTransformationService {
 				st.setString(3, serverName);
 			} else {
 				// selecting info for specific columns
-				st = conn
-						.prepareStatement("SELECT "
+				st = conn.prepareStatement("SELECT "
 								+ "column_name, data_type, character_maximum_length, is_nullable "
 								+ "FROM information_schema.columns "
 								+ "WHERE table_name = ? AND column_name = ?"
@@ -222,18 +220,18 @@ public class DBTransformationService {
 	/*
 	 * 
 	 * Read rows in table
+	 * 
 	 * @throws SQLException
 	 */
 	protected void getRows(TableImpl table) throws SQLException {
 		PreparedStatement st = null;
 		ResultSet rs = null;
 		Cell cell = null;
-		//get list of columns
+		// get list of columns
 		EList<Column> cols = table.getColumns();
 		try {
-			//getting data within a table
-			st = conn.prepareStatement("SELECT * " + "FROM " + schemaName + "."
-					+ table.getName() + "");
+			// getting data within a table
+			st = conn.prepareStatement("SELECT * " + "FROM " + schemaName + "."+ table.getName() + "");
 			rs = st.executeQuery();
 			while (rs.next()) {
 
@@ -258,8 +256,10 @@ public class DBTransformationService {
 
 	/*
 	 * Get FK and PK for the given table
+	 * 
 	 * @param table
-	 * @return 
+	 * 
+	 * @return
 	 */
 	public void getTableKeys(TableImpl table) throws SQLException {
 		DatabaseMetaData metaData = null;
@@ -267,14 +267,14 @@ public class DBTransformationService {
 		try {
 			// getting database meta data
 			metaData = conn.getMetaData();
-			
-			//get foreign key
+
+			// get foreign key
 			keys = metaData.getImportedKeys(conn.getCatalog(), schemaName,
 					table.getName());
 
-			//creating table for each fk constraint
+			// creating table for each fk constraint
 			while (keys.next()) {
-				//create new constraint object
+				// create new constraint object
 				Constraint cons = new ConstraintImpl();
 				String fkName = keys.getString("FK_NAME");
 				String fkTableName = keys.getString("FKTABLE_NAME");
@@ -284,7 +284,7 @@ public class DBTransformationService {
 				cons.setName(fkName);
 				cons.setType(ConstraintType.FOREIGN_KEY);
 
-				//create new table for the constraint
+				// create new table for the constraint
 				TableImpl refTable = new TableImpl();
 				refTable.setName(pkTableName);
 				getColumns(refTable, pkColumnName, true);
@@ -369,8 +369,11 @@ public class DBTransformationService {
 
 	/*
 	 * Get column object from the given table and column name
+	 * 
 	 * @param table
+	 * 
 	 * @param name, column name
+	 * 
 	 * @return Column
 	 */
 	private Column getColumnByName(Table table, String name) {
@@ -386,4 +389,3 @@ public class DBTransformationService {
 	}
 
 }
-
