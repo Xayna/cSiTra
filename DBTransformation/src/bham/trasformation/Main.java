@@ -16,15 +16,15 @@ import bham.trasformation.rules.SqlCol2NoSqlCol;
 import bham.trasformation.rules.Table2ColumnFamily;
 
 public class Main {
-	public static KeySpace mainKeySpace = null ;
+
+	public static KeySpace mainKeySpace = null;
 	public static int colNameCounter = 0;
-	
+
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-		
-		try {
-			System.out.println("Started :" + Calendar.getInstance().getTime().toString());
-			
+			try {
+			System.out.println("Started :"
+					+ Calendar.getInstance().getTime().toString());
+			// initializing rules
 			SimpleTransformerImpl converter = new SimpleTransformerImpl(null);
 			converter.addRuleType(Database2Keyspace.class);
 			converter.addRuleType(Table2ColumnFamily.class);
@@ -32,59 +32,57 @@ public class Main {
 			converter.addRuleType(SQLCell2NoSQLCell.class);
 			converter.addRuleType(SQLCons2NoSQLCons.class);
 
-			System.out.println("starting generate Sql MM objects :" + Calendar.getInstance().getTime().toString());
+			// converting sql db into objects using the sql meta model
+			System.out.println("starting generate Sql MM objects :"
+					+ Calendar.getInstance().getTime().toString());
 			DBTransformationService dbConnector = new DBTransformationService();
 			Database db = dbConnector.generate();
-			
-			System.out.println("converting Sql to NoSql MM objects :" + Calendar.getInstance().getTime().toString());
-			KeySpace keyspace = converter.transform(Database2Keyspace.class, db);
-			
-			
+			// converting sql meta module into no-sql meta model using sitra
+			System.out.println("converting Sql to NoSql MM objects :"
+					+ Calendar.getInstance().getTime().toString());
+			KeySpace keyspace = converter
+					.transform(Database2Keyspace.class, db);
+
 			/*
-			System.out.println("Keyspace: "+keyspace.getName());
-			System.out.println("---------------------------------------");
-			System.out.println("---------------------- NO OF COLUMN FAMILES: "+keyspace.getFamilies().size());
-			for(ColumnFamily colFam: (EList<ColumnFamily>)keyspace.getFamilies()){
-				System.out.println("Column Family: "+colFam.getName());
-				for(Column col: (EList<Column>)colFam.getColumns()){
-					System.out.println("--Column: "+col.getName());
-					System.out.println("--Datatype: "+col.getDatatype().getName());
-					System.out.println("--Size: "+col.getSize());
-					System.out.println();
-				}
-				System.out.println();
-				for(nosql.Row row: (EList<nosql.Row>)colFam.getRows()){
-					for(nosql.Cell cell: (EList<nosql.Cell>)row.getCells()){
-						System.out.print(cell.getValue()+"("+cell.getColumn().getName()+")\t");
-					}
-					System.out.println();
-				}
-				System.out.print("Primary Key ------- ");
-				for(Column col: (EList<Column>)colFam.getPK().getColumns()){
-					System.out.print(col.getName()+"\t");
-				}
-				System.out.println();
-				System.out.println("----------------------------------------------");
-			}
-			*/
-			System.out.println("inserting to casandra :" + Calendar.getInstance().getTime().toString());
+			 * System.out.println("Keyspace: "+keyspace.getName());
+			 * System.out.println("---------------------------------------");
+			 * System
+			 * .out.println("---------------------- NO OF COLUMN FAMILES: "
+			 * +keyspace.getFamilies().size()); for(ColumnFamily colFam:
+			 * (EList<ColumnFamily>)keyspace.getFamilies()){
+			 * System.out.println("Column Family: "+colFam.getName());
+			 * for(Column col: (EList<Column>)colFam.getColumns()){
+			 * System.out.println("--Column: "+col.getName());
+			 * System.out.println("--Datatype: "+col.getDatatype().getName());
+			 * System.out.println("--Size: "+col.getSize());
+			 * System.out.println(); } System.out.println(); for(nosql.Row row:
+			 * (EList<nosql.Row>)colFam.getRows()){ for(nosql.Cell cell:
+			 * (EList<nosql.Cell>)row.getCells()){
+			 * System.out.print(cell.getValue
+			 * ()+"("+cell.getColumn().getName()+")\t"); } System.out.println();
+			 * } System.out.print("Primary Key ------- "); for(Column col:
+			 * (EList<Column>)colFam.getPK().getColumns()){
+			 * System.out.print(col.getName()+"\t"); } System.out.println();
+			 * System
+			 * .out.println("----------------------------------------------"); }
+			 */
+			// Genarating no-sql db from the converted model
+			System.out.println("inserting to casandra :"
+					+ Calendar.getInstance().getTime().toString());
 			CDBTransformationService t = new CDBTransformationService();
 			t.generate(keyspace);
-			
-			System.out.println("finished :" + Calendar.getInstance().getTime().toString());
-			
-		} 
-		catch (RuleNotFoundException e) {
-			// TODO Auto-generated catch block
+
+			System.out.println("finished :"
+					+ Calendar.getInstance().getTime().toString());
+
+		} catch (RuleNotFoundException e) {
 			e.printStackTrace();
 		}
-	
-		
-		 catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		
+
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+
 	}
 
 }

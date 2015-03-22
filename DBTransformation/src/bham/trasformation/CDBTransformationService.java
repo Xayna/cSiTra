@@ -7,63 +7,83 @@ import nosql.Column;
 import nosql.ColumnFamily;
 import nosql.KeySpace;
 import nosql.Row;
-
 import org.eclipse.emf.common.util.EList;
-
 import bham.trasformation.rules.DatatypeMapping;
-
-import com.datastax.driver.core.Cluster;
-import com.datastax.driver.core.Host;
-import com.datastax.driver.core.Metadata;
 import com.datastax.driver.core.Session;
 
 public class CDBTransformationService {
 
-	NoSQLConnection conn;
-	Session session;
+	NoSQLConnection conn = null;
+	Session session = null;
 
+	/*
+	 * Generate Cassandra db
+	 * 
+	 * @param myKeySpace, used to generate cassandra db
+	 * 
+	 * @return
+	 */
 	public void generate(KeySpace myKeySpace) {
 		try {
-			//conn = Cluster.builder().addContactPoint("127.0.0.1").build();
-			//session = conn.connect();
-			
-			//System.out.println("i'm here");
+			// initiate connection
+			conn = new NoSQLConnection();
+			session = conn.connect();
 
-			 conn = new NoSQLConnection();
-			 session = conn.connect();
-			 
+			// creating db schema
 			createSchema(session, myKeySpace);
-			
+
+			// fill db with data
 			fillData(session, myKeySpace);
-			 conn.close();
 
 		} catch (Exception ex) {
 			ex.printStackTrace();
-		}
-		finally {
-			
+		} finally {
+			// closing connection
+			if (conn != null)
+				conn.close();
 		}
 	}
 
+	/*
+	 * Filling created db with data
+	 * 
+	 * @param mySession, used to open session with db server to execute db
+	 * queries
+	 * 
+	 * @param KeySpace, contains data to be filled in the db
+	 * 
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
 	private void fillData(Session mySession, KeySpace myKeySpace) {
 		try {
-			System.out.println("Filling data : " + Calendar.getInstance().getTime().toString());
+			System.out.println("Filling data : "
+					+ Calendar.getInstance().getTime().toString());
+			// extracting tables from keyspace
 			EList<ColumnFamily> tables = myKeySpace.getFamilies();
 			for (ColumnFamily tab : tables) {
+				// get list of rows associated with each table
 				EList<Row> rows = tab.getRows();
 				for (Row row : rows) {
+					// get list of cells associated with each row
 					EList<Cell> cells = row.getCells();
 					if (cells != null && cells.size() > 0) {
+						// extract associated column names to insert the values
+						// in the same order
 						String colNames = "";
 						String cellsValues = "";
 
 						int index = 0;
+						// enter the while if there is more than one cell
+						// which means we have more than one column
 						while (index < cells.size() - 1) {
+
 							Column tempCol = cells.get(index).getColumn();
 							Cell tempCell = cells.get(index);
 
 							colNames += tempCol.getName();
 							colNames += ",";
+							// if the column type is string then and 'value'
 							if (DatatypeMapping.isStringType(tempCol
 									.getDatatype()))
 								cellsValues += "'" + tempCell.getValue() + "'";
@@ -72,6 +92,7 @@ public class CDBTransformationService {
 							cellsValues += ",";
 							index++;
 						}
+						// get the frist/last column info
 						colNames += cells.get(index).getColumn().getName();
 
 						if (DatatypeMapping.isStringType(cells.get(index)
@@ -81,12 +102,13 @@ public class CDBTransformationService {
 						else
 							cellsValues += cells.get(index).getValue();
 
-						String sql = "INSERT INTO " + tab.getName() + "("
+						// prepare nosql string
+						String nosql = "INSERT INTO " + tab.getName() + "("
 								+ colNames + ")" + " VALUES (" + cellsValues
 								+ ");";
-						//System.out.println(sql);
-						session.execute(sql);
-						
+
+						session.execute(nosql);
+
 						// the syntax for add new col
 						/*
 						 * ALTER column_name TYPE cql_type | ( ADD column_name
@@ -98,44 +120,54 @@ public class CDBTransformationService {
 					}
 				}
 			}
-			
-			System.out.println("Inserting is finished : " + Calendar.getInstance().getTime().toString());
-			
+
+			System.out.println("Inserting is finished : "
+					+ Calendar.getInstance().getTime().toString());
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
-		/*
-		 * session.execute(
-		 * "INSERT INTO users (firstname, lastname, age, email, city) VALUES ('Jane', 'Doe', 36, 'janedoe@email.com', 'Beverly Hills');"
-		 * );
-		 * 
-		 * session.execute(
-		 * " INSERT INTO users (firstname, lastname, age, email, city) VALUES ('Rob', 'Byrne', 24, 'robbyrne@email.com', 'San Diego');"
-		 * );
-		 */
 	}
 
+	/*
+	 * Create db schema
+	 * 
+	 * @param mySession, used to open session with db server to execute db
+	 * queries
+	 * 
+	 * @param KeySpace, contains info used to create schema
+	 * 
+	 * @return
+	 */
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private void createSchema(Session mySession, KeySpace myKeySpace) {
 		try {
 			try {
 				// drop keySpace check there is command DORP KEYSPACE IFEXISTS
-				session.execute("DROP KEYSPACE " + myKeySpace.getName());
+				session.execute("DROP KEYSPACE IF EXISTS "
+						+ myKeySpace.getName());
 			} catch (Exception ex) {
-				System.out.println("createSchema : Keyspace "
-						+ myKeySpace.getName() + " does not exists");
+				System.out
+						.println("createSchema : error while dropping Keyspace "
+								+ myKeySpace.getName() + " does not exists");
 			}
-			// keySpace
+			// create keySpace
+			// for now the keyspace options are static
+			// in the future should be read form options object that is created
+			// based on the options selected by the user
 			String keySpaceStr = "CREATE KEYSPACE " + myKeySpace.getName()
 					+ " WITH replication "
 					+ "= {'class':'SimpleStrategy', 'replication_factor':1};";
 
-			System.out.println(keySpaceStr + Calendar.getInstance().getTime().toString());
+			System.out.println(keySpaceStr
+					+ Calendar.getInstance().getTime().toString());
 			session.execute(keySpaceStr);
 
+			// using the new schema
 			session.execute("USE " + myKeySpace.getName() + ";");
 
-			// ColumnFamily
+			// create ColumnFamilies
 			EList<ColumnFamily> families = myKeySpace.getFamilies();
 			for (ColumnFamily family : families) {
 
@@ -146,45 +178,39 @@ public class CDBTransformationService {
 				EList columns = family.getColumns();
 				for (Object object : columns) {
 					Column col = (Column) object;
-					// to-do see why the columns are doubled through transformation
-					//if(!columnsStr.contains(col.getName()))
 					columnsStr += col.getName() + " " + col.getDatatype() + ",";
+
+					// cassandra does not support size
 					// if(!col.getSize().isEmpty())
 					// columnsStr += "(" + col.getSize() + ")";
 					// columnsStr += ",";
 				}
-				/*
-				 * System.out.println("1 ---- "+(family.getPK() !=
-				 * null?"not null":"null")); System.out.println(" 2 ---- " +
-				 * ((pkColumns = family.getPK().getColumns()) != null));
-				 * System.out.println(" 3 ---- "+ (pkColumns.size() > 0));
-				 */
-				
+
+				// get the pk
+				// pk is mandatory in cassandra
 				if (family.getPK() != null
 						&& (pkColumns = family.getPK().getColumns()) != null
 						&& pkColumns.size() > 0) {
 					int index = 0;
-					// System.out.println(pkColumns.size()+"!!!!!!!!");
+					// for composite key
 					while (index < pkColumns.size() - 1) {
 						pkStr += ((Column) pkColumns.get(index)).getName();
 						pkStr += ",";
 						index++;
 					}
 					pkStr += ((Column) pkColumns.get(index)).getName();
-					// System.out.println(pkStr);
-
-				}
 				
-				// check options 
+				}
+
+				// check options
+				//future work , to be implemented later
 				/*
-				 * if it has options
-				 * withStr = "WITH "
-				 * if (options)
-				 * {
-				 * 	for each option in Options
-				 * 		withstr += option.getname + option.value==""?"":"="+options.value ;
-				 * } 
+				 * if it has options withStr = "WITH " if (options) { for each
+				 * option in Options withstr += option.getname +
+				 * option.value==""?"":"="+options.value ; }
 				 */
+				
+				//preparing and executing nosql create table string 
 				pkStr = "PRIMARY KEY (" + pkStr + ")";
 				String noSqlStr = "CREATE TABLE " + family.getName() + "("
 						+ columnsStr + pkStr + ");";
@@ -192,7 +218,6 @@ public class CDBTransformationService {
 				session.execute(noSqlStr);
 			}
 
-			// createColumnFaminly();
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}

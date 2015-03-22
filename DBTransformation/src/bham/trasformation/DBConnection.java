@@ -46,12 +46,17 @@ public class DBConnection {
 
 	private Properties props;
 	
-	
+	/*
+	 * @return properties
+	 */
 	public Properties getProps() {
 		return props;
 	}
 
 
+	/*
+	 * @return connection
+	 */
 	public Connection connect() {
 		try {
 			// Load in Database properties from file
@@ -81,10 +86,12 @@ public class DBConnection {
 			
 			// get the db info from properties
 			String[] databaseInfo = getDBConnectionInfo(props);
-			if (databaseInfo[0] == null) {
-				System.err.println("Error: No JDBC driver specified in the");
+			if (databaseInfo == null)
+			{
+				System.err.println("Cancelling the process");
 				System.exit(1);
 			}
+			
 
 			//load the jdbc driver
 			Class.forName(databaseInfo[0]);
@@ -110,11 +117,11 @@ public class DBConnection {
 						+ "\" failed: " + e.getMessage());
 			}
 
+			//save the db last used db info
 			saveProperties(props ,databaseInfo);
 		} catch (SQLException e) {
 			do {
 				System.out.println(e.getMessage());
-				// e.printStackTrace();
 			} while ((e = e.getNextException()) != null);
 			System.exit(1);
 		} catch (Exception e) {
@@ -127,6 +134,9 @@ public class DBConnection {
 
 	}
 
+	/*
+	 * close the connection with database
+	 */
 	public void close() {
 		try {
 			if (conn != null)
@@ -138,7 +148,12 @@ public class DBConnection {
 	}
 
 	
-	// build the dbinfo UI
+	/*
+	 *  build the db info UI
+	 *  
+	 *  @param props, properties contain db info
+	 *  @return String
+	 */
 	private static String[] getDBConnectionInfo(Properties props) {
 		// get the JDBC driver
 		String drivers = props.getProperty(DB_DRIVER_PROP);
@@ -148,11 +163,12 @@ public class DBConnection {
 		String database = props.getProperty(DB_NAME_PROP);
 		// get the schema
 		String schema = props.getProperty(DB_SCHEMA_PROP);
-
+		//get the user name
 		String usernameP = props.getProperty(DB_USER_NAME_PROP);
-		
+		//get the password
 		String pass = props.getProperty(DB_PASSWORD_PROP);
 		
+		//creating UI fields 
 		JTextField dbDriver = new JTextField((drivers == null) ? "" : drivers,
 				50);
 		JTextField dbURL = new JTextField((databaseUrl == null) ? ""
@@ -167,23 +183,62 @@ public class DBConnection {
 				GET_DB_NAME, dbName, GET_DB_SCHEMA, dbSchema, GET_DB_USER_NAME,
 				username, GET_DB_USER_PASS, password };
 
+		//creating UI dialog 
 		JOptionPane pane = new JOptionPane(fields,
 				JOptionPane.QUESTION_MESSAGE, JOptionPane.OK_CANCEL_OPTION,
 				null);
 		JDialog d = pane.createDialog(null, "Database Access");
 		d.setVisible(true);
 
+		// reading entered values
 		Integer returnValue = (Integer) pane.getValue();
 		d.dispose();
 
+		//checking for return value or cancel option
 		if (returnValue == null || returnValue != JOptionPane.OK_OPTION) {
 			return null;
 		}
+		
+		//checking essential db connection parameters
+		if (dbDriver.getText() == null) {
+			System.err.println("Error: No JDBC driver specified");
+			return null;
+		}
+	
+		if (dbURL.getText() == null) {
+			System.err.println("Error: No database URL ");
+			return null;
+		}
+		if (dbName.getText() == null) {
+			System.err.println("Error: No database name is provided ");
+			return null;
+		}
+		if (dbSchema.getText() == null) {
+			System.err.println("Error: No schema is provided ");
+			return null;
+		}
+		
+		if (username.getText() == null) {
+			System.err.println("Error: No username is provided ");
+			return null;
+		}
+		
+		if (password.getPassword().toString() == null) {
+			System.err.println("Error: No password is provided ");
+			return null;
+		}
+		
+		
 		return new String[] { dbDriver.getText(), dbURL.getText(),
 				dbName.getText(), dbSchema.getText(), username.getText(),
 				new String(password.getPassword()) };
 	}
 
+	/*
+	 * @param props, properties to be saved
+	 * @param dbInfo, array of new properties values
+	 * @return 
+	 */
 	private void saveProperties(Properties props ,String[] dbInfo) {
 		
 		// set the JDBC driver
@@ -194,11 +249,12 @@ public class DBConnection {
 		props.setProperty(DB_NAME_PROP, dbInfo[2]);
 		// set the schema
 		props.setProperty(DB_SCHEMA_PROP, dbInfo[3]);
-
+		// set the username
 		props.setProperty(DB_USER_NAME_PROP, dbInfo[4]);
-		
+		// set the password
 		props.setProperty(DB_PASSWORD_PROP, dbInfo[5]);
 		
+		//saving the properties
 		File file = new File(TEMP_FILE_PATH
 				+ NEW_PROPERTIES_FILE_NAME);
 		OutputStream out = null;
@@ -209,17 +265,17 @@ public class DBConnection {
 			System.out.println(file.getAbsolutePath());
 
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
+		
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
-			// TODO: handle exception
+	
 		} finally {
 			try {
 				if (out != null)
 					out.close();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
+			
 				e.printStackTrace();
 			}
 		}
