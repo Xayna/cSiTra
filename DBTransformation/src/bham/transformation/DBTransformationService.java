@@ -53,7 +53,8 @@ public class DBTransformationService {
 			serverName = conn.getCatalog();
 
 			db.setName(dbName + "_" + schemaName);
-			System.out.println("MY SCHEMA :" + db.getName());
+			Main.times.add(System.currentTimeMillis());
+			System.out.println(Main.calTimeDiff(false)+" ms Connection established.");
 			getTables(db);
 
 		} catch (SQLException e) {
@@ -88,17 +89,24 @@ public class DBTransformationService {
 
 				/** set table name & set its columns **/
 				table.setName(rs.getString("table_name"));
-				System.out.println("Reading sql table :" + table.getName());
+				System.out.println("\nFOR TABLE: "+table.getName());
 				getColumns(table, null, false);
-
+				Main.times.add(System.currentTimeMillis());
+				System.out.println(Main.calTimeDiff(true)+" ms "+table.getColumns().size()+" columns added.");
 				/** get table rows & set into tables **/
 				getRows(table);
-
+				Main.times.add(System.currentTimeMillis());
+				System.out.println(Main.calTimeDiff(true)+" ms "+table.getRows().size()+" rows added.");
 				/** get table constraints & set into tables **/
 				getTableKeys(table);
-
+				Main.times.add(System.currentTimeMillis());
+				System.out.println(Main.calTimeDiff(true)+" ms  constraints added.");
 				/** add the table **/
 				tables.add(table);
+				Main.times.add(System.currentTimeMillis());
+				Main.calTimeDiff(true);
+				System.out.println((Main.totalTime)+" ms "+table.getName()+" table read.");
+				Main.totalTime = 0;
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -118,7 +126,6 @@ public class DBTransformationService {
 		PreparedStatement st = null;
 		ResultSet rs = null;
 		try {
-			System.out.println("Getting columns for " + table.getName());
 			// selecting info for multiple columns
 			if (!oneColumn) {
 				st = conn.prepareStatement("SELECT "
@@ -234,7 +241,6 @@ public class DBTransformationService {
 		// get list of columns
 		EList<Column> cols = table.getColumns();
 		try {
-			System.out.println("Getting rows for " + table.getName());
 			
 			// getting data within a table
 			st = conn.prepareStatement("SELECT * " + "FROM " + schemaName + "."+ table.getName() + "");
@@ -271,7 +277,6 @@ public class DBTransformationService {
 		DatabaseMetaData metaData = null;
 		ResultSet keys = null;
 		try {
-			System.out.println("Getting keys for " + table.getName());
 			// getting database meta data
 			metaData = conn.getMetaData();
 

@@ -45,7 +45,9 @@ public class Table2ColumnFamily implements Rule<Table, ColumnFamily> {
 	public void setProperties(ColumnFamily target, Table source, Transformer t) {
 		try {
 			// initializing ColumnFamily
-			System.out.println(new Date()+"Transforming table: "+source.getName());
+			Main.times.add(System.currentTimeMillis());
+			Main.totalTime=0;
+			System.out.println("\nTransforming table: "+source.getName());
 			target.setName(source.getName());
 			target.setKeyspace(Main.mainKeySpace);
 
@@ -62,10 +64,13 @@ public class Table2ColumnFamily implements Rule<Table, ColumnFamily> {
 				checkConstraints(t, newCol, col);
 
 			}
-			System.out.println(new Date()+"Columns and constraints transformed.");
+			Main.times.add(System.currentTimeMillis());
+			System.out.println(Main.calTimeDiff(true)+" ms Columns and constraints transformed.");
 			// fill data
 			fillData(source, target);
-			System.out.println(new Date()+"Data filled.");
+			Main.times.add(System.currentTimeMillis());
+			System.out.println(Main.calTimeDiff(true)+" ms Data filled( with FK table, if present).");
+			System.out.println(Main.totalTime+" ms "+target.getName()+" column family transformed.");
 		} catch (RuleNotFoundException e) {
 			e.printStackTrace();
 		}
@@ -134,6 +139,9 @@ public class Table2ColumnFamily implements Rule<Table, ColumnFamily> {
 					// add the column family to keyspace
 					Main.mainKeySpace.getFamilies().add(ref);
 					ref.setKeyspace(Main.mainKeySpace);
+					Main.times.add(System.currentTimeMillis());
+					System.out.println(Main.calTimeDiff(false)+" ms "+ref.getName()+" Foreign Key table added.");
+					Main.times.remove(Main.times.size()-1);
 					break;
 				default:
 					break;

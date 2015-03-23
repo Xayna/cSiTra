@@ -1,6 +1,8 @@
 package bham.transformation;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 
 import metamodel.Database;
 import nosql.KeySpace;
@@ -14,28 +16,27 @@ public class Main {
 
 	public static KeySpace mainKeySpace = null;
 	public static int colNameCounter = 0;
+	public static ArrayList<Long> times = new ArrayList<Long>();
+	public static long totalTime=0;
 
 	public static void main(String[] args) {
 		try {
-			System.out.println("Started :"
-					+ Calendar.getInstance().getTime().toString());
+			times.add(System.currentTimeMillis());
+			System.out.println(times.get(0)+ " Started");
 			// initializing rules
 			SimpleTransformerImpl converter = new SimpleTransformerImpl(null);
 			converter.addRuleType(Database2Keyspace.class);
 			converter.addRuleType(Table2ColumnFamily.class);
 			converter.addRuleType(SqlCol2NoSqlCol.class);
 	
-
+			times.set(0, System.currentTimeMillis());
 			// converting sql db into objects using the sql meta model
-			System.out.println("starting generate Sql MM objects :"
-					+ Calendar.getInstance().getTime().toString());
+			System.out.println(new Date()+ " starting generate Sql MM objects.....");
 			DBTransformationService dbConnector = new DBTransformationService();
 			Database db = dbConnector.generate();
 			// converting sql meta module into no-sql meta model using sitra
-			System.out.println("converting Sql to NoSql MM objects :"
-					+ Calendar.getInstance().getTime().toString());
-			KeySpace keyspace = converter
-					.transform(Database2Keyspace.class, db);
+			System.out.println("\n"+new Date()+" converting Sql to NoSql MM objects.....\n");
+			KeySpace keyspace = converter.transform(Database2Keyspace.class, db);
 
 			/*
 			 * System.out.println("Keyspace: "+keyspace.getName());
@@ -61,13 +62,13 @@ public class Main {
 			 * .out.println("----------------------------------------------"); }
 			 */
 			// Genarating no-sql db from the converted model
-			System.out.println("inserting to casandra :"
-					+ Calendar.getInstance().getTime().toString());
+			System.out.println("\n"+new Date()+" inserting to casandra...\n");
+			times.add(System.currentTimeMillis());
+			totalTime=0;
 			CDBTransformationService t = new CDBTransformationService();
 			t.generate(keyspace);
 
-			System.out.println("finished :"
-					+ Calendar.getInstance().getTime().toString());
+			System.out.println("\n"+new Date()+" COMPLETED. ");
 
 		} catch (RuleNotFoundException e) {
 			e.printStackTrace();
@@ -78,5 +79,11 @@ public class Main {
 		}
 
 	}
-
+	
+	public static long calTimeDiff(boolean addToTotal){
+		long ans = times.get(times.size()-1)- times.get(times.size()-2);
+		if(addToTotal)
+			totalTime+=ans;
+		return ans;
+	}
 }
