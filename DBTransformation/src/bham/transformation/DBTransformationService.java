@@ -161,6 +161,7 @@ public class DBTransformationService {
 				switch (rs.getString("data_type").toLowerCase().split(" ")[0]) {
 				case "int":
 				case "integer":
+				case "samllint":
 					column.setType(Datatype.INT);
 					break;
 				case "bigint":
@@ -173,15 +174,18 @@ public class DBTransformationService {
 					column.setType(Datatype.BLOB);
 					break;
 				case "char":
+				case "character":
 					column.setType(Datatype.CHAR);
 					break;
 				case "date":
 					column.setType(Datatype.DATE);
 					break;
 				case "datetime":
+				case "timestamp without time zone":
 					column.setType(Datatype.DATETIME);
 					break;
 				case "decimal":
+				case "numeric":
 					column.setType(Datatype.DECIMAL);
 					break;
 				case "double":
@@ -200,6 +204,7 @@ public class DBTransformationService {
 					column.setType(Datatype.STRING);
 					break;
 				case "text":
+				case "characture varying":
 					column.setType(Datatype.TEXT);
 					break;
 				case "timestamp":
