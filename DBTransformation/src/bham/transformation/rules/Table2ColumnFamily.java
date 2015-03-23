@@ -3,6 +3,8 @@
  */
 package bham.transformation.rules;
 
+import java.util.Date;
+
 import metamodel.Constraint;
 import metamodel.ConstraintType;
 import metamodel.Table;
@@ -43,6 +45,7 @@ public class Table2ColumnFamily implements Rule<Table, ColumnFamily> {
 	public void setProperties(ColumnFamily target, Table source, Transformer t) {
 		try {
 			// initializing ColumnFamily
+			System.out.println(new Date()+"Transforming table: "+source.getName());
 			target.setName(source.getName());
 			target.setKeyspace(Main.mainKeySpace);
 
@@ -59,10 +62,10 @@ public class Table2ColumnFamily implements Rule<Table, ColumnFamily> {
 				checkConstraints(t, newCol, col);
 
 			}
-
+			System.out.println(new Date()+"Columns and constraints transformed.");
 			// fill data
 			fillData(source, target);
-
+			System.out.println(new Date()+"Data filled.");
 		} catch (RuleNotFoundException e) {
 			e.printStackTrace();
 		}
@@ -102,8 +105,7 @@ public class Table2ColumnFamily implements Rule<Table, ColumnFamily> {
 
 					break;
 				case ConstraintType.UNIQUE_VALUE:
-					System.out
-							.println("Cassandra does not support UNIQUE contraint");
+					System.out.println("Cassandra does not support UNIQUE contraint");
 					break;
 
 				case ConstraintType.FOREIGN_KEY_VALUE:
@@ -185,11 +187,11 @@ public class Table2ColumnFamily implements Rule<Table, ColumnFamily> {
 			 * String refValue = getCell(noSqlRow.getCells(),
 			 * col.getName()).getValue();
 			 * 
-			 * boolean present = false; nosql.Row refTableRow = null; for
+			 * boolean present = false; nosql.Row refTableRow = null, oldRefTableRow=null; for
 			 * (nosql.Row rows : (EList<nosql.Row>) refTable .getRows()) { if
 			 * (getCell( rows.getCells(), ((nosql.Column) refTable.getPK()
 			 * .getColumns().get(0)).getName()) .getValue().equals(refValue)) {
-			 * present = true; refTableRow = rows; break; } } if (!present) {
+			 * present = true; refTableRow = rows; oldRefTableRow = rows; break; } } if (!present) {
 			 * refTableRow = new nosql.impl.RowImpl();
 			 * refTableRow.setKeyspace(refTable.getKeyspace());
 			 * refTableRow.setName(refTable.getName()); //
@@ -218,6 +220,8 @@ public class Table2ColumnFamily implements Rule<Table, ColumnFamily> {
 			 * refTableCell.setColumn(refTableCol);
 			 * refTableRow.getCells().add(refTableCell);
 			 * 
+					if(oldRefTableRow!=null)
+						refTable.getRows().remove(oldRefTableRow);
 			 * refTable.getRows().add(refTableRow);
 			 * refTable.getColumns().add(refTableCol);
 			 * 
@@ -250,7 +254,7 @@ public class Table2ColumnFamily implements Rule<Table, ColumnFamily> {
 					String refValue = getCell(cells, col.getName()).getValue();
 
 					
-					nosql.Row refTableRow = null;
+					nosql.Row refTableRow = null, oldRefTableRow=null;
 					//get the related nosql row if exist
 					for (nosql.Row rows : (EList<nosql.Row>) refTable.getRows()) {
 						if (getCell(
@@ -260,6 +264,7 @@ public class Table2ColumnFamily implements Rule<Table, ColumnFamily> {
 								refValue)) {
 							
 							refTableRow = rows;
+							oldRefTableRow = rows;
 							break;
 						}
 					}
@@ -296,6 +301,8 @@ public class Table2ColumnFamily implements Rule<Table, ColumnFamily> {
 					//add the cell to the row
 					refTableRow.getCells().add(refTableCell);
 					//add the row to the table
+					if(oldRefTableRow!=null)
+						refTable.getRows().remove(oldRefTableRow);
 					refTable.getRows().add(refTableRow);
 					refTable.getColumns().add(refTableCol);
 

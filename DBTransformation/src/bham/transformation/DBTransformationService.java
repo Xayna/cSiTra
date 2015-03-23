@@ -88,7 +88,7 @@ public class DBTransformationService {
 
 				/** set table name & set its columns **/
 				table.setName(rs.getString("table_name"));
-				System.out.print("Reading sql table :" + table.getName());
+				System.out.println("Reading sql table :" + table.getName());
 				getColumns(table, null, false);
 
 				/** get table rows & set into tables **/

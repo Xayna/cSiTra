@@ -1,6 +1,7 @@
 package bham.transformation;
 
 import java.util.Calendar;
+import java.util.Date;
 
 import nosql.Cell;
 import nosql.Column;
@@ -34,7 +35,7 @@ public class CDBTransformationService {
 
 			// creating db schema
 			createSchema(session, myKeySpace);
-
+			System.out.println(new Date()+"Schema Created.");
 			// fill db with data
 			fillData(session, myKeySpace);
 
@@ -102,7 +103,7 @@ public class CDBTransformationService {
 						sql = "INSERT INTO " + tab.getName() + "(" + colNames
 								+ ")" + " VALUES (" + cellValues + " ["
 								+ addCellValues + "]);";
-						System.out.println(sql);
+						//System.out.println(sql);
 						session.execute(sql);
 					}
 				} else {
