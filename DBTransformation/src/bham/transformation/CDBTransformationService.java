@@ -1,7 +1,6 @@
 package bham.transformation;
 
-import java.util.Calendar;
-import java.util.Date;
+import java.util.ArrayList;
 
 import nosql.Cell;
 import nosql.Column;
@@ -14,6 +13,8 @@ import org.eclipse.emf.common.util.EList;
 
 import bham.transformation.rules.DatatypeMapping;
 
+import com.datastax.driver.core.BoundStatement;
+import com.datastax.driver.core.PreparedStatement;
 import com.datastax.driver.core.Session;
 
 public class CDBTransformationService {
@@ -66,7 +67,9 @@ public class CDBTransformationService {
 	 */
 	@SuppressWarnings("unchecked")
 	private void fillData(Session mySession, KeySpace myKeySpace) {
-		String colNames, cellValues, sql, addCellValues, nosql="";
+		String colNames, cellValues, sql, addCellValues;
+		PreparedStatement ps=null;
+		BoundStatement bs = null;
 		try {
 			// extracting tables from keyspace
 			EList<ColumnFamily> tables = myKeySpace.getFamilies();
@@ -74,74 +77,55 @@ public class CDBTransformationService {
 				// get list of rows associated with each table
 				EList<Row> rows = tab.getRows();
 				if (tab.getComment() != null && tab.getComment().equals("Reference Table for Foreign Key")) {
+					colNames = ((Column) tab.getPK().getColumns().get(0)).getName() + ", " + ((Column) ((Cell) (rows.get(0).getCells().get(1))).getColumn()).getName() + "List";
+					ps = session.prepare("INSERT INTO " + tab.getName() + "(" + colNames + ")" + " VALUES (?, ?);");
 					for (Row row : rows) {
-						colNames = ""; cellValues = ""; sql = ""; addCellValues = "";
-						colNames = ((Column) tab.getPK().getColumns().get(0)).getName() + ", " + ((Column) ((Cell) (row.getCells().get(1))).getColumn()).getName() + "List";
-
-						EList<Cell> cells = row.getCells();
-						for (Cell cell : (EList<Cell>) row.getCells()) {
+						colNames = ""; cellValues = ""; sql = ""; addCellValues = "[";
+						bs = new BoundStatement(ps);
+						Object PKCell =null;
+						if(DatatypeMapping.isStringType(((Cell)row.getCells().get(0)).getColumn().getDatatype()))
+							PKCell = "'"+((Cell)row.getCells().get(0)).getValue()+"'";
+						else
+							PKCell =((Cell)row.getCells().get(0)).getValue();
+						row.getCells().remove(0);
+						/*for (Cell cell : ((EList<Cell>) row.getCells())) {
 							if (cell.getColumn().getName().equals(((Column) tab.getPK().getColumns().get(0)).getName()))
-								cellValues +=checkType(cell);
-							else
-								addCellValues +=checkType(cell);
-						}
-						addCellValues = addCellValues.substring(0, addCellValues.length() - 2);
-
-						sql = "INSERT INTO " + tab.getName() + "(" + colNames + ")" + " VALUES (" + cellValues + " [" + addCellValues + "]);";
-						// System.out.println(sql);
-						session.execute(sql);
+								if(DatatypeMapping.isStringType(cell.getColumn().getDatatype()))
+									addCellValues += "'"+cell.getValue()+"', ";
+								else
+									addCellValues +=cell.getValue()+", ";
+						}*/
+						//addCellValues = addCellValues.substring(0, addCellValues.length() - 2)+"]";
+						bs.bind(PKCell, getValues(row.getCells())); 
+						//System.out.println(bs);
+						session.execute(bs);
 					}
 				} else {
+					EList<Cell> cells = rows.get(0).getCells();
+					colNames = "";
+					String cellsValues = "";
+					for (Cell cell : (EList<Cell>)cells) {
+						colNames += cell.getColumn().getName()+", ";
+						cellsValues+="?, ";
+					}
+					colNames = colNames.substring(0, colNames.length() - 2);
+					cellsValues = cellsValues.substring(0, cellsValues.length() - 2);
+					System.out.println("INSERT INTO " + tab.getName() + "(" + colNames + ")" + " VALUES (" + cellsValues + ");");
+					ps = session.prepare("INSERT INTO " + tab.getName() + "(" + colNames + ")" + " VALUES (" + cellsValues + ");");
+					
+					
 					for (Row row : rows) {
 						// get list of cells associated with each row
-						EList<Cell> cells = row.getCells();
-						if (cells != null && cells.size() > 0) {
-							// extract associated column names to insert the
-							// values
-							// in the same order
-							colNames = "";
-							String cellsValues = "";
-
-							int index = 0;
-							// enter the while if there is more than one cell
-							// which means we have more than one column
-							while (index < cells.size() - 1) {
-
-								Column tempCol = cells.get(index).getColumn();
-								Cell tempCell = cells.get(index);
-
-								colNames += tempCol.getName();
-								colNames += ",";
-								// if the column type is string then and 'value'
-								if (DatatypeMapping.isStringType(tempCol.getDatatype()))
-									cellsValues += "'" + tempCell.getValue() + "'";
-								else
-									cellsValues += tempCell.getValue();
-								cellsValues += ",";
-								index++;
-							}
-							// get the frist/last column info
-							colNames += cells.get(index).getColumn().getName();
-
-							if (DatatypeMapping.isStringType(cells.get(index).getColumn().getDatatype()))
-								cellsValues += "'" + cells.get(index).getValue() + "'";
-							else
-								cellsValues += cells.get(index).getValue();
-
-							// prepare nosql string
-							nosql = "INSERT INTO " + tab.getName() + "(" + colNames + ")" + " VALUES (" + cellsValues + ");";
-
-							session.execute(nosql);
-
-							// the syntax for add new col
-							/*
-							 * ALTER column_name TYPE cql_type | ( ADD
-							 * column_name cql_type ) | ( DROP column_name ) | (
-							 * RENAME column_name TO column_name ) | ( WITH
-							 * property AND property ... )
-							 */
-
-						}
+						bs = new BoundStatement(ps);
+						ArrayList<Object> val = getValues(row.getCells());
+						bs.bind(val.toArray());
+						System.out.println(val.toArray());
+						/*for(Object obj: getValues(row.getCells())){
+							//bs.set
+							bs.bind();
+						}*/
+						//System.out.println(bs.toString());
+						session.execute(bs);
 					}
 				}
 				Main.times.add(System.currentTimeMillis());
@@ -150,7 +134,7 @@ public class CDBTransformationService {
 			System.out.println("\n");
 
 		} catch (Exception e) {
-			System.err.println(nosql);
+			System.err.println(bs.toString());
 			e.printStackTrace();
 		}
 
@@ -250,13 +234,15 @@ public class CDBTransformationService {
 	 * @param cell
 	 * @return String, formated string 
 	 */
-	private String checkType (Cell cell)
+	private ArrayList<Object> getValues(EList<Cell> cells)
 	{
-		if (DatatypeMapping.isStringType(cell.getColumn().getDatatype()))
-			return  "'" + cell.getValue() + "', ";
-		else if (cell.getColumn().getDatatype().equals(Type.BOOLEAN_LITERAL))
-			return (cell.getValue().equalsIgnoreCase("t") || cell.getValue().equalsIgnoreCase("1") ? "True" : "False" ) + ", ";
-		else
-			return cell.getValue() + ", ";
+		ArrayList<Object> values = new ArrayList<Object>();
+		for(Cell cell: cells){
+			if (cell.getColumn().getDatatype().equals(Type.BOOLEAN_LITERAL))
+				values.add(cell.getValue().equals("t") || cell.getValue().equals("T") || cell.getValue().equals("1") ||cell.getValue().equals(1) ? true:false );
+			else
+				values.add(cell.getValue());
+		}
+		return values;
 	}
 }

@@ -37,7 +37,7 @@ public class CellImpl extends MinimalEObjectImpl.Container implements Cell {
 	 * @generated
 	 * @ordered
 	 */
-	protected static final String VALUE_EDEFAULT = null;
+	protected static final Object VALUE_EDEFAULT = null;
 
 	/**
 	 * The cached value of the '{@link #getValue() <em>Value</em>}' attribute.
@@ -47,7 +47,7 @@ public class CellImpl extends MinimalEObjectImpl.Container implements Cell {
 	 * @generated
 	 * @ordered
 	 */
-	protected String value = VALUE_EDEFAULT;
+	protected Object value = VALUE_EDEFAULT;
 
 	/**
 	 * The cached value of the '{@link #getColumn() <em>Column</em>}' reference.
@@ -83,7 +83,7 @@ public class CellImpl extends MinimalEObjectImpl.Container implements Cell {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public String getValue() {
+	public Object getValue() {
 		return value;
 	}
 
@@ -92,8 +92,8 @@ public class CellImpl extends MinimalEObjectImpl.Container implements Cell {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setValue(String newValue) {
-		String oldValue = value;
+	public void setValue(Object newValue) {
+		Object oldValue = value;
 		value = newValue;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, MetamodelPackage.CELL__VALUE, oldValue, value));

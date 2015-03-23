@@ -158,7 +158,7 @@ public class DBTransformationService {
 				// creating new column
 				Column column = new ColumnImpl();
 				column.setName(rs.getString("column_name"));
-				switch (rs.getString("data_type").toLowerCase()) {
+				switch (rs.getString("data_type").toLowerCase().split(" ")[0]) {
 				case "int":
 				case "integer":
 					column.setType(Datatype.INT);
@@ -250,7 +250,7 @@ public class DBTransformationService {
 				Row row = new RowImpl();
 				for (Column col : cols) {
 					cell = new CellImpl();
-					cell.setValue(rs.getString(col.getName()));
+					cell.setValue(rs.getObject(col.getName()));
 					cell.setColumn(col);
 					row.getCells().add(cell);
 				}

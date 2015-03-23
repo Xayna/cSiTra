@@ -36,7 +36,7 @@ public interface Cell extends EObject {
 	 * @model
 	 * @generated
 	 */
-	String getValue();
+	Object getValue();
 
 	/**
 	 * Sets the value of the '{@link nosql.Cell#getValue <em>Value</em>}' attribute.
@@ -46,7 +46,7 @@ public interface Cell extends EObject {
 	 * @see #getValue()
 	 * @generated
 	 */
-	void setValue(String value);
+	void setValue(Object value);
 
 	/**
 	 * Returns the value of the '<em><b>Column</b></em>' reference.
