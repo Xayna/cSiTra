@@ -119,7 +119,7 @@ public class CDBTransformationService {
 						bs = new BoundStatement(ps);
 						ArrayList<Object> val = getValues(row.getCells());
 						bs.bind(val.toArray());
-						System.out.println(val.toArray());
+						//System.out.println(val.toArray());
 						/*for(Object obj: getValues(row.getCells())){
 							//bs.set
 							bs.bind();
