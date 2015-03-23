@@ -8,6 +8,7 @@ import nosql.Column;
 import nosql.ColumnFamily;
 import nosql.KeySpace;
 import nosql.Row;
+import nosql.Type;
 
 import org.eclipse.emf.common.util.EList;
 
@@ -80,14 +81,9 @@ public class CDBTransformationService {
 						EList<Cell> cells = row.getCells();
 						for (Cell cell : (EList<Cell>) row.getCells()) {
 							if (cell.getColumn().getName().equals(((Column) tab.getPK().getColumns().get(0)).getName()))
-								if (DatatypeMapping.isStringType(cell.getColumn().getDatatype()))
-									cellValues += "'" + cell.getValue() + "', ";
-								else
-									cellValues += cell.getValue() + ", ";
-							else if (DatatypeMapping.isStringType(cell.getColumn().getDatatype()))
-								addCellValues += "'" + cell.getValue() + "', ";
+								cellValues +=checkType(cell);
 							else
-								addCellValues += cell.getValue() + ", ";
+								addCellValues +=checkType(cell);
 						}
 						addCellValues = addCellValues.substring(0, addCellValues.length() - 2);
 
@@ -249,4 +245,18 @@ public class CDBTransformationService {
 
 	}
 
+	/*
+	 * CheckType to return the right formate
+	 * @param cell
+	 * @return String, formated string 
+	 */
+	private String checkType (Cell cell)
+	{
+		if (DatatypeMapping.isStringType(cell.getColumn().getDatatype()))
+			return  "'" + cell.getValue() + "', ";
+		else if (cell.getColumn().getDatatype().equals(Type.BOOLEAN_LITERAL))
+			return (cell.getValue().equalsIgnoreCase("t") || cell.getValue().equalsIgnoreCase("1") ? "True" : "False" ) + ", ";
+		else
+			return cell.getValue() + ", ";
+	}
 }
