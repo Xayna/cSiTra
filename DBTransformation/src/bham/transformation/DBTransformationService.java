@@ -255,7 +255,7 @@ public class DBTransformationService {
 				Row row = new RowImpl();
 				for (Column col : cols) {
 					cell = new CellImpl();
-					cell.setValue(rs.getObject(col.getName()));
+					cell.setValue(rs.getString(col.getName()));
 					cell.setColumn(col);
 					row.getCells().add(cell);
 				}

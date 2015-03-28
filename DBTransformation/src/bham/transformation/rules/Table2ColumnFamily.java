@@ -250,7 +250,7 @@ public class Table2ColumnFamily implements Rule<Table, ColumnFamily> {
 						return;
 					}
 					// get value
-					Object refValue = getCell(cells, col.getName()).getValue();
+					String refValue = getCell(cells, col.getName()).getValue();
 
 					nosql.Row refTableRow = null, oldRefTableRow = null;
 					// get the related nosql row if exist

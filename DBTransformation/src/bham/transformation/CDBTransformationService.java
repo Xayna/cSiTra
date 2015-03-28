@@ -67,9 +67,10 @@ public class CDBTransformationService {
 	 */
 	@SuppressWarnings("unchecked")
 	private void fillData(Session mySession, KeySpace myKeySpace) {
-		String colNames, cellValues, sql, addCellValues;
-		PreparedStatement ps=null;
-		BoundStatement bs = null;
+		String colNames, cellValues, sql, nosqlStmt = null;
+		/*
+		 * PreparedStatement ps=null; BoundStatement bs = null;
+		 */
 		try {
 			// extracting tables from keyspace
 			EList<ColumnFamily> tables = myKeySpace.getFamilies();
@@ -77,64 +78,69 @@ public class CDBTransformationService {
 				// get list of rows associated with each table
 				EList<Row> rows = tab.getRows();
 				if (tab.getComment() != null && tab.getComment().equals("Reference Table for Foreign Key")) {
-					colNames = ((Column) tab.getPK().getColumns().get(0)).getName() + ", " + ((Column) ((Cell) (rows.get(0).getCells().get(1))).getColumn()).getName() + "List";
-					ps = session.prepare("INSERT INTO " + tab.getName() + "(" + colNames + ")" + " VALUES (?, ?);");
-					for (Row row : rows) {
-						colNames = ""; cellValues = ""; sql = ""; addCellValues = "[";
-						bs = new BoundStatement(ps);
-						Object PKCell =null;
-						if(DatatypeMapping.isStringType(((Cell)row.getCells().get(0)).getColumn().getDatatype()))
-							PKCell = "'"+((Cell)row.getCells().get(0)).getValue()+"'";
-						else
-							PKCell =((Cell)row.getCells().get(0)).getValue();
-						row.getCells().remove(0);
-						/*for (Cell cell : ((EList<Cell>) row.getCells())) {
-							if (cell.getColumn().getName().equals(((Column) tab.getPK().getColumns().get(0)).getName()))
-								if(DatatypeMapping.isStringType(cell.getColumn().getDatatype()))
-									addCellValues += "'"+cell.getValue()+"', ";
-								else
-									addCellValues +=cell.getValue()+", ";
-						}*/
-						//addCellValues = addCellValues.substring(0, addCellValues.length() - 2)+"]";
-						bs.bind(PKCell, getValues(row.getCells())); 
-						//System.out.println(bs);
-						session.execute(bs);
+					if (rows.size() > 0) {
+						colNames = ((Column) tab.getPK().getColumns().get(0)).getName() + ", " + ((Column) ((Cell) (rows.get(0).getCells().get(1))).getColumn()).getName() + "List";
+						for (Row row : rows) {
+							cellValues = "";
+							sql = "";
+							if (DatatypeMapping.isStringType(((Cell) row.getCells().get(0)).getColumn().getDatatype()))
+								cellValues = "'" + ((Cell) row.getCells().get(0)).getValue() + "', [";
+							else
+								cellValues = ((Cell) row.getCells().get(0)).getValue() + ", [";
+							row.getCells().remove(0);
+							cellValues += getValues(row.getCells()) + "]";
+							/*
+							 * for (Cell cell : ((EList<Cell>) row.getCells()))
+							 * { if(
+							 * DatatypeMapping.isStringType(cell.getColumn(
+							 * ).getDatatype ())) cellValues +=
+							 * "'"+cell.getValue()+"', "; else cellValues
+							 * +=cell.getValue()+", "; } cellValues =
+							 * cellValues.substring(0, cellValues.length() -
+							 * 2)+"]";
+							 */
+
+							// bs.bind(PKCell, getValues(row.getCells()));
+							// System.out.println(bs);
+							nosqlStmt = "INSERT INTO " + tab.getName() + "(" + colNames + ")" + " VALUES (" + cellValues + ");";
+							session.execute(nosqlStmt);
+						}
 					}
 				} else {
-					EList<Cell> cells = rows.get(0).getCells();
-					colNames = "";
-					String cellsValues = "";
-					for (Cell cell : (EList<Cell>)cells) {
-						colNames += cell.getColumn().getName()+", ";
-						cellsValues+="?, ";
-					}
-					colNames = colNames.substring(0, colNames.length() - 2);
-					cellsValues = cellsValues.substring(0, cellsValues.length() - 2);
-					System.out.println("INSERT INTO " + tab.getName() + "(" + colNames + ")" + " VALUES (" + cellsValues + ");");
-					ps = session.prepare("INSERT INTO " + tab.getName() + "(" + colNames + ")" + " VALUES (" + cellsValues + ");");
-					
-					
-					for (Row row : rows) {
-						// get list of cells associated with each row
-						bs = new BoundStatement(ps);
-						ArrayList<Object> val = getValues(row.getCells());
-						bs.bind(val.toArray());
-						//System.out.println(val.toArray());
-						/*for(Object obj: getValues(row.getCells())){
-							//bs.set
-							bs.bind();
-						}*/
-						//System.out.println(bs.toString());
-						session.execute(bs);
+					if (rows.size() > 0) {
+						EList<Cell> cells = rows.get(0).getCells();
+						colNames = "";
+						for (Cell cell : (EList<Cell>) cells) {
+							colNames += cell.getColumn().getName() + ", ";
+						}
+						colNames = colNames.substring(0, colNames.length() - 2);
+						// System.out.println("INSERT INTO " + tab.getName() +
+						// "(" + colNames + ")" + " VALUES (" + cellsValues +
+						// ");");
+
+						for (Row row : rows) {
+							// get list of cells associated with each row
+							// ArrayList<String> val =
+							// getValues(row.getCells());
+							/*
+							 * String cellsValues = ""; for (Cell cell :
+							 * (EList<Cell>)row.getCells()) { cellsValues +=
+							 * cell.getColumn().getName()+", "; } cellsValues =
+							 * cellsValues.substring(0, cellsValues.length() -
+							 * 2);
+							 */
+							nosqlStmt = "INSERT INTO " + tab.getName() + "(" + colNames + ")" + " VALUES (" + getValues(row.getCells()) + ");";
+							session.execute(nosqlStmt);
+						}
 					}
 				}
 				Main.times.add(System.currentTimeMillis());
-				System.out.println(Main.calTimeDiff(true)+ "ms "+rows.size()+" rows entered into "+tab.getName()+" column family.");
+				System.out.println(Main.calTimeDiff(true) + "ms " + rows.size() + " rows entered into " + tab.getName() + " column family.");
 			}
 			System.out.println("\n");
 
 		} catch (Exception e) {
-			System.err.println(bs.toString());
+			System.err.println(nosqlStmt);
 			e.printStackTrace();
 		}
 
@@ -231,18 +237,22 @@ public class CDBTransformationService {
 
 	/*
 	 * CheckType to return the right formate
+	 * 
 	 * @param cell
-	 * @return String, formated string 
+	 * 
+	 * @return String, formated string
 	 */
-	private ArrayList<Object> getValues(EList<Cell> cells)
-	{
-		ArrayList<Object> values = new ArrayList<Object>();
-		for(Cell cell: cells){
-			if (cell.getColumn().getDatatype().equals(Type.BOOLEAN_LITERAL))
-				values.add(cell.getValue().equals("t") || cell.getValue().equals("T") || cell.getValue().equals("1") ||cell.getValue().equals(1) ? true:false );
+	private String getValues(EList<Cell> cells) {
+		String values = "";
+		for (Cell cell : cells) {
+
+			if (DatatypeMapping.isStringType(cell.getColumn().getDatatype()))
+				values += "'" + cell.getValue() + "', ";
+			else if (cell.getColumn().getDatatype().equals(Type.BOOLEAN_LITERAL))
+				values += (cell.getValue().equals("t") || cell.getValue().equals("T") || cell.getValue().equals("1") || cell.getValue().equals(1) ? "true" : "false") + ", ";
 			else
-				values.add(cell.getValue());
+				values += cell.getValue() + ", ";
 		}
-		return values;
+		return values.substring(0, values.length() - 2);
 	}
 }
