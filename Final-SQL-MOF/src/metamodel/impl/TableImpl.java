@@ -42,8 +42,7 @@ public class TableImpl extends MinimalEObjectImpl.Container implements Table {
 	/**
 	 * The default value of the '{@link #getName() <em>Name</em>}' attribute.
 	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getName()
+	 * <!-- end-user-doc -->	 * @see #getName()
 	 * @generated
 	 * @ordered
 	 */
@@ -177,6 +176,22 @@ public class TableImpl extends MinimalEObjectImpl.Container implements Table {
 		return rows;
 	}
 
+	public EList<Row> getEmptyArrayList ()
+	{
+		return new EObjectResolvingEList<Row>(Row.class, this, MetamodelPackage.TABLE__ROWS);
+	}
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void addRows(EList<Row> row) {
+		if (rows == null) {
+			rows = new EObjectResolvingEList<Row>(Row.class, this, MetamodelPackage.TABLE__ROWS);
+		}
+		rows.addAll(row);
+		
+	}
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

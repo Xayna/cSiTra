@@ -102,5 +102,8 @@ public interface Table extends EObject {
 	 * @generated
 	 */
 	EList<Row> getRows();
+	
+	public void addRows(EList<Row> row);
 
+	public EList<Row> getEmptyArrayList ();
 } // Table
