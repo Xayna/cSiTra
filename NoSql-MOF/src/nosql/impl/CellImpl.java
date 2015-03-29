@@ -7,10 +7,8 @@ import nosql.Column;
 import nosql.NosqlPackage;
 
 import org.eclipse.emf.common.notify.Notification;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
 
@@ -214,6 +212,11 @@ public class CellImpl extends MinimalEObjectImpl.Container implements Cell {
 		result.append(value);
 		result.append(')');
 		return result.toString();
+	}
+
+	public void setValue(Object value) {
+		// TODO Auto-generated method stub
+		
 	}
 
 } //CellImpl
