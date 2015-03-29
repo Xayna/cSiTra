@@ -35,32 +35,10 @@ public class Main {
 			DBTransformationService dbConnector = new DBTransformationService();
 			Database db = dbConnector.generate();
 			// converting sql meta module into no-sql meta model using sitra
+			
 			System.out.println("\n"+new Date()+" converting Sql to NoSql MM objects.....\n");
 			KeySpace keyspace = converter.transform(Database2Keyspace.class, db);
 
-			/*
-			 * System.out.println("Keyspace: "+keyspace.getName());
-			 * System.out.println("---------------------------------------");
-			 * System
-			 * .out.println("---------------------- NO OF COLUMN FAMILES: "
-			 * +keyspace.getFamilies().size()); for(ColumnFamily colFam:
-			 * (EList<ColumnFamily>)keyspace.getFamilies()){
-			 * System.out.println("Column Family: "+colFam.getName());
-			 * for(Column col: (EList<Column>)colFam.getColumns()){
-			 * System.out.println("--Column: "+col.getName());
-			 * System.out.println("--Datatype: "+col.getDatatype().getName());
-			 * System.out.println("--Size: "+col.getSize());
-			 * System.out.println(); } System.out.println(); for(nosql.Row row:
-			 * (EList<nosql.Row>)colFam.getRows()){ for(nosql.Cell cell:
-			 * (EList<nosql.Cell>)row.getCells()){
-			 * System.out.print(cell.getValue
-			 * ()+"("+cell.getColumn().getName()+")\t"); } System.out.println();
-			 * } System.out.print("Primary Key ------- "); for(Column col:
-			 * (EList<Column>)colFam.getPK().getColumns()){
-			 * System.out.print(col.getName()+"\t"); } System.out.println();
-			 * System
-			 * .out.println("----------------------------------------------"); }
-			 */
 			// Genarating no-sql db from the converted model
 			System.out.println("\n"+new Date()+" inserting to casandra...\n");
 			times.add(System.currentTimeMillis());

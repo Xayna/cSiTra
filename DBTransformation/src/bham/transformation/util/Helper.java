@@ -24,6 +24,8 @@ public class Helper {
 	public static final String NDB_PORT_PROP = "NoSQL.Port";
 	public static final Object GET_NDB_HOST = "Enter cassandra db host address:";
 	public static final Object GET_NDB_PORT = "Enter cassandra db port:";
+	public static final int NUM_OF_ROWS = 150000;
+	
 	
 
 }
