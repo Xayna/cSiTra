@@ -177,60 +177,7 @@ public class Table2ColumnFamily implements Rule<Table, ColumnFamily> {
 
 			// map the cells to the right columns
 			AddFKCellData(table.getColumns(), noSqlRow.getCells(), table.getName(), colFamily.getPK());
-			/*
-			 * for (metamodel.Column col : table.getColumns()) {
-			 * 
-			 * for (Constraint cons : col.getReferences()) { if (cons.getType()
-			 * == ConstraintType.FOREIGN_KEY) { ColumnFamily refTable =
-			 * getColumnFamily(cons .getReferenceTable().getName() + "_" +
-			 * table.getName()); if (refTable == null) System.err
-			 * .println("FOREIGN KEY REFERENCE TABLE NOT FOUND!!"); else {
-			 * String refValue = getCell(noSqlRow.getCells(),
-			 * col.getName()).getValue();
-			 * 
-			 * boolean present = false; nosql.Row refTableRow = null,
-			 * oldRefTableRow=null; for (nosql.Row rows : (EList<nosql.Row>)
-			 * refTable .getRows()) { if (getCell( rows.getCells(),
-			 * ((nosql.Column) refTable.getPK() .getColumns().get(0)).getName())
-			 * .getValue().equals(refValue)) { present = true; refTableRow =
-			 * rows; oldRefTableRow = rows; break; } } if (!present) {
-			 * refTableRow = new nosql.impl.RowImpl();
-			 * refTableRow.setKeyspace(refTable.getKeyspace());
-			 * refTableRow.setName(refTable.getName()); //
-			 * refTableRow.setPK(refTable.getPK());
-			 * 
-			 * nosql.Cell refTablePKCell = new nosql.impl.CellImpl();
-			 * refTablePKCell.setValue(refValue); refTablePKCell
-			 * .setColumn((nosql.Column) refTable .getPK().getColumns().get(0));
-			 * refTableRow.getCells().add(refTablePKCell); }
-			 * 
-			 * nosql.Column refTableCol = new nosql.impl.ColumnImpl();
-			 * refTableCol.setColumnFamily(refTableRow); refTableCol
-			 * .setDatatype(((nosql.Column) colFamily
-			 * .getPK().getColumns().get(0)) .getDatatype());
-			 * refTableCol.setSize(((nosql.Column) colFamily
-			 * .getPK().getColumns().get(0)).getSize());
-			 * refTableCol.setName(((nosql.Column) colFamily
-			 * .getPK().getColumns().get(0)).getName());
-			 * 
-			 * refTableRow.getAdditionalColumns().add(refTableCol);
-			 * 
-			 * nosql.Cell refTableCell = new nosql.impl.CellImpl();
-			 * refTableCell.setValue(getCell( noSqlRow.getCells(),
-			 * ((nosql.Column) colFamily.getPK()
-			 * .getColumns().get(0)).getName()) .getValue());
-			 * refTableCell.setColumn(refTableCol);
-			 * refTableRow.getCells().add(refTableCell);
-			 * 
-			 * if(oldRefTableRow!=null)
-			 * refTable.getRows().remove(oldRefTableRow);
-			 * refTable.getRows().add(refTableRow);
-			 * refTable.getColumns().add(refTableCol);
-			 * 
-			 * Main.colNameCounter++;
-			 * 
-			 * } } } }
-			 */
+			
 		}
 		return colFamily;
 
